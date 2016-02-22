@@ -1,27 +1,25 @@
 package tetrominoes;
 
 public class Block {
-	private int[][] shape = new int[4][4];
+	private boolean[][] shape = new boolean[4][4];
 	
-	
-	
-	public Block(int[][] size){
+	public Block(boolean[][] size){
 		this.shape = size;
 	}
 	
-	public void mapNeg90(){
-		int[][] tempMap = shape;
+	public void rotRight(){
+		boolean[][] tempMap = shape;
 		reflectY(tempMap);
 		reflectXY(tempMap);
 	}
 	
-	public void mapPos90(){
-		int[][] tempMap = shape;
+	public void rotLeft(){
+		boolean[][] tempMap = shape;
 		reflectXY(tempMap);
 		reflectY(tempMap);
 	}
 
-	private void reflectXY(int[][] tempMap) {
+	private void reflectXY(boolean[][] tempMap) {
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
 				shape[i][j] = tempMap[j][i];
@@ -30,7 +28,7 @@ public class Block {
 		
 	}
 
-	private void reflectY(int[][] tempMap) {
+	private void reflectY(boolean[][] tempMap) {
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
 				shape[i][4-j] = tempMap[i][j];

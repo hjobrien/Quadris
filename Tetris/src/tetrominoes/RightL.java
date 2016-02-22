@@ -1,17 +1,17 @@
 package tetrominoes;
 
-public class Square extends Block {
-
+public class RightL extends Block {
+	
 	public static final boolean[][] SHAPE = new boolean[][]{
-		{false, false, 	false,	false},
-		{false,	true,	true,	false},
+		{false, true, 	false,	false},
+		{false,	true,	false,	false},
 		{false,	true,	true,	false},
 		{false,	false,	false,	false}
 	};
-	
-	public Square() {
+
+	public RightL() {
 		super(SHAPE);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 }
