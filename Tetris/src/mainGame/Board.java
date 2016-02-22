@@ -1,7 +1,5 @@
 package mainGame;
 
-import javafx.scene.canvas.GraphicsContext;
-
 public class Board {
 
 	private boolean[][] board;

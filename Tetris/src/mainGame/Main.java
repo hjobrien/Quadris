@@ -10,7 +10,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
-import mainGame.Board;
+import tetrominoes.Block;
 
 public class Main extends Application{
 	
@@ -47,7 +47,7 @@ public class Main extends Application{
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
 			} else if(e.getCode() == KeyCode.N){
-//				Block b = generateRandomBlock();
+				Block b = generateRandomBlock();
 			}
 		});  
 		
@@ -56,6 +56,11 @@ public class Main extends Application{
 		
 		stage.show();
 
+	}
+
+	private Block generateRandomBlock() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private void configureGrid(GridPane grid) {
