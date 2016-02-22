@@ -1,6 +1,6 @@
 package tetrominoes;
 
-public class Line extends Block {
+public class StraightLine extends Block {
 	
 	public static final boolean[][] SHAPE = new boolean[][]{
 		{true, 	true, 	true,	true},
@@ -9,7 +9,7 @@ public class Line extends Block {
 		{false,	false,	false,	false}
 	};
 
-	public Line() {
+	public StraightLine() {
 		super(SHAPE);
 		// TODO Auto-generated constructor stub
 	}

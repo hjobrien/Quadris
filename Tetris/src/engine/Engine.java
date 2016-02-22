@@ -3,9 +3,10 @@ package engine;
 import javafx.animation.AnimationTimer;
 
 public class Engine extends AnimationTimer {
+	private boolean[][] boardState;
 
 	public Engine(boolean[][] boardState){
-		
+		this.boardState = boardState;
 	}
 	
 	
@@ -22,6 +23,10 @@ public class Engine extends AnimationTimer {
 	private void update() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public boolean[][] getBoardState(){
+		return boardState;
 	}
 
 }
