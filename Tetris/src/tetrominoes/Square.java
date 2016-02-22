@@ -2,11 +2,11 @@ package tetrominoes;
 
 public class Square extends Block {
 
-	public static final int[][] SHAPE = new int[][]{
-		{0,0,0,0},
-		{0,1,1,0},
-		{0,1,1,0},
-		{0,0,0,0}
+	public static final boolean[][] SHAPE = new boolean[][]{
+		{false, false, false ,false},
+		{false,true,true,false},
+		{false,true,true,false},
+		{false,false,false,false}
 	};
 	
 	public Square() {
