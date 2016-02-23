@@ -1,7 +1,7 @@
 package mainGame;
 
 import java.util.Random;
-
+import engine.Engine;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tetrominoes.Block;
 import tetrominoes.LeftL;
@@ -52,16 +53,36 @@ public class Main extends Application{
 		
 		configureGrid(grid);
 		
+		//just for debugging now, although a similar system could be used to display the actual blocks
+		for (int i = 0; i < BOARD_HEIGHT; i++){
+			for (int j = 0; j < BOARD_WIDTH; j++){
+				if (board.valueOf(i, j) == false){
+					Text x = new Text("O");
+					grid.add(x, j, i);
+				} else {
+					Text x = new Text("X");
+					grid.add(x, j, i);
+				}
+			}
+		}
+		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
 			} else if(e.getCode() == KeyCode.N){
+				//still unsure how to communicate this to the engine. 
+				//i was thinking boolean variables such as "nWasPressed," 
+				//but hopefully there's a better way
 				Block b = generateRandomBlock();
+				board.add(b);
 			}
 		});  
 		
 //		this.board.update(10, 10, true);
 //		this.board.display();
+		
+		//Are we supposed to do this?
+		Engine e = new Engine(board);
 		
 		stage.show();
 

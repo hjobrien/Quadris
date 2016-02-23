@@ -1,12 +1,13 @@
 package engine;
 
 import javafx.animation.AnimationTimer;
+import mainGame.Board;
 
 public class Engine extends AnimationTimer {
-	private boolean[][] boardState;
+	private Board board;
 
-	public Engine(boolean[][] boardState){
-		this.boardState = boardState;
+	public Engine(Board board){
+		this.board = board;
 	}
 	
 	
@@ -20,13 +21,17 @@ public class Engine extends AnimationTimer {
 	}
 
 	//do collision detection here I think
+	//when I tried to debug this, it was never reached by the program
 	private void update() {
-		// TODO Auto-generated method stub
-		
+		if (board.blockAdded){
+			board.blockAdded = false;
+			board.updateBoard(board.getFallingBlock());
+		}
 	}
-	
+
+
 	public boolean[][] getBoardState(){
-		return boardState;
+		return board.getBoardState();
 	}
 
 }

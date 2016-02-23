@@ -1,15 +1,30 @@
 package mainGame;
 
+import tetrominoes.Block;
+
 public class Board {
 
 	private boolean[][] board;
+	private Block fallingBlock;
+	public boolean blockAdded = false;
 	
-	public boolean[][] getBoard(){
+	public boolean[][] getBoardState(){
 		return this.board;
 	}
 	
 	public Board(int height, int width){
 		this.board = new boolean[height][width];
+	}
+	
+	public void updateBoard(Block b){
+		boolean[][] blockShape = b.getShape();
+		for (int i = 0; i < blockShape.length; i++){
+			for (int j = 0; j < blockShape[i].length; j++){
+				if (valueOf(i, j) != true){
+					update(i, j, blockShape[i][j]);
+				}
+			}
+		}
 	}
 	
 	public void update(int i, int j, boolean b){
@@ -27,5 +42,16 @@ public class Board {
 			}
 			System.out.println();
 		}
+	}
+	
+	public void add(Block b){
+		blockAdded = true;
+		fallingBlock = b;
+	}
+	
+	//could have some checker that makes sure the falling block is still falling
+	//and if it isn't, a new one can be generated
+	public Block getFallingBlock(){
+		return fallingBlock;
 	}
 }

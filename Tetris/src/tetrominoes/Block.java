@@ -2,9 +2,14 @@ package tetrominoes;
 
 public class Block {
 	private boolean[][] shape = new boolean[4][4];
+	private boolean falling = true;
 	
 	public Block(boolean[][] size){
 		this.shape = size;
+	}
+	
+	public boolean[][] getShape(){
+		return shape;
 	}
 	
 	public void rotRight(){
@@ -36,6 +41,12 @@ public class Block {
 		}
 	}
 	
+	public boolean getFalling(){
+		return falling;
+	}
 	
+	public void stoppedFalling(){
+		falling = false;
+	}
 
 }
