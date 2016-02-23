@@ -86,7 +86,9 @@ public class Main extends Application{
 		case 6: 
 			return new Square();
 		}
-		return null;
+		
+		//shouldnt ever happen
+		return new StraightLine();
 	}
 
 	private void configureGrid(GridPane grid) {
