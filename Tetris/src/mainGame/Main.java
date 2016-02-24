@@ -1,7 +1,9 @@
 package mainGame;
 
 import java.util.Random;
+
 import engine.Engine;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -11,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tetrominoes.Block;
@@ -24,24 +27,28 @@ import tetrominoes.T;
 
 public class Main extends Application{
 	
+	
+	//change this to enable debug configurations, allows for fast switching between releases and development versions
+	boolean debug = true;
+	
 	//height should be double width
 	private static final int SCREEN_WIDTH = 300;
 	private static final int SCREEN_HEIGHT = SCREEN_WIDTH * 2;
 	
 	public static final int BOARD_HEIGHT = 20;
 	public static final int BOARD_WIDTH = 10;
+	private Board board = new Board(BOARD_HEIGHT, BOARD_WIDTH);
+
+	private Engine engine = new Engine(board);
 
 	
-	private Board board;
 
 	public static void main(String[] args) {	
 		launch(args);
 	}
 	
 	@Override
-	public void start(Stage stage) throws Exception {
-		this.board = new Board(BOARD_HEIGHT, BOARD_WIDTH);
-	
+	public void start(Stage stage) throws Exception {	
 		GridPane grid = new GridPane();
 //		Group root = new Group();
 		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -82,10 +89,37 @@ public class Main extends Application{
 //		this.board.display();
 		
 		//Are we supposed to do this?
-		Engine e = new Engine(board);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		run(grid);
 		
 		stage.show();
 
+	}
+	
+	private void run(GridPane board){
+		new AnimationTimer(){
+			@Override
+			public void handle(long time){
+				if(time % 1e9 == 0)
+					draw(engine.getBoardState(), board);
+			}
+		}.start();
+	}
+
+	private void draw(boolean[][] state, GridPane board) {
+		for(int i = 0; i < state.length; i++){
+			for(int j = 0; j < state[i].length; j++){
+				board.add(new Rectangle(), i, j);
+			}
+		}
 	}
 
 	private Block generateRandomBlock() {
@@ -121,7 +155,9 @@ public class Main extends Application{
 		}
 		
 		//very helpful for debugging purposes
-		grid.setGridLinesVisible(true);
+		if(debug){
+			grid.setGridLinesVisible(true);
+		}
 	}
 
 }
