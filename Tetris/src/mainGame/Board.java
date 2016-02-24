@@ -46,12 +46,16 @@ public class Board {
 	
 	public void add(Block b){
 		blockAdded = true;
-		fallingBlock = b;
+		setFallingBlock(b);
 	}
 	
 	//could have some checker that makes sure the falling block is still falling
 	//and if it isn't, a new one can be generated
 	public Block getFallingBlock(){
 		return fallingBlock;
+	}
+
+	public void setFallingBlock(Block fallingBlock) {
+		this.fallingBlock = fallingBlock;
 	}
 }

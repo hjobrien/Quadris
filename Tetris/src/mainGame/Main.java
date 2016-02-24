@@ -1,7 +1,5 @@
 package mainGame;
 
-import java.util.Random;
-
 import engine.Engine;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -13,17 +11,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tetrominoes.Block;
-import tetrominoes.LeftL;
-import tetrominoes.LeftS;
-import tetrominoes.RightL;
-import tetrominoes.RightS;
-import tetrominoes.Square;
-import tetrominoes.StraightLine;
-import tetrominoes.T;
 
 public class Main extends Application{
 	
@@ -80,8 +71,7 @@ public class Main extends Application{
 				//still unsure how to communicate this to the engine. 
 				//i was thinking boolean variables such as "nWasPressed," 
 				//but hopefully there's a better way
-				Block b = generateRandomBlock();
-				board.add(b);
+				engine.addBlock();
 			}
 		});  
 		
@@ -108,8 +98,12 @@ public class Main extends Application{
 		new AnimationTimer(){
 			@Override
 			public void handle(long time){
-				if(time % 1e9 == 0)
+				if(time % (1e3 * 5) == 0){
 					draw(engine.getBoardState(), board);
+					if(debug){
+						System.out.println("updated " + time%1e9);
+					}
+				}
 			}
 		}.start();
 	}
@@ -117,34 +111,14 @@ public class Main extends Application{
 	private void draw(boolean[][] state, GridPane board) {
 		for(int i = 0; i < state.length; i++){
 			for(int j = 0; j < state[i].length; j++){
-				board.add(new Rectangle(), i, j);
+				Rectangle r = new Rectangle();
+				r.setFill(Color.RED);
+				board.add(r, i, j);
 			}
 		}
 	}
 
-	private Block generateRandomBlock() {
-		Random r = new Random();
-		int i = r.nextInt(7);
-		switch (i){
-		case 0:
-			return new LeftL();
-		case 1:
-			return new RightL();
-		case 2:
-			return new LeftS();
-		case 3: 
-			return new RightS();
-		case 4:
-			return new StraightLine();
-		case 5:
-			return new T();
-		case 6: 
-			return new Square();
-		}
-		
-		//shouldnt ever happen
-		return new StraightLine();
-	}
+	
 
 	private void configureGrid(GridPane grid) {
 		for (int i = 0; i < BOARD_WIDTH; i++){
