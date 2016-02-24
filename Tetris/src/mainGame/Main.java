@@ -41,7 +41,6 @@ public class Main extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {	
 		GridPane grid = new GridPane();
-//		Group root = new Group();
 		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		
@@ -74,20 +73,7 @@ public class Main extends Application{
 				engine.addBlock();
 			}
 		});  
-		
-//		this.board.update(10, 10, true);
-//		this.board.display();
-		
-		//Are we supposed to do this?
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		run(grid);
 		
 		stage.show();
@@ -113,7 +99,7 @@ public class Main extends Application{
 			for(int j = 0; j < state[i].length; j++){
 				Rectangle r = new Rectangle();
 				r.setFill(Color.RED);
-				board.add(r, i, j);
+				board.add(r, j, i);
 			}
 		}
 	}
