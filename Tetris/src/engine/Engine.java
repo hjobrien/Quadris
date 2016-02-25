@@ -38,6 +38,8 @@ public class Engine {
 	public void addBlock() {
 		Block blockToAdd = generateRandomBlock();
 		board.setFallingBlock(blockToAdd);
+		board.updateBoard(blockToAdd);
+		board.display();
 		System.out.println("added");
 		
 	}

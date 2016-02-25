@@ -20,8 +20,8 @@ public class Board {
 		boolean[][] blockShape = b.getShape();
 		for (int i = 0; i < blockShape.length; i++){
 			for (int j = 0; j < blockShape[i].length; j++){
-				if (valueOf(i, j) != true){
-					update(i, j, blockShape[i][j]);
+				if (valueOf(i, j+3) != true){
+					update(i, j+3, blockShape[i][j]);
 				}
 			}
 		}

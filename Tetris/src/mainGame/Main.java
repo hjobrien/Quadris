@@ -51,17 +51,8 @@ public class Main extends Application{
 		
 		configureGrid(grid);
 		
-		//just for debugging now, although a similar system could be used to display the actual blocks
-		for (int i = 0; i < BOARD_HEIGHT; i++){
-			for (int j = 0; j < BOARD_WIDTH; j++){
-				if (board.valueOf(i, j) == false){
-					Text x = new Text("O");
-					grid.add(x, j, i);
-				} else {
-					Text x = new Text("X");
-					grid.add(x, j, i);
-				}
-			}
+		if(debug){
+			indicateFilled(grid);
 		}
 		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
@@ -89,6 +80,7 @@ public class Main extends Application{
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 1000){
 					draw(engine.getBoardState(), grid);
+					indicateFilled(grid);
 					if(debug){
 						System.out.println("updated " + (now-pastTime));
 					}
@@ -125,12 +117,15 @@ public class Main extends Application{
 		};
 	}
 
-	private void draw(boolean[][] state, GridPane board) {
+	private void draw(boolean[][] state, GridPane grid) {
 		for(int i = 0; i < state.length; i++){
 			for(int j = 0; j < state[i].length; j++){
 				Rectangle r = new Rectangle();
 				r.setFill(Color.RED);
-				board.add(r, j, i);
+				r.setX(1000);
+				r.setY(1000);
+				r.setVisible(true);
+				grid.add(r, j, i);
 			}
 		}
 	}
@@ -149,6 +144,22 @@ public class Main extends Application{
 		if(debug){
 			grid.setGridLinesVisible(true);
 		}
+	}
+	
+	private void indicateFilled(GridPane grid){
+		//just for debugging now, although a similar system could be used to display the actual blocks
+		for (int i = 0; i < BOARD_HEIGHT; i++){
+			for (int j = 0; j < BOARD_WIDTH; j++){
+				if (board.valueOf(i, j) == false){
+					Text x = new Text("O");
+					grid.add(x, j, i);
+				} else {
+					Text x = new Text("X");
+					grid.add(x, j, i);
+				}
+			}
+		}
+		
 	}
 
 }
