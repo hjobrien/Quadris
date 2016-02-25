@@ -27,8 +27,15 @@ public class Engine {
 			board.blockAdded = false;
 			board.updateBoard(board.getFallingBlock());
 		}
+		if (board.getFallingBlock().isFalling()){
+			if (board.checkBlockSpace()){
+				board.blockDown();
+			} else {
+				board.getFallingBlock().stoppedFalling();
+				addBlock();
+			}
+		}
 	}
-
 
 	public boolean[][] getBoardState(){
 		return board.getBoardState();

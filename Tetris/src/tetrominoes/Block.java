@@ -41,7 +41,7 @@ public class Block {
 		}
 	}
 	
-	public boolean getFalling(){
+	public boolean isFalling(){
 		return falling;
 	}
 	

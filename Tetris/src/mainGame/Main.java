@@ -94,28 +94,29 @@ public class Main extends Application{
 
 	}
 	
-	private void run(GridPane grid){
-		timer = new AnimationTimer(){
-			private long pastTime;
-			@Override
-			public void start(){
-				pastTime = System.currentTimeMillis();
-				super.start();
-			}
-			
-			@Override
-			public void handle(long time){
-				long now = System.currentTimeMillis();
-				if(now-pastTime >= 1000){
-					draw(engine.getBoardState(), grid);
-					if(debug){
-						System.out.println("updated " + (time%1e9));
-					}
-				}
-				pastTime = now;
-			}
-		};
-	}
+	//obsolete
+//	private void run(GridPane grid){
+//		timer = new AnimationTimer(){
+//			private long pastTime;
+//			@Override
+//			public void start(){
+//				pastTime = System.currentTimeMillis();
+//				super.start();
+//			}
+//			
+//			@Override
+//			public void handle(long time){
+//				long now = System.currentTimeMillis();
+//				if(now-pastTime >= 1000){
+//					draw(engine.getBoardState(), grid);
+//					if(debug){
+//						System.out.println("updated " + (time%1e9));
+//					}
+//				}
+//				pastTime = now;
+//			}
+//		};
+//	}
 
 	private void draw(boolean[][] state, GridPane grid) {
 		for(int i = 0; i < state.length; i++){
@@ -150,10 +151,18 @@ public class Main extends Application{
 		//just for debugging now, although a similar system could be used to display the actual blocks
 		for (int i = 0; i < BOARD_HEIGHT; i++){
 			for (int j = 0; j < BOARD_WIDTH; j++){
+				
+				//some super sketchy erasing
 				if (board.valueOf(i, j) == false){
+					Text y = new Text("X");
+					y.setFill(Color.WHITE);
+					grid.add(y, j, i);
 					Text x = new Text("O");
 					grid.add(x, j, i);
 				} else {
+					Text y = new Text("O");
+					y.setFill(Color.WHITE);
+					grid.add(y, j, i);
 					Text x = new Text("X");
 					grid.add(x, j, i);
 				}

@@ -58,4 +58,32 @@ public class Board {
 	public void setFallingBlock(Block fallingBlock) {
 		this.fallingBlock = fallingBlock;
 	}
+
+	public boolean checkBlockSpace() {
+		boolean[][] shape = fallingBlock.getShape();
+		for (int i = 0; i < shape.length; i++){
+			boolean blockInColumn = false;
+			int row = shape.length - 1;
+			while(!blockInColumn && row >= 0){
+				if (shape[i][row] == true){
+					blockInColumn = true;
+					if (valueOf(i, row+1) == true){
+						return false;
+					}
+				}
+				row--;
+			}
+		}
+		return true;
+	}
+
+	public void blockDown() {
+		boolean[][] shape = fallingBlock.getShape();
+		for (int i = shape.length - 1; i >= 0; i--){
+			for (int j = shape[i].length; j >= 0; j--){
+				
+				//implement
+			}
+		}
+	}
 }
