@@ -31,6 +31,7 @@ public class Main extends Application{
 	private Board board = new Board(BOARD_HEIGHT, BOARD_WIDTH);
 
 	private Engine engine = new Engine(board);
+	private AnimationTimer timer;
 
 	
 
@@ -74,24 +75,54 @@ public class Main extends Application{
 			}
 		});  
 
-		run(grid);
+//		run(grid);
+		timer = new AnimationTimer(){
+			private long pastTime;
+			@Override
+			public void start(){
+				pastTime = System.currentTimeMillis();
+				super.start();
+			}
+			
+			@Override
+			public void handle(long time){
+				long now = System.currentTimeMillis();
+				if(now-pastTime >= 1000){
+					draw(engine.getBoardState(), grid);
+					if(debug){
+						System.out.println("updated " + (now-pastTime));
+					}
+					pastTime = now;
+				}
+			}
+		};
+		timer.start();
 		
 		stage.show();
 
 	}
 	
-	private void run(GridPane board){
-		new AnimationTimer(){
+	private void run(GridPane grid){
+		timer = new AnimationTimer(){
+			private long pastTime;
+			@Override
+			public void start(){
+				pastTime = System.currentTimeMillis();
+				super.start();
+			}
+			
 			@Override
 			public void handle(long time){
-				if(time % (1e3 * 5) == 0){
-					draw(engine.getBoardState(), board);
+				long now = System.currentTimeMillis();
+				if(now-pastTime >= 1000){
+					draw(engine.getBoardState(), grid);
 					if(debug){
-						System.out.println("updated " + time%1e9);
+						System.out.println("updated " + (time%1e9));
 					}
 				}
+				pastTime = now;
 			}
-		}.start();
+		};
 	}
 
 	private void draw(boolean[][] state, GridPane board) {
