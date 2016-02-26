@@ -31,6 +31,7 @@ public class Engine {
 			if (board.checkBlockSpace()){
 				board.blockDown();
 			} else {
+				board.getFallingBlock().stoppedFalling();
 				addBlock();
 			}
 		}
