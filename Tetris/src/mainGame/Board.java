@@ -8,6 +8,9 @@ public class Board {
 	private Block fallingBlock;
 	public boolean blockAdded = false;
 	
+	//for debugging
+	private boolean debug = true;
+	
 	public boolean[][] getBoardState(){
 		return this.board;
 	}
@@ -16,7 +19,7 @@ public class Board {
 		this.board = new boolean[height][width];
 	}
 	
-	public void updateBoard(Block b){
+	public void updateBoardWithNewBlock(Block b){
 		boolean[][] blockShape = b.getShape();
 		for (int i = 0; i < blockShape.length; i++){
 			for (int j = 0; j < blockShape[i].length; j++){
@@ -44,10 +47,10 @@ public class Board {
 		}
 	}
 	
-	public void add(Block b){
-		blockAdded = true;
-		setFallingBlock(b);
-	}
+//	public void add(Block b){
+//		blockAdded = true;
+//		setFallingBlock(b);
+//	}
 	
 	//could have some checker that makes sure the falling block is still falling
 	//and if it isn't, a new one can be generated
@@ -68,20 +71,30 @@ public class Board {
 				if (shape[i][row] == true){
 					blockInColumn = true;
 					if (valueOf(i, row+1) == true){
+						if (debug){
+							System.out.println("block has space beneath = false");
+						}
 						return false;
 					}
 				}
 				row--;
 			}
 		}
+		if (debug){
+			System.out.println("block has space beneath = true");
+		}
 		return true;
 	}
 
+	//still in development
 	public void blockDown() {
 		boolean[][] shape = fallingBlock.getShape();
 		for (int i = shape.length - 1; i >= 0; i--){
 			for (int j = shape[i].length; j >= 0; j--){
-				
+//				if (shape[i][j] == true){
+//					shape[i][j] = false;
+//					
+//				}
 				//implement
 			}
 		}

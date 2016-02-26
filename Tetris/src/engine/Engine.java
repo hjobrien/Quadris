@@ -22,19 +22,19 @@ public class Engine {
 
 	//do collision detection here I think
 	//when I tried to debug this, it was never reached by the program
-	private void update() {
-		if (board.blockAdded){
-			board.blockAdded = false;
-			board.updateBoard(board.getFallingBlock());
-		}
+	public void update() {
+//		if (board.blockAdded){
+//			board.blockAdded = false;
+//			board.updateBoardWithNewBlock(board.getFallingBlock());
+//		}
 		if (board.getFallingBlock().isFalling()){
 			if (board.checkBlockSpace()){
 				board.blockDown();
 			} else {
-				board.getFallingBlock().stoppedFalling();
 				addBlock();
 			}
 		}
+		
 	}
 
 	public boolean[][] getBoardState(){
@@ -45,7 +45,7 @@ public class Engine {
 	public void addBlock() {
 		Block blockToAdd = generateRandomBlock();
 		board.setFallingBlock(blockToAdd);
-		board.updateBoard(blockToAdd);
+		board.updateBoardWithNewBlock(blockToAdd);
 		board.display();
 		System.out.println("added");
 		

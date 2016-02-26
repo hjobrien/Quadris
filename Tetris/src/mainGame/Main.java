@@ -55,6 +55,8 @@ public class Main extends Application{
 			indicateFilled(grid);
 		}
 		
+		engine.addBlock();
+		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
@@ -80,6 +82,7 @@ public class Main extends Application{
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 1000){
 					draw(engine.getBoardState(), grid);
+					engine.update();
 					indicateFilled(grid);
 					if(debug){
 						System.out.println("updated " + (now-pastTime));

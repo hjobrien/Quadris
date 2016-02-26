@@ -4,6 +4,9 @@ public class Block {
 	private boolean[][] shape = new boolean[4][4];
 	private boolean falling = true;
 	
+	//still in development
+	private int[][] locationInGrid;
+	
 	public Block(boolean[][] size){
 		this.shape = size;
 	}
