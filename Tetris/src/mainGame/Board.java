@@ -1,47 +1,70 @@
 package mainGame;
 
+import java.util.ArrayList;
+
 import tetrominoes.Block;
+import tetrominoes.Tile;
 
 public class Board {
-
-	private boolean[][] board;
+	private ArrayList<ArrayList<Tile>> boardState;
 	private Block fallingBlock;
 	public boolean blockAdded = false;
 	
 	//for debugging
 	private boolean debug = true;
 	
-	public boolean[][] getBoardState(){
-		return this.board;
+	public ArrayList<ArrayList<Tile>> getBoardState(){
+		return this.boardState;
 	}
 	
 	public Board(int height, int width){
-		this.board = new boolean[height][width];
+		ArrayList<ArrayList<Tile>> tempBoard = new ArrayList<ArrayList<Tile>>();
+		for(int i = 0; i < height; i++){
+			ArrayList<Tile> temp = new ArrayList<Tile>();
+			for(int j = 0; j < width; j++){
+				temp.add(new Tile(false, false));			//not active, not filled
+			}
+			tempBoard.add(temp);
+		}
+		this.boardState = tempBoard;
 	}
 	
+	
+	//TO-DO
 	public void updateBoardWithNewBlock(Block b){
-		boolean[][] blockShape = b.getShape();
-		for (int i = 0; i < blockShape.length; i++){
-			for (int j = 0; j < blockShape[i].length; j++){
-				if (valueOf(i, j+3) != true){
-					update(i, j+3, blockShape[i][j]);
+		ArrayList<ArrayList<Tile>> blockShape = b.getShape();
+		for (int i = 0; i < blockShape.size(); i++){
+			for (int j = 0; j < blockShape.get(i).size(); j++){
+				if (!tileAt(i, j+3).isFilled()){
+					update(i, j+3, blockShape.get(i).get(j));
 				}
 			}
 		}
 	}
 	
-	public void update(int i, int j, boolean b){
-		this.board[i][j] = b;
+	//we might not want to change tiles, just the tile's fields
+	public void update(int i, int j, Tile t){
+		this.boardState.get(i).get(j).setActive(t.isActive());
+		this.boardState.get(i).get(j).setFilled(t.isFilled());
 	}
 	
-	public boolean valueOf(int i, int j){
-		return this.board[i][j];
+	//might not need these
+//	public void updateActive(int i, int j, boolean b){
+//		this.boardState.get(i).get(j).setActive(b);;
+//	}
+//	
+//	public void updateFilled(int i, int j, boolean b){
+//		this.boardState.get(i).get(j).setFilled(b);;
+//	}
+	
+	public Tile tileAt(int i, int j){
+		return this.boardState.get(i).get(j);
 	}
 	
 	public void display(){
-		for (int i = 0; i < board.length; i++){
-			for (int j = 0; j < board[i].length; j++){
-				System.out.print(board[i][j]);
+		for (int i = 0; i < this.boardState.size(); i++){
+			for (int j = 0; j < this.boardState.get(i).size(); j++){
+				System.out.print(this.boardState.get(i).get(j).isFilled());
 			}
 			System.out.println();
 		}
@@ -62,22 +85,31 @@ public class Board {
 		this.fallingBlock = fallingBlock;
 	}
 
+	
+//	//TO-DO
 	public boolean checkBlockSpace() {
-		boolean[][] shape = fallingBlock.getShape();
-		for (int i = 0; i < shape.length; i++){
-			boolean blockInColumn = false;
-			int row = shape.length - 1;
-			while(!blockInColumn && row >= 0){
-				if (shape[i][row] == true){
-					blockInColumn = true;
-					if (valueOf(i, row+1) == true){
+		int lastIndex = boardState.size() - 1;
+		for (int i = 0; i < boardState.get(lastIndex).size(); i++){
+			if (tileAt(lastIndex, i).isActive()){
+				if (debug){
+					System.out.println("block has space beneath = true");
+				}
+				return false;
+			}
+		}
+		
+		for (int i = 0; i < boardState.size(); i++){
+			for (int j = 0; j < boardState.get(i).size(); j++){
+				Tile thisT = boardState.get(i).get(j);
+				if (thisT.isActive()){
+					Tile nextT = boardState.get(i + 1).get(j);
+					if (nextT.isFilled() && !nextT.isActive()){
 						if (debug){
-							System.out.println("block has space beneath = false");
+							System.out.println("block has space beneath = true");
 						}
 						return false;
 					}
 				}
-				row--;
 			}
 		}
 		if (debug){
@@ -86,17 +118,26 @@ public class Board {
 		return true;
 	}
 
+	
 	//still in development
 	public void blockDown() {
-		boolean[][] shape = fallingBlock.getShape();
-		for (int i = shape.length - 1; i >= 0; i--){
-			for (int j = shape[i].length; j >= 0; j--){
-//				if (shape[i][j] == true){
-//					shape[i][j] = false;
-//					
-//				}
-				//implement
+		for (int i = boardState.size() - 1; i >= 0; i--){
+			for (int j = boardState.get(i).size() - 1; j >= 0; j--){
+				if (tileAt(i, j).isActive()){
+					//updates new tile
+					update(i + 1, j, tileAt(i ,j));
+					//clears old tile
+					update(i, j, new Tile(false, false));
+				}
 			}
 		}
 	}
+
+	public void setNotFalling() {
+		for (ArrayList<Tile> list : boardState){
+			for (Tile t : list){
+				t.setActive(false);
+			}
+		}
+	}	
 }

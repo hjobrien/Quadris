@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -12,6 +13,7 @@ import tetrominoes.RightS;
 import tetrominoes.Square;
 import tetrominoes.StraightLine;
 import tetrominoes.T;
+import tetrominoes.Tile;
 
 public class Engine {
 	private Board board;
@@ -28,17 +30,22 @@ public class Engine {
 //			board.updateBoardWithNewBlock(board.getFallingBlock());
 //		}
 		if (board.getFallingBlock().isFalling()){
+			
 			if (board.checkBlockSpace()){
 				board.blockDown();
 			} else {
-				board.getFallingBlock().stoppedFalling();
+				board.setNotFalling();
 				addBlock();
 			}
 		}
 		
 	}
+	
+//	public void setBoard(Board b){
+//		this.board = b;
+//	}
 
-	public boolean[][] getBoardState(){
+	public ArrayList<ArrayList<Tile>> getBoardState(){
 		return board.getBoardState();
 	}
 
@@ -55,6 +62,7 @@ public class Engine {
 	private Block generateRandomBlock() {
 		Random r = new Random();
 		int i = r.nextInt(7);
+
 		switch (i){
 		case 0:
 			return new LeftL();

@@ -1,45 +1,50 @@
 package tetrominoes;
 
+import java.util.ArrayList;
+
 public class Block {
-	private boolean[][] shape = new boolean[4][4];
+	private ArrayList<ArrayList<Tile>> shape = new ArrayList<ArrayList<Tile>>();
+	
+	
+//	private boolean[][] shape = new boolean[4][4];
 	private boolean falling = true;
 	
 	//still in development
 	private int[][] locationInGrid;
 	
-	public Block(boolean[][] size){
+	public Block(ArrayList<ArrayList<Tile>> size){
 		this.shape = size;
 	}
 	
-	public boolean[][] getShape(){
+	public ArrayList<ArrayList<Tile>> getShape(){
 		return shape;
 	}
 	
 	public void rotRight(){
-		boolean[][] tempMap = shape;
+		ArrayList<ArrayList<Tile>> tempMap = shape;
 		reflectY(tempMap);
 		reflectXY(tempMap);
 	}
 	
 	public void rotLeft(){
-		boolean[][] tempMap = shape;
+		ArrayList<ArrayList<Tile>> tempMap = shape;
 		reflectXY(tempMap);
 		reflectY(tempMap);
 	}
 
-	private void reflectXY(boolean[][] tempMap) {
+	private void reflectXY(ArrayList<ArrayList<Tile>> tempMap) {
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
-				shape[i][j] = tempMap[j][i];
+				shape.get(i).set(j, tempMap.get(j).get(i));
 			}
 		}
 		
 	}
 
-	private void reflectY(boolean[][] tempMap) {
+	private void reflectY(ArrayList<ArrayList<Tile>> tempMap) {
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
-				shape[i][4-j] = tempMap[i][j];
+				shape.get(i).set(4 - j, tempMap.get(i).get(j));
 			}
 		}
 	}
@@ -50,6 +55,7 @@ public class Block {
 	
 	public void stoppedFalling(){
 		falling = false;
+		//set each tile of the block to active = false
 	}
 
 }

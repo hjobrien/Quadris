@@ -4,15 +4,12 @@ import engine.Engine;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -28,9 +25,8 @@ public class Main extends Application{
 	
 	public static final int BOARD_HEIGHT = 20;
 	public static final int BOARD_WIDTH = 10;
-	private Board board = new Board(BOARD_HEIGHT, BOARD_WIDTH);
 
-	private Engine engine = new Engine(board);
+	private Engine engine;
 	private AnimationTimer timer;
 
 	
@@ -40,10 +36,17 @@ public class Main extends Application{
 	}
 	
 	@Override
-	public void start(Stage stage) throws Exception {	
+	public void start(Stage stage) throws Exception {
+		
+		//if we only make 1 board and it's in engine, we can always just receive the boardState 
+		//from engine when we need it and we wont have to be translating boardStates
+		this.engine = new Engine(new Board(BOARD_HEIGHT, BOARD_WIDTH));
+		
 		GridPane grid = new GridPane();
-		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
-		GraphicsContext g = canvas.getGraphicsContext2D();
+		
+		//we havent been using this at all
+//		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
+//		GraphicsContext g = canvas.getGraphicsContext2D();
 		
 		Scene boardScene = new Scene(grid, SCREEN_WIDTH, SCREEN_HEIGHT);
 		
@@ -81,7 +84,7 @@ public class Main extends Application{
 			public void handle(long time){
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 1000){
-					draw(engine.getBoardState(), grid);
+//					draw(engine.getBoardState(), grid);
 					engine.update();
 					indicateFilled(grid);
 					if(debug){
@@ -119,22 +122,7 @@ public class Main extends Application{
 //				pastTime = now;
 //			}
 //		};
-//	}
-
-	private void draw(boolean[][] state, GridPane grid) {
-		for(int i = 0; i < state.length; i++){
-			for(int j = 0; j < state[i].length; j++){
-				Rectangle r = new Rectangle();
-				r.setFill(Color.RED);
-				r.setX(1000);
-				r.setY(1000);
-				r.setVisible(true);
-				grid.add(r, j, i);
-			}
-		}
-	}
-
-	
+//	}	
 
 	private void configureGrid(GridPane grid) {
 		for (int i = 0; i < BOARD_WIDTH; i++){
@@ -145,6 +133,7 @@ public class Main extends Application{
 		}
 		
 		//very helpful for debugging purposes
+		//maybe we want this even when not debugging?
 		if(debug){
 			grid.setGridLinesVisible(true);
 		}
@@ -156,17 +145,17 @@ public class Main extends Application{
 			for (int j = 0; j < BOARD_WIDTH; j++){
 				
 				//some super sketchy erasing
-				if (board.valueOf(i, j) == false){
-					Text y = new Text("X");
-					y.setFill(Color.WHITE);
-					grid.add(y, j, i);
-					Text x = new Text("O");
-					grid.add(x, j, i);
-				} else {
+				if (engine.getBoardState().get(i).get(j).isFilled()){
 					Text y = new Text("O");
 					y.setFill(Color.WHITE);
 					grid.add(y, j, i);
 					Text x = new Text("X");
+					grid.add(x, j, i);
+				} else {
+					Text y = new Text("X");
+					y.setFill(Color.WHITE);
+					grid.add(y, j, i);
+					Text x = new Text("O");
 					grid.add(x, j, i);
 				}
 			}
