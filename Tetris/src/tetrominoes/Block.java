@@ -55,7 +55,6 @@ public class Block {
 	
 	public void stoppedFalling(){
 		falling = false;
-		//set each tile of the block to active = false
 	}
 
 }

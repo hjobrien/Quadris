@@ -45,6 +45,7 @@ public class Main extends Application{
 		GridPane grid = new GridPane();
 		
 		//we havent been using this at all
+		//but might want to for styling?
 //		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
 //		GraphicsContext g = canvas.getGraphicsContext2D();
 		
@@ -63,11 +64,16 @@ public class Main extends Application{
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
-			} else if(e.getCode() == KeyCode.N){
-				//still unsure how to communicate this to the engine. 
-				//i was thinking boolean variables such as "nWasPressed," 
-				//but hopefully there's a better way
-				engine.addBlock();
+			} 
+			//TODO
+			else if (e.getCode() == KeyCode.RIGHT){
+				
+			} else if (e.getCode() == KeyCode.LEFT){
+				
+			} else if (e.getCode() == KeyCode.UP){
+				
+			} else if (e.getCode() == KeyCode.DOWN){
+				
 			}
 		});  
 
@@ -87,9 +93,6 @@ public class Main extends Application{
 //					draw(engine.getBoardState(), grid);
 					engine.update();
 					indicateFilled(grid);
-					if(debug){
-						System.out.println("updated " + (now-pastTime));
-					}
 					pastTime = now;
 				}
 			}
@@ -100,7 +103,7 @@ public class Main extends Application{
 
 	}
 	
-	//obsolete
+	//obsolete but we might want to update it if it's useful
 //	private void run(GridPane grid){
 //		timer = new AnimationTimer(){
 //			private long pastTime;

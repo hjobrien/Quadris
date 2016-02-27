@@ -25,10 +25,6 @@ public class Engine {
 	//do collision detection here I think
 	//when I tried to debug this, it was never reached by the program
 	public void update() {
-//		if (board.blockAdded){
-//			board.blockAdded = false;
-//			board.updateBoardWithNewBlock(board.getFallingBlock());
-//		}
 		if (board.getFallingBlock().isFalling()){
 			
 			if (board.checkBlockSpace()){
@@ -38,7 +34,8 @@ public class Engine {
 				addBlock();
 			}
 		}
-		
+		//TODO
+		//checkForCompleteRows();
 	}
 	
 //	public void setBoard(Board b){
@@ -49,14 +46,11 @@ public class Engine {
 		return board.getBoardState();
 	}
 
-
+	//Adds a random block to the board
 	public void addBlock() {
 		Block blockToAdd = generateRandomBlock();
 		board.setFallingBlock(blockToAdd);
-		board.updateBoardWithNewBlock(blockToAdd);
-		board.display();
-		System.out.println("added");
-		
+		board.updateBoardWithNewBlock(blockToAdd);		
 	}
 	
 	private Block generateRandomBlock() {
