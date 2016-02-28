@@ -37,10 +37,6 @@ public class Engine {
 		//TODO
 		//checkForCompleteRows();
 	}
-	
-//	public void setBoard(Board b){
-//		this.board = b;
-//	}
 
 	public ArrayList<ArrayList<Tile>> getBoardState(){
 		return board.getBoardState();
@@ -78,5 +74,8 @@ public class Engine {
 		return new StraightLine();
 	}
 
+	public Board getBoard(){
+		return this.board;
+	}
 
 }

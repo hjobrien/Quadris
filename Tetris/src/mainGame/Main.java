@@ -90,7 +90,9 @@ public class Main extends Application{
 			public void handle(long time){
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 1000){
-//					draw(engine.getBoardState(), grid);
+					if (engine.getBoard().isFull()){
+						timer.stop();
+					}
 					engine.update();
 					indicateFilled(grid);
 					pastTime = now;
@@ -98,6 +100,7 @@ public class Main extends Application{
 			}
 		};
 		timer.start();
+		
 		
 		stage.show();
 

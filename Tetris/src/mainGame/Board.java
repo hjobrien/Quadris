@@ -9,6 +9,7 @@ public class Board {
 	private ArrayList<ArrayList<Tile>> boardState;
 	private Block fallingBlock;
 	public boolean blockAdded = false;
+	boolean full = false;
 	
 	//for debugging
 	private boolean debug = true;
@@ -71,6 +72,14 @@ public class Board {
 	}
 
 	public boolean checkBlockSpace() {
+		//checks if the board has filled up
+		for (int i = 0; i < boardState.get(0).size(); i++){
+			Tile firstTile = tileAt(0, i);
+			if (firstTile.isFilled() && !firstTile.isActive()){
+				full = true;
+			}
+		}
+		
 		//checks if the block has traversed the whole screen
 		int lastIndex = boardState.size() - 1;
 		for (int i = 0; i < boardState.get(lastIndex).size(); i++){
@@ -125,4 +134,8 @@ public class Board {
 			}
 		}
 	}	
+	
+	public boolean isFull(){
+		return this.full;
+	}
 }
