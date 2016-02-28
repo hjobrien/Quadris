@@ -149,9 +149,71 @@ public class Board {
 				moveLeft();
 			}
 		} else if (string.equals("up")){
-			fallingBlock.rotRight();
+			tryToRotate("right");
+//			fallingBlock.rotRight();
 		} else if (string.equals("down")){
-			fallingBlock.rotLeft();
+			tryToRotate("left");
+//			fallingBlock.rotLeft();
+		}
+		
+	}
+
+	//TODO
+	/* currently condenses the board to a block
+	 * I would like to have some method that tries to make that block a square
+	 * if it can't, nothing will happen because that means blocks are in the way.
+	 * if it can, it will resize to a square, then perform the translation, then tell 
+	 * the board it's new shape
+	 * 
+	 * *******also causes an error and i dont know why
+	 */
+	
+	private void tryToRotate(String string) {
+		ArrayList<ArrayList<Tile>> block = getBoardState();
+		ArrayList<Integer> columnsErased = new ArrayList<Integer>();
+		ArrayList<Integer> rowsErased = new ArrayList<Integer>();
+		
+		//gets rid of any rows that don't have active tiles
+		for (int row = block.size() - 1; row >= 0; row--){
+			boolean rowCleared = true;
+			int column = 0;
+			while (rowCleared && column < block.get(row).size()){
+				if(block.get(row).get(column).isActive()){
+					rowCleared = false;
+				}
+				column++;
+			}
+			if (rowCleared){
+				block.remove(row);
+				rowsErased.add(row);
+			}
+		}
+		
+		//gets rid of any columns that don't have active tiles
+		for (int column = block.get(0).size() - 1; column >= 0; column --){
+			boolean columnCleared = true;
+			int row = 0;
+			while (columnCleared && row < block.size()){
+				if (block.get(row).get(column).isActive()){
+					columnCleared = false;
+				}
+				row++;
+			}
+			if (columnCleared){
+				for (int i = 0; i < block.size(); i++){
+					block.get(i).remove(column);
+					columnsErased.add(column);
+				}
+			}
+		}
+		
+		if (debug){
+			for (int i = 0; i < block.size(); i++){
+				for (int j = 0; j < block.get(i).size(); j++){
+					System.out.print(block.get(i).get(j).isFilled());
+				}
+				System.out.println();
+			}
 		}
 		
 	}
