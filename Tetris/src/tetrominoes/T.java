@@ -13,7 +13,9 @@ public class T extends Block {
 
 	public T() {
 		super(getTShape());
-		// TODO Auto-generated constructor stub
+		if (super.debug){
+			System.out.println("made T");
+		}
 	}
 	
 	public static ArrayList<ArrayList<Tile>> getTShape(){

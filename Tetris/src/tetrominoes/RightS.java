@@ -13,7 +13,9 @@ public class RightS extends Block {
 
 	public RightS() {
 		super(getRightSShape());
-		// TODO Auto-generated constructor stub
+		if (super.debug){
+			System.out.println("made Right S");
+		}
 	}
 	
 	public static ArrayList<ArrayList<Tile>> getRightSShape(){

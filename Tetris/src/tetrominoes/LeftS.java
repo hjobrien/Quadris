@@ -13,7 +13,9 @@ public class LeftS extends Block{
 
 	public LeftS() {
 		super(getLeftSShape());
-		// TODO Auto-generated constructor stub
+		if (super.debug){
+			System.out.println("made left S");
+		}
 	}
 	
 	public static ArrayList<ArrayList<Tile>> getLeftSShape(){

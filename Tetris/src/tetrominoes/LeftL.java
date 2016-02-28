@@ -6,6 +6,9 @@ public class LeftL extends Block {
 	
 	public LeftL() {
 		super(getLeftLShape());
+		if (super.debug){
+			System.out.println("made left L");
+		}
 	}
 
 	//i feel like there should be a better way to do this

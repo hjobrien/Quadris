@@ -13,7 +13,9 @@ public class Square extends Block {
 	
 	public Square() {
 		super(getSquareShape());
-		// TODO Auto-generated constructor stub
+		if (super.debug){
+			System.out.println("made square");
+		}
 	}
 	
 	public static ArrayList<ArrayList<Tile>> getSquareShape(){

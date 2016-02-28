@@ -13,7 +13,9 @@ public class StraightLine extends Block {
 
 	public StraightLine() {
 		super(getStraightLineShape());
-		// TODO Auto-generated constructor stub
+		if (super.debug){
+			System.out.println("made straight line");
+		}
 	}
 	
 	public static ArrayList<ArrayList<Tile>> getStraightLineShape(){
