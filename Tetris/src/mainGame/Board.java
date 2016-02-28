@@ -138,4 +138,87 @@ public class Board {
 	public boolean isFull(){
 		return this.full;
 	}
+
+	public void pressed(String string) {
+		if (string.equals("right")){
+			if (checkRight()){
+				moveRight();
+			}
+		} else if (string.equals("left")){
+			if (checkLeft()){
+				moveLeft();
+			}
+		} else if (string.equals("up")){
+			fallingBlock.rotRight();
+		} else if (string.equals("down")){
+			fallingBlock.rotLeft();
+		}
+		
+	}
+
+	private boolean checkRight() {
+		for (ArrayList<Tile> a : boardState){
+			
+			//checks the far right column
+			if (a.get(a.size() - 1).isActive()){
+				return false;
+			}
+			
+			//checks for an inactive but filled tile on the right of every active tile
+			for (int i = a.size() - 2; i >= 0; i--){
+				if (a.get(i).isActive()){
+					Tile tileOnRight = a.get(i + 1);
+					if (tileOnRight.isFilled() && !tileOnRight.isActive()){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	private void moveRight() {
+		for (int i = 0; i < boardState.size(); i++){
+			for (int j = boardState.get(i).size() - 2; j >= 0; j--){
+				Tile currentTile = boardState.get(i).get(j);
+				if (currentTile.isActive()){
+					update(i, j + 1, currentTile);
+					update(i, j, new Tile(false, false));
+				}
+			}
+		}
+	}
+	
+	private boolean checkLeft() {
+		for (ArrayList<Tile> a : boardState){
+			
+			//checks the far left column
+			if (a.get(0).isActive()){
+				return false;
+			}
+			
+			//checks for an inactive but filled tile on the left of every active tile
+			for (int i = 1; i < a.size(); i++){
+				if (a.get(i).isActive()){
+					Tile tileOnLeft = a.get(i - 1);
+					if (tileOnLeft.isFilled() && !tileOnLeft.isActive()){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	private void moveLeft() {
+		for (int i = 0; i < boardState.size(); i++){
+			for (int j = 1; j < boardState.get(i).size(); j++){
+				Tile currentTile = boardState.get(i).get(j);
+				if (currentTile.isActive()){
+					update(i, j - 1, currentTile);
+					update(i, j, new Tile(false, false));
+				}
+			}
+		}
+	}
 }

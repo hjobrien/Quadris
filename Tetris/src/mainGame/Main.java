@@ -67,13 +67,13 @@ public class Main extends Application{
 			} 
 			//TODO
 			else if (e.getCode() == KeyCode.RIGHT){
-				
+				engine.getBoard().pressed("right");
 			} else if (e.getCode() == KeyCode.LEFT){
-				
+				engine.getBoard().pressed("left");
 			} else if (e.getCode() == KeyCode.UP){
-				
+				engine.getBoard().pressed("up");
 			} else if (e.getCode() == KeyCode.DOWN){
-				
+				engine.getBoard().pressed("down");
 			}
 		});  
 
