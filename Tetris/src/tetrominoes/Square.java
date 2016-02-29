@@ -2,6 +2,8 @@ package tetrominoes;
 
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
+
 public class Square extends Block {
 
 	public static final boolean[][] SHAPE = new boolean[][]{
@@ -10,6 +12,9 @@ public class Square extends Block {
 		{false,	true,	true,	false},
 		{false,	false,	false,	false}
 	};
+	
+	private static Color color = Color.RED;
+
 	
 	public Square() {
 		super(getSquareShape());
@@ -28,14 +33,14 @@ public class Square extends Block {
 
 		ArrayList<Tile> secondLine = new ArrayList<Tile>();
 		secondLine.add(new Tile(false, false));
-		secondLine.add(new Tile(true, true));
-		secondLine.add(new Tile(true, true));
+		secondLine.add(new Tile(true, true, color));
+		secondLine.add(new Tile(true, true, color));
 		secondLine.add(new Tile(false, false));
 		
 		ArrayList<Tile> thirdLine = new ArrayList<Tile>();
 		thirdLine.add(new Tile(false, false));
-		thirdLine.add(new Tile(true, true));
-		thirdLine.add(new Tile(true, true));
+		thirdLine.add(new Tile(true, true, color));
+		thirdLine.add(new Tile(true, true, color));
 		thirdLine.add(new Tile(false, false));
 		
 		ArrayList<Tile> fourthLine = new ArrayList<Tile>();

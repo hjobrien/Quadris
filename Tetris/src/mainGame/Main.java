@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import tetrominoes.Tile;
 
 public class Main extends Application{
 	
@@ -153,31 +154,21 @@ public class Main extends Application{
 		for (int i = 0; i < BOARD_HEIGHT; i++){
 			for (int j = 0; j < BOARD_WIDTH; j++){
 				
-				//some super sketchy erasing
-				if (engine.getBoardState().get(i).get(j).isFilled()){
+				Tile current = engine.getBoardState().get(i).get(j);
+				if (current.isFilled()){
 					Rectangle r = new Rectangle();
-					r.setHeight(30);
-					r.setWidth(30);
+					r.setHeight(29);
+					r.setWidth(29);
 //					r.setFill(getNextColor());
-					r.setFill(Color.RED);
+					r.setFill(current.getColor());
 					grid.add(r, j,i);
-//					Text y = new Text("O");
-//					y.setFill(Color.WHITE);
-//					grid.add(y, j, i);
-//					Text x = new Text("X");
-//					grid.add(x, j, i);
 				} else {
 					Rectangle r = new Rectangle();
 					r.setHeight(29);
 					r.setWidth(29);
 //					r.setFill(getNextColor());
-					r.setFill(Color.WHITE);
+					r.setFill(current.getColor());
 					grid.add(r, j, i);
-//					Text y = new Text("X");
-//					y.setFill(Color.WHITE);
-//					grid.add(y, j, i);
-//					Text x = new Text("O");
-//					grid.add(x, j, i);
 				}
 			}
 		}
