@@ -10,7 +10,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -28,6 +29,8 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
+
+	private int colorIndex = 0;
 
 	
 
@@ -145,27 +148,63 @@ public class Main extends Application{
 	}
 	
 	private void indicateFilled(GridPane grid){
+		
 		//just for debugging now, although a similar system could be used to display the actual blocks
 		for (int i = 0; i < BOARD_HEIGHT; i++){
 			for (int j = 0; j < BOARD_WIDTH; j++){
 				
 				//some super sketchy erasing
 				if (engine.getBoardState().get(i).get(j).isFilled()){
-					Text y = new Text("O");
-					y.setFill(Color.WHITE);
-					grid.add(y, j, i);
-					Text x = new Text("X");
-					grid.add(x, j, i);
+					Rectangle r = new Rectangle();
+					r.setHeight(30);
+					r.setWidth(30);
+//					r.setFill(getNextColor());
+					r.setFill(Color.RED);
+					grid.add(r, j,i);
+//					Text y = new Text("O");
+//					y.setFill(Color.WHITE);
+//					grid.add(y, j, i);
+//					Text x = new Text("X");
+//					grid.add(x, j, i);
 				} else {
-					Text y = new Text("X");
-					y.setFill(Color.WHITE);
-					grid.add(y, j, i);
-					Text x = new Text("O");
-					grid.add(x, j, i);
+					Rectangle r = new Rectangle();
+					r.setHeight(29);
+					r.setWidth(29);
+//					r.setFill(getNextColor());
+					r.setFill(Color.WHITE);
+					grid.add(r, j, i);
+//					Text y = new Text("X");
+//					y.setFill(Color.WHITE);
+//					grid.add(y, j, i);
+//					Text x = new Text("O");
+//					grid.add(x, j, i);
 				}
 			}
 		}
 		
+	}
+
+	private Paint getNextColor() {
+		colorIndex++;
+
+		colorIndex %= 6;
+		switch (colorIndex){
+		case 0:
+			return Color.RED;
+		case 1:
+			return Color.BLUE;
+		case 2: 
+			return Color.GREEN;
+		case 3:
+			return Color.ORANGE;
+		case 4:
+			return Color.YELLOW;
+		case 5:
+			return Color.PURPLE;
+		default: 
+			return Color.BLACK;
+		}
+
 	}
 
 }
