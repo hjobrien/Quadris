@@ -1,12 +1,21 @@
 package tetrominoes;
 
+import javafx.scene.paint.Color;
+
 public class Tile {
 	private boolean active;
 	private boolean filled;
+	private Color color;
 	
 	public Tile(boolean active, boolean filled){
 		this.active = active;
 		this.filled = filled;
+		this.color = Color.WHITE;
+	}
+	public Tile(boolean active, boolean filled, Color c){
+		this.active = active;
+		this.filled = filled;
+		this.color = c;
 	}
 
 	public boolean isActive() {
@@ -23,6 +32,13 @@ public class Tile {
 
 	public void setFilled(boolean filled) {
 		this.filled = filled;
+	}
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color2) {
+		this.color = color2;
+		
 	}
 
 }

@@ -12,7 +12,7 @@ import tetrominoes.RightL;
 import tetrominoes.RightS;
 import tetrominoes.Square;
 import tetrominoes.StraightLine;
-import tetrominoes.T;
+import tetrominoes.TBlock;
 import tetrominoes.Tile;
 
 public class Engine {
@@ -52,7 +52,6 @@ public class Engine {
 	private Block generateRandomBlock() {
 		Random r = new Random();
 		int i = r.nextInt(7);
-
 		//testing
 		i = 6;
 		switch (i){
@@ -67,12 +66,12 @@ public class Engine {
 		case 4:
 			return new StraightLine();
 		case 5:
-			return new T();
+			return new TBlock();
 		case 6: 
 			return new Square();
 		}
 		
-		//shouldnt ever happen
+//		shouldnt ever happen
 		return new StraightLine();
 	}
 

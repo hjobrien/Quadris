@@ -10,8 +10,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import tetrominoes.Tile;
 
 public class Main extends Application{
 	
@@ -28,6 +29,8 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
+
+	private int colorIndex = 0;
 
 	
 
@@ -88,7 +91,7 @@ public class Main extends Application{
 			@Override
 			public void handle(long time){
 				long now = System.currentTimeMillis();
-				if(now-pastTime >= 1000){
+				if(now-pastTime >= 500){
 					if (engine.getBoard().isFull()){
 						timer.stop();
 					}
@@ -145,27 +148,30 @@ public class Main extends Application{
 	}
 	
 	private void indicateFilled(GridPane grid){
+		
 		//just for debugging now, although a similar system could be used to display the actual blocks
 		for (int i = 0; i < BOARD_HEIGHT; i++){
 			for (int j = 0; j < BOARD_WIDTH; j++){
 				
-				//some super sketchy erasing
-				if (engine.getBoardState().get(i).get(j).isFilled()){
-					Text y = new Text("O");
-					y.setFill(Color.WHITE);
-					grid.add(y, j, i);
-					Text x = new Text("X");
-					grid.add(x, j, i);
+				Tile current = engine.getBoardState().get(i).get(j);
+				if (current.isFilled()){
+					Rectangle r = new Rectangle();
+					r.setHeight(29);
+					r.setWidth(29);
+					r.setFill(current.getColor());
+					grid.add(r, j,i);
 				} else {
-					Text y = new Text("X");
-					y.setFill(Color.WHITE);
-					grid.add(y, j, i);
-					Text x = new Text("O");
-					grid.add(x, j, i);
+					Rectangle r = new Rectangle();
+					r.setHeight(29);
+					r.setWidth(29);
+					r.setFill(Color.WHITE);
+					grid.add(r, j, i);
 				}
+
 			}
 		}
 		
 	}
+
 
 }
