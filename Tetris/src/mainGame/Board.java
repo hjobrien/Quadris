@@ -170,9 +170,7 @@ public class Board {
 	 */
 	
 	private void tryToRotate(String string) {
-		
-		//boardState is mirroring block and i don't know why
-		ArrayList<ArrayList<Tile>> block = getBoardState();
+		ArrayList<ArrayList<Tile>> block = makeBoard();
 		ArrayList<Integer> columnsErased = new ArrayList<Integer>();
 		ArrayList<Integer> rowsErased = new ArrayList<Integer>();
 		
@@ -218,6 +216,20 @@ public class Board {
 				System.out.println();
 			}
 		}
+		
+	}
+	
+	private ArrayList<ArrayList<Tile>> makeBoard(){
+		ArrayList<ArrayList<Tile>> newBoard = new ArrayList<ArrayList<Tile>>();
+		for (ArrayList<Tile> currentRow : boardState){
+			ArrayList<Tile> newRow = new ArrayList<Tile>();
+			for (Tile t : currentRow){
+				newRow.add(t);
+			}
+			newBoard.add(newRow);
+
+		}
+		return newBoard;
 		
 	}
 
