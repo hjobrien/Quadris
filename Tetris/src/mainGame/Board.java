@@ -215,8 +215,73 @@ public class Board {
 				}
 				System.out.println();
 			}
+			System.out.println();
 		}
 		
+		Block b = null;
+		if (block.size() == block.get(0).size()){
+			if (string.equals("right")){
+				b = rotRight(new Block(block));
+			} else if (string.equals("left")){
+				b = rotLeft(new Block(block));
+			}
+		}
+		
+		else {
+			b = makeBlockSquare(block, rowsErased, columnsErased);
+		}
+		
+		if (!b.getShape().isEmpty()){
+			if (debug){
+				for (int i = 0; i < b.getShape().size(); i++){
+					for (int j = 0; j < b.getShape().get(i).size(); j++){
+						System.out.print(b.getShape().get(i).get(j).isFilled());
+					}
+					System.out.println();
+				}
+			}
+		} else {
+			System.out.println("Can't rotate");
+		}
+	}
+	
+	private Block makeBlockSquare(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
+			ArrayList<Integer> columnsErased) {
+		// TODO Auto-generated method stub
+		return new Block(new ArrayList<ArrayList<Tile>>());
+	}
+
+
+	public Block rotRight(Block b){
+		ArrayList<ArrayList<Tile>> tempMap = b.getShape();
+		b = reflectY(b, tempMap);
+		b = reflectXY(b, tempMap);
+		return b;
+	}
+	
+	public Block rotLeft(Block b){
+		ArrayList<ArrayList<Tile>> tempMap = b.getShape();
+		b = reflectXY(b, tempMap);
+		b = reflectY(b, tempMap);
+		return b;
+	}
+
+	private Block reflectXY(Block b, ArrayList<ArrayList<Tile>> tempMap) {
+		for(int i = 0; i < tempMap.size(); i++){
+			for(int j = 0; j < tempMap.get(i).size(); j++){
+				b.getShape().get(i).set(j, tempMap.get(j).get(i));
+			}
+		}
+		return b;
+	}
+
+	private Block reflectY(Block b, ArrayList<ArrayList<Tile>> tempMap) {
+		for(int i = 0; i < tempMap.size(); i++){
+			for(int j = 0; j < tempMap.get(i).size(); j++){
+				b.getShape().get(i).set(tempMap.get(i).size() - 1 - j, tempMap.get(i).get(j));
+			}
+		}
+		return b;
 	}
 	
 	private ArrayList<ArrayList<Tile>> makeBoard(){
