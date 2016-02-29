@@ -77,7 +77,6 @@ public class Main extends Application{
 			}
 		});  
 
-//		run(grid);
 		timer = new AnimationTimer(){
 			private long pastTime;
 			@Override
