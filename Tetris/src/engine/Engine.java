@@ -52,7 +52,6 @@ public class Engine {
 	private Block generateRandomBlock() {
 		Random r = new Random();
 		int i = r.nextInt(7);
-
 		switch (i){
 		case 0:
 			return new LeftL();
@@ -70,7 +69,7 @@ public class Engine {
 			return new Square();
 		}
 		
-		//shouldnt ever happen
+//		shouldnt ever happen
 		return new StraightLine();
 	}
 

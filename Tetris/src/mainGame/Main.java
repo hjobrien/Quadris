@@ -10,7 +10,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import tetrominoes.Tile;
@@ -92,7 +91,7 @@ public class Main extends Application{
 			@Override
 			public void handle(long time){
 				long now = System.currentTimeMillis();
-				if(now-pastTime >= 1000){
+				if(now-pastTime >= 500){
 					if (engine.getBoard().isFull()){
 						timer.stop();
 					}
@@ -159,43 +158,20 @@ public class Main extends Application{
 					Rectangle r = new Rectangle();
 					r.setHeight(29);
 					r.setWidth(29);
-//					r.setFill(getNextColor());
 					r.setFill(current.getColor());
 					grid.add(r, j,i);
 				} else {
 					Rectangle r = new Rectangle();
 					r.setHeight(29);
 					r.setWidth(29);
-//					r.setFill(getNextColor());
-					r.setFill(current.getColor());
+					r.setFill(Color.WHITE);
 					grid.add(r, j, i);
 				}
+
 			}
 		}
 		
 	}
 
-	private Paint getNextColor() {
-		colorIndex++;
-
-		colorIndex %= 6;
-		switch (colorIndex){
-		case 0:
-			return Color.RED;
-		case 1:
-			return Color.BLUE;
-		case 2: 
-			return Color.GREEN;
-		case 3:
-			return Color.ORANGE;
-		case 4:
-			return Color.YELLOW;
-		case 5:
-			return Color.PURPLE;
-		default: 
-			return Color.BLACK;
-		}
-
-	}
 
 }

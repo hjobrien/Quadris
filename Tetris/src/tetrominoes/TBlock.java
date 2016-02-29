@@ -14,7 +14,7 @@ public class TBlock extends Block {
 	};
 	
 	
-	private static Color color = Color.LIGHTBLUE;
+	private static Color color = Color.AQUAMARINE;
 
 
 	public TBlock() {

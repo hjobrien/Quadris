@@ -46,6 +46,7 @@ public class Board {
 	public void update(int i, int j, Tile t){
 		this.boardState.get(i).get(j).setActive(t.isActive());
 		this.boardState.get(i).get(j).setFilled(t.isFilled());
+		this.boardState.get(i).get(j).setColor(t.getColor());
 	}
 	
 	public Tile tileAt(int i, int j){
