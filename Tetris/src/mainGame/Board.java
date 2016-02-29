@@ -9,6 +9,8 @@ public class Board {
 	private ArrayList<ArrayList<Tile>> boardState;
 	private Block fallingBlock;
 	public boolean blockAdded = false;
+	
+	//would indicate the game is over
 	boolean full = false;
 	
 	//for debugging
@@ -135,6 +137,8 @@ public class Board {
 		}
 	}	
 	
+	
+	//if full, the game is over
 	public boolean isFull(){
 		return this.full;
 	}
@@ -164,11 +168,11 @@ public class Board {
 	 * if it can't, nothing will happen because that means blocks are in the way.
 	 * if it can, it will resize to a square, then perform the translation, then tell 
 	 * the board it's new shape
-	 * 
-	 * *******also causes an error and i dont know why
 	 */
 	
 	private void tryToRotate(String string) {
+		
+		//boardState is mirroring block and i don't know why
 		ArrayList<ArrayList<Tile>> block = getBoardState();
 		ArrayList<Integer> columnsErased = new ArrayList<Integer>();
 		ArrayList<Integer> rowsErased = new ArrayList<Integer>();
