@@ -16,10 +16,6 @@ public class Board {
 	//for debugging
 	private boolean debug = true;
 	
-	public ArrayList<ArrayList<Tile>> getBoardState(){
-		return this.boardState;
-	}
-	
 	public Board(int height, int width){
 		ArrayList<ArrayList<Tile>> tempBoard = new ArrayList<ArrayList<Tile>>();
 		for(int i = 0; i < height; i++){
@@ -56,14 +52,18 @@ public class Board {
 		return this.boardState.get(i).get(j);
 	}
 	
-	public void display(){
-		for (int i = 0; i < this.boardState.size(); i++){
-			for (int j = 0; j < this.boardState.get(i).size(); j++){
-				System.out.print(this.boardState.get(i).get(j).isFilled());
-			}
-			System.out.println();
-		}
+	public ArrayList<ArrayList<Tile>> getBoardState(){
+		return this.boardState;
 	}
+	
+//	public void display(){
+//		for (int i = 0; i < this.boardState.size(); i++){
+//			for (int j = 0; j < this.boardState.get(i).size(); j++){
+//				System.out.print(this.boardState.get(i).get(j).isFilled());
+//			}
+//			System.out.println();
+//		}
+//	}
 	
 	public Block getFallingBlock(){
 		return fallingBlock;
@@ -82,7 +82,7 @@ public class Board {
 			}
 		}
 		
-		//checks if the block has traversed the whole screen
+		//checks if the block is at the bottom of the screen
 		int lastIndex = boardState.size() - 1;
 		for (int i = 0; i < boardState.get(lastIndex).size(); i++){
 			if (tileAt(lastIndex, i).isActive()){
@@ -135,8 +135,7 @@ public class Board {
 				t.setActive(false);
 			}
 		}
-	}	
-	
+	}
 	
 	//if full, the game is over
 	public boolean isFull(){
