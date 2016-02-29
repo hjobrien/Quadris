@@ -52,8 +52,6 @@ public class Engine {
 	private Block generateRandomBlock() {
 		Random r = new Random();
 		int i = r.nextInt(7);
-		//testing
-		i = 6;
 		switch (i){
 		case 0:
 			return new LeftL();
