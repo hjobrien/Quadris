@@ -2,7 +2,7 @@ package tetrominoes;
 
 import java.util.ArrayList;
 
-public class T extends Block {
+public class TBlock extends Block {
 	
 	public static final boolean[][] SHAPE = new boolean[][]{
 		{false, false, 	false,	false},
@@ -11,7 +11,7 @@ public class T extends Block {
 		{false,	false,	false,	false}
 	};
 
-	public T() {
+	public TBlock() {
 		super(getTShape());
 		if (super.debug){
 			System.out.println("made T");
