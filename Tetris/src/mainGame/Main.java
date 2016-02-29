@@ -29,9 +29,6 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
-
-	private int colorIndex = 0;
-
 	
 
 	public static void main(String[] args) {	
