@@ -3,7 +3,10 @@ package mainGame;
 import engine.Engine;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -29,7 +32,8 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
-	
+	private	int score = 0;
+
 
 	public static void main(String[] args) {	
 		launch(args);
@@ -48,6 +52,11 @@ public class Main extends Application{
 		for(int i = 0; i < 3; i++){
 			mainGame.getRowConstraints().add(new RowConstraints(150));
 		}
+		Label scoreText = new Label("\t\tScore: " + score);
+		StringProperty valueProperty = new SimpleStringProperty();
+		valueProperty.setValue("0");
+		scoreText.textProperty().bind(valueProperty);
+		mainGame.add(scoreText, 1,3);
 		
 //		mainGame.setGridLinesVisible(true);
 		
@@ -55,7 +64,7 @@ public class Main extends Application{
 		
 		GridPane grid = new GridPane();
 		mainGame.add(grid, 0, 0,1,4);
-		//we havent been using this at all
+		//we haven't been using this at all
 		//but might want to for styling?
 //		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
 //		GraphicsContext g = canvas.getGraphicsContext2D();
@@ -99,8 +108,11 @@ public class Main extends Application{
 			
 			@Override
 			public void handle(long time){
+
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 500){
+					score++;
+					valueProperty.set("\t\tScore: " + score);
 					if (engine.getBoard().isFull()){
 						timer.stop();
 					}
@@ -116,30 +128,7 @@ public class Main extends Application{
 		stage.show();
 
 	}
-	
-	//obsolete but we might want to update it if it's useful
-//	private void run(GridPane grid){
-//		timer = new AnimationTimer(){
-//			private long pastTime;
-//			@Override
-//			public void start(){
-//				pastTime = System.currentTimeMillis();
-//				super.start();
-//			}
-//			
-//			@Override
-//			public void handle(long time){
-//				long now = System.currentTimeMillis();
-//				if(now-pastTime >= 1000){
-//					draw(engine.getBoardState(), grid);
-//					if(debug){
-//						System.out.println("updated " + (time%1e9));
-//					}
-//				}
-//				pastTime = now;
-//			}
-//		};
-//	}	
+		
 
 	private void configureGrid(GridPane grid) {
 		for (int i = 0; i < BOARD_WIDTH; i++){

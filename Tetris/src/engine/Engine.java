@@ -25,7 +25,7 @@ public class Engine {
 	//do collision detection here I think
 	//when I tried to debug this, it was never reached by the program
 	public void update() {
-		if(!isPaused){
+		if(!isPaused){ //little hacky, could be improved
 			if (board.getFallingBlock().isFalling()){
 				
 				if (board.checkBlockSpace()){
