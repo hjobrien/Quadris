@@ -2,12 +2,14 @@ package mainGame;
 
 import java.util.ArrayList;
 
+import javafx.scene.layout.GridPane;
 import tetrominoes.Block;
 import tetrominoes.Tile;
 
 public class Board {
 	private ArrayList<ArrayList<Tile>> boardState;
 	private Block fallingBlock;
+	private GridPane grid;
 	public boolean blockAdded = false;
 	
 	//would indicate the game is over
@@ -16,7 +18,7 @@ public class Board {
 	//for debugging
 	private boolean debug = true;
 	
-	public Board(int height, int width){
+	public Board(int height, int width, GridPane grid){
 		ArrayList<ArrayList<Tile>> tempBoard = new ArrayList<ArrayList<Tile>>();
 		for(int i = 0; i < height; i++){
 			ArrayList<Tile> temp = new ArrayList<Tile>();
@@ -26,6 +28,7 @@ public class Board {
 			tempBoard.add(temp);
 		}
 		this.boardState = tempBoard;
+		this.grid = grid;
 	}
 	
 	
@@ -296,6 +299,26 @@ public class Board {
 					update(i, j - 1, currentTile);
 					update(i, j, new Tile(false, false));
 				}
+			}
+		}
+	}
+	
+	public void clearBoard(){
+		for(ArrayList<Tile> row : boardState){
+			for(Tile t: row){
+				t = new Tile(false, false);
+			}
+		}
+	}
+	
+	public GridPane getGrid(){
+		return grid;
+	}
+	
+	public void freeze(){
+		for(ArrayList<Tile> row: boardState){
+			for(Tile t : row){
+				t.setActive(false); 
 			}
 		}
 	}

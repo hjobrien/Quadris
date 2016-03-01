@@ -12,10 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import tetrominoes.Tile;
 
 public class Main extends Application{
 	
@@ -44,25 +41,32 @@ public class Main extends Application{
 		
 		//if we only make 1 board and it's in engine, we can always just receive the boardState 
 		//from engine when we need it and we wont have to be translating boardStates
-		this.engine = new Engine(new Board(BOARD_HEIGHT, BOARD_WIDTH));
+		GridPane grid = new GridPane();
+		GridPane nextBlock = new GridPane();
+		this.engine = new Engine(new Board(BOARD_HEIGHT, BOARD_WIDTH, grid), new Board(4,4,nextBlock));
 		GridPane mainGame = new GridPane();
 		mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
+		mainGame.getColumnConstraints().add(new ColumnConstraints(20));
 		mainGame.getColumnConstraints().add(new ColumnConstraints(150));
 		
 		for(int i = 0; i < 3; i++){
 			mainGame.getRowConstraints().add(new RowConstraints(150));
 		}
-		Label scoreText = new Label("\t\tScore: " + score);
+		Label scoreText = new Label("Score: " + score);
 		StringProperty valueProperty = new SimpleStringProperty();
 		valueProperty.setValue("0");
 		scoreText.textProperty().bind(valueProperty);
-		mainGame.add(scoreText, 1,3);
+		mainGame.add(scoreText, 2,3);
 		
 //		mainGame.setGridLinesVisible(true);
-		
-		
-		
-		GridPane grid = new GridPane();
+		for (int i = 0; i < 4; i++){
+			nextBlock.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / BOARD_WIDTH));
+		}
+		for (int i = 0; i < 4; i ++){
+			nextBlock.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / BOARD_HEIGHT));
+		}
+		nextBlock.setGridLinesVisible(true);
+		mainGame.add(nextBlock, 2,0);
 		mainGame.add(grid, 0, 0,1,4);
 		//we haven't been using this at all
 		//but might want to for styling?
@@ -75,9 +79,7 @@ public class Main extends Application{
 		
 		configureGrid(grid);
 		
-		if(debug){
-			indicateFilled(grid);
-		}
+		engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
 		
 		engine.addBlock();
 		
@@ -112,12 +114,12 @@ public class Main extends Application{
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 500){
 					score++;
-					valueProperty.set("\t\tScore: " + score);
+					valueProperty.set("\tScore: " + score);
 					if (engine.getBoard().isFull()){
 						timer.stop();
 					}
 					engine.update();
-					indicateFilled(grid);
+					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
 					pastTime = now;
 				}
 			}
@@ -145,31 +147,7 @@ public class Main extends Application{
 		}
 	}
 	
-	private void indicateFilled(GridPane grid){
-		
-		//just for debugging now, although a similar system could be used to display the actual blocks
-		for (int i = 0; i < BOARD_HEIGHT; i++){
-			for (int j = 0; j < BOARD_WIDTH; j++){
-				
-				Tile current = engine.getBoardState().get(i).get(j);
-				if (current.isFilled()){
-					Rectangle r = new Rectangle();
-					r.setHeight(29);
-					r.setWidth(29);
-					r.setFill(current.getColor());
-					grid.add(r, j,i);
-				} else {
-					Rectangle r = new Rectangle();
-					r.setHeight(29);
-					r.setWidth(29);
-					r.setFill(Color.WHITE);
-					grid.add(r, j, i);
-				}
-
-			}
-		}
-		
-	}
+	
 
 
 }
