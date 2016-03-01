@@ -3,7 +3,6 @@ package engine;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javafx.animation.AnimationTimer;
 import mainGame.Board;
 import tetrominoes.Block;
 import tetrominoes.LeftL;
@@ -17,6 +16,7 @@ import tetrominoes.Tile;
 
 public class Engine {
 	private Board board;
+	private boolean isPaused = false;
 
 	public Engine(Board board){
 		this.board = board;
@@ -25,13 +25,15 @@ public class Engine {
 	//do collision detection here I think
 	//when I tried to debug this, it was never reached by the program
 	public void update() {
-		if (board.getFallingBlock().isFalling()){
-			
-			if (board.checkBlockSpace()){
-				board.blockDown();
-			} else {
-				board.setNotFalling();
-				addBlock();
+		if(!isPaused){
+			if (board.getFallingBlock().isFalling()){
+				
+				if (board.checkBlockSpace()){
+					board.blockDown();
+				} else {
+					board.setNotFalling();
+					addBlock();
+				}
 			}
 		}
 		//TODO
@@ -75,6 +77,11 @@ public class Engine {
 
 	public Board getBoard(){
 		return this.board;
+	}
+
+	public void togglePause() {
+		isPaused = !isPaused;
+		
 	}
 
 }

@@ -29,9 +29,6 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
-
-	private int colorIndex = 0;
-
 	
 
 	public static void main(String[] args) {	
@@ -44,15 +41,26 @@ public class Main extends Application{
 		//if we only make 1 board and it's in engine, we can always just receive the boardState 
 		//from engine when we need it and we wont have to be translating boardStates
 		this.engine = new Engine(new Board(BOARD_HEIGHT, BOARD_WIDTH));
+		GridPane mainGame = new GridPane();
+		mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
+		mainGame.getColumnConstraints().add(new ColumnConstraints(150));
+		
+		for(int i = 0; i < 3; i++){
+			mainGame.getRowConstraints().add(new RowConstraints(150));
+		}
+		
+//		mainGame.setGridLinesVisible(true);
+		
+		
 		
 		GridPane grid = new GridPane();
-		
+		mainGame.add(grid, 0, 0,1,4);
 		//we havent been using this at all
 		//but might want to for styling?
 //		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
 //		GraphicsContext g = canvas.getGraphicsContext2D();
 		
-		Scene boardScene = new Scene(grid, SCREEN_WIDTH, SCREEN_HEIGHT);
+		Scene boardScene = new Scene(mainGame, SCREEN_WIDTH+150, SCREEN_HEIGHT);
 		
 		stage.setScene(boardScene);
 		
@@ -67,9 +75,10 @@ public class Main extends Application{
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
-			} 
-			//TODO
-			else if (e.getCode() == KeyCode.RIGHT){
+			}
+			else if(e.getCode() == KeyCode.P){
+				engine.togglePause();
+			} else if (e.getCode() == KeyCode.RIGHT){
 				engine.getBoard().pressed("right");
 			} else if (e.getCode() == KeyCode.LEFT){
 				engine.getBoard().pressed("left");
