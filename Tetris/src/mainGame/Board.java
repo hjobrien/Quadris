@@ -203,8 +203,8 @@ public class Board {
 			if (columnCleared){
 				for (int i = 0; i < block.size(); i++){
 					block.get(i).remove(column);
-					columnsErased.add(column);
 				}
+				columnsErased.add(column);
 			}
 		}
 		
@@ -247,7 +247,22 @@ public class Board {
 	
 	private Block makeBlockSquare(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
 			ArrayList<Integer> columnsErased) {
-		// TODO Auto-generated method stub
+		while (block.get(0).size() < block.size()){
+			if (!columnsErased.contains(boardState.get(0).size())){
+				boolean noBlockOnRight = true;
+				int columnHeight = 0;
+				while (noBlockOnRight && columnHeight < block.size()){
+					if (boardState.get(rightSide(columnsErased)).get(blockRow(rowsErased, columnHeight)).isFilled){
+						noBlockOnRight = false;
+					}
+					columnHeight++;
+				}
+				if (noBlockOnRight){
+					
+				}
+				
+			}
+		}
 		return new Block(new ArrayList<ArrayList<Tile>>());
 	}
 
