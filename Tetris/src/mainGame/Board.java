@@ -208,34 +208,18 @@ public class Board {
 			if (columnCleared){
 				for (int i = 0; i < block.size(); i++){
 					block.get(i).remove(column);
-					columnsErased.add(column);
 				}
+				columnsErased.add(column);
 			}
 		}
 		
-		if (debug){
-			for (int i = 0; i < block.size(); i++){
-				for (int j = 0; j < block.get(i).size(); j++){
-					System.out.print(block.get(i).get(j).isFilled());
-				}
-				System.out.println();
-			}
-			System.out.println();
-		}
-		
-		Block b = null;
-		if (block.size() == block.get(0).size()){
-			if (string.equals("right")){
-				b = rotRight(new Block(block));
-			} else if (string.equals("left")){
-				b = rotLeft(new Block(block));
-			}
-		}
-		
-		else {
+		//returns blockSquare or empty double arrayList if it can't make a square
+		Block b = new Block(block);
+		if (block.size() != block.get(0).size()){
 			b = makeBlockSquare(block, rowsErased, columnsErased);
 		}
 		
+		//prints old and new shape or that it can't rotate
 		if (!b.getShape().isEmpty()){
 			if (debug){
 				for (int i = 0; i < b.getShape().size(); i++){
@@ -245,6 +229,23 @@ public class Board {
 					System.out.println();
 				}
 			}
+			
+			if (string.equals("right")){
+				b = rotRight(b);
+			} else if (string.equals("left")){
+				b = rotLeft(b);
+			}
+			
+			if (debug){
+				System.out.println();
+				for (int i = 0; i < b.getShape().size(); i++){
+					for (int j = 0; j < b.getShape().get(i).size(); j++){
+						System.out.print(b.getShape().get(i).get(j).isFilled());
+					}
+					System.out.println();
+				}
+			}
+			
 		} else {
 			System.out.println("Can't rotate");
 		}
@@ -252,8 +253,183 @@ public class Board {
 	
 	private Block makeBlockSquare(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
 			ArrayList<Integer> columnsErased) {
-		// TODO Auto-generated method stub
-		return new Block(new ArrayList<ArrayList<Tile>>());
+		while (block.get(0).size() < block.size()){
+			if (checkSpaceOnRight(block, rowsErased, columnsErased)){
+				for (int i = 0; i < block.size(); i++){
+					block.get(i).add(new Tile(false, false));
+				}
+			} else {
+				if (checkSpaceOnLeft(block, rowsErased, columnsErased)){
+					for (int i = 0; i < block.size(); i++){
+						block.get(i).add(0, new Tile(false, false));
+					}
+				} else {
+					return new Block(new ArrayList<ArrayList<Tile>>());
+				}
+			}
+		}
+		while (block.get(0).size() > block.size()){
+			if (checkSpaceUnder(block, rowsErased, columnsErased)){
+				ArrayList<Tile> row = new ArrayList<Tile>();
+				for (int i = 0; i < block.get(0).size(); i++){
+					row.add(new Tile(false, false));
+				}
+				block.add(row);
+			} else {
+				if (checkSpaceAbove(block, rowsErased, columnsErased)){
+					ArrayList<Tile> row = new ArrayList<Tile>();
+					for (int i = 0; i < block.get(0).size(); i++){
+						row.add(new Tile(false, false));
+					}
+					block.add(0, row);
+				} else {
+					return new Block(new ArrayList<ArrayList<Tile>>());
+				}
+			}
+		}
+		return new Block(block);
+	}
+	
+	private boolean checkSpaceAbove(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
+			ArrayList<Integer> columnsErased) {
+		if (!rowsErased.contains(0)){
+			return false;
+		}
+		boolean spaceAbove = true;
+		int rowLength = 0;
+		while (spaceAbove && rowLength < block.get(0).size()){
+			int column = blockColumn(columnsErased, rowLength);
+			int row = aboveRow(rowsErased);
+			if (column == -1 || row == -1 || boardState.get(row).get(column).isFilled()){
+				return false;
+			}
+		}
+		return spaceAbove;
+	}
+
+	private boolean checkSpaceUnder(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
+			ArrayList<Integer> columnsErased) {
+		if (!rowsErased.contains(boardState.size() - 1)){
+			return false;
+		}
+		boolean spaceUnder = true;
+		int rowLength = 0;
+		while (spaceUnder && rowLength < block.get(0).size()){
+			int column = blockColumn(columnsErased, rowLength);
+			int row = underRow(rowsErased);
+			if (column == -1 || row == -1 || boardState.get(row).get(column).isFilled()){
+				return false;
+			}
+			rowLength++;
+		}
+		return spaceUnder;
+	}
+
+	private boolean checkSpaceOnRight(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
+			ArrayList<Integer> columnsErased){
+		if (!columnsErased.contains(boardState.get(0).size() - 1)){
+			return false;
+		}
+		boolean spaceOnRight = true;
+		int columnHeight = 0;
+		while (spaceOnRight && columnHeight < block.size()){
+			int row = blockRow(rowsErased, columnHeight);
+			int column = rightColumn(columnsErased);
+			if (column == -1 || row == -1 || boardState.get(row).get(column).isFilled()){
+				return false;
+			}
+			columnHeight++;
+		}
+		return spaceOnRight;
+	}
+	
+	private boolean checkSpaceOnLeft(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
+			ArrayList<Integer> columnsErased){
+		if (!columnsErased.contains(0)){
+			return false;
+		}
+		boolean spaceOnLeft = true;
+		int columnHeight = 0;
+		while (spaceOnLeft && columnHeight < block.size()){
+			int row = blockRow(rowsErased, columnHeight);
+			int column = leftColumn(columnsErased);
+			if (column == -1 || row == -1 || boardState.get(row).get(column).isFilled()){
+				return false;
+			}
+			columnHeight++;
+		}
+		return spaceOnLeft;
+	}
+
+	private int blockColumn(ArrayList<Integer> columnsErased, int rowLength) {
+		int index = 0;
+		for (int i = boardState.get(0).size() - 1; i >= 0; i--){
+			if (index > columnsErased.size() - 1|| columnsErased.get(index) != i){
+				return i - rowLength;
+			}
+			index++;
+		}
+		return -1;
+	}
+
+	private int blockRow(ArrayList<Integer> rowsErased, int columnHeight) {
+		int index = 0;
+		for (int i = boardState.size() - 1; i >= 0; i--){
+			if (rowsErased.get(index) != i){
+				return i - columnHeight;
+			}
+			index++;
+		}
+		return -1;
+	}
+	
+	private int aboveRow(ArrayList<Integer> rowsErased) {
+		int index = rowsErased.size() - 1;
+		for (int i = 0; i < boardState.size(); i++){
+			if (index < 0){
+				index = 0;
+			}
+			if (rowsErased.get(index) != i){
+				return i - 1;
+			}
+			index--;
+		}
+		return -1;
+	}
+	
+	private int underRow(ArrayList<Integer> rowsErased) {
+		int index = 0;
+		for (int i = boardState.size() - 1; i >= 0; i--){
+			if (index > rowsErased.size() - 1 || rowsErased.get(index) != i){
+				return i + 1;
+			}
+		}
+		return -1;
+	}
+
+	private int rightColumn(ArrayList<Integer> columnsErased) {
+		int index = 0;
+		for (int i = boardState.get(0).size() - 1; i >= 0; i--){
+			if (index > columnsErased.size() - 1 || columnsErased.get(index) != i){
+				return i + 1;
+			}
+			index++;
+		}
+		return -1;
+	}
+	
+	private int leftColumn(ArrayList<Integer> columnsErased){
+		int index = columnsErased.size() - 1;
+		for (int i = 0; i < boardState.size(); i++){
+			if (index < 0){
+				index = 0;
+			}
+			if (columnsErased.get(index) != i){
+				return i - 1;
+			}
+			index--;
+		}
+		return -1;
 	}
 
 
