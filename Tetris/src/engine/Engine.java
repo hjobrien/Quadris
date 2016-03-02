@@ -54,7 +54,7 @@ public class Engine {
 		int i = r.nextInt(7);
 
 		//testing
-		i = 0;
+		i = 5;
 		switch (i){
 		case 0:
 			return new LeftL();
