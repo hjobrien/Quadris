@@ -26,16 +26,16 @@ public class StraightLine extends Block {
 	public static ArrayList<ArrayList<Tile>> getStraightLineShape(){
 		ArrayList<ArrayList<Tile>> shape = new ArrayList<ArrayList<Tile>>();
 		ArrayList<Tile> firstLine = new ArrayList<Tile>();
-		firstLine.add(new Tile(true, true, color));
-		firstLine.add(new Tile(true, true, color));
-		firstLine.add(new Tile(true, true, color));
-		firstLine.add(new Tile(true, true, color));
+		firstLine.add(new Tile(false, false));
+		firstLine.add(new Tile(false, false));
+		firstLine.add(new Tile(false, false));
+		firstLine.add(new Tile(false, false));
 		
 		ArrayList<Tile> secondLine = new ArrayList<Tile>();
-		secondLine.add(new Tile(false, false));
-		secondLine.add(new Tile(false, false));
-		secondLine.add(new Tile(false, false));
-		secondLine.add(new Tile(false, false));
+		secondLine.add(new Tile(true, true, color));
+		secondLine.add(new Tile(true, true, color));
+		secondLine.add(new Tile(true, true, color));
+		secondLine.add(new Tile(true, true, color));
 
 		ArrayList<Tile> thirdLine = new ArrayList<Tile>();
 		thirdLine.add(new Tile(false, false));
@@ -49,8 +49,8 @@ public class StraightLine extends Block {
 		fourthLine.add(new Tile(false, false));
 		fourthLine.add(new Tile(false, false));
 
-		shape.add(firstLine);
 		shape.add(secondLine);
+		shape.add(firstLine);
 		shape.add(thirdLine);
 		shape.add(fourthLine);
 
