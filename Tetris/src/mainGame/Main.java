@@ -31,6 +31,8 @@ public class Main extends Application{
 	private AnimationTimer timer;
 	private	int score = 0;
 	
+	boolean paused = false;
+	
 
 
 	public static void main(String[] args) {	
@@ -89,6 +91,7 @@ public class Main extends Application{
 				System.exit(0);
 			}
 			else if(e.getCode() == KeyCode.P){
+				changePause();
 				engine.togglePause();
 			} else if (e.getCode() == KeyCode.RIGHT){
 				engine.getBoard().pressed("right");
@@ -114,7 +117,9 @@ public class Main extends Application{
 
 				long now = System.currentTimeMillis();
 				if(now-pastTime >= 500){
-					score++;
+					if (!paused){
+						score++;
+					}
 					valueProperty.set("\tScore: " + score);
 					if (engine.getBoard().isFull()){
 						timer.stop();
@@ -130,6 +135,14 @@ public class Main extends Application{
 		
 		stage.show();
 
+	}
+	
+	private void changePause(){
+		if (paused){
+			this.paused = false;
+		} else {
+			this.paused = true;
+		}
 	}
 		
 
