@@ -56,9 +56,11 @@ public class Engine {
 		board.updateBoardWithNewBlock(nextBlock);
 		nextBlock = generateRandomBlock();	
 		nextPieceBoard.clearBoard();
+		draw(nextPieceBoard, 4,4);
 		nextPieceBoard.setFallingBlock(nextBlock);
-		nextPieceBoard.freeze();
-		draw(nextPieceBoard, 4, 4);
+		nextPieceBoard.updateBoardWithNewBlock(nextBlock);
+		nextPieceBoard.setNotFalling();
+		draw(nextPieceBoard, 4,4);
 	}
 	
 	private Block generateRandomBlock() {
