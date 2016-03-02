@@ -5,13 +5,6 @@ import java.util.ArrayList;
 import javafx.scene.paint.Color;
 
 public class StraightLine extends Block {
-	
-	public static final boolean[][] SHAPE = new boolean[][]{
-		{true, 	true, 	true,	true},
-		{false,	false,	false,	false},
-		{false,	false,	false,	false},
-		{false,	false,	false,	false}
-	};
 
 	private static Color color = Color.PURPLE;
 

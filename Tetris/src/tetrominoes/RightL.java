@@ -6,15 +6,7 @@ import javafx.scene.paint.Color;
 
 public class RightL extends Block {
 	
-	public static final boolean[][] SHAPE = new boolean[][]{
-		{false, true, 	false,	false},
-		{false,	true,	false,	false},
-		{false,	true,	true,	false},
-		{false,	false,	false,	false}
-	};
-	
 	private static Color color = Color.YELLOW;
-
 
 	public RightL() {
 		super(getRightLShape());

@@ -6,13 +6,6 @@ import javafx.scene.paint.Color;
 
 public class Square extends Block {
 
-	public static final boolean[][] SHAPE = new boolean[][]{
-		{false, false, 	false,	false},
-		{false,	true,	true,	false},
-		{false,	true,	true,	false},
-		{false,	false,	false,	false}
-	};
-	
 	private static Color color = Color.RED;
 
 	
