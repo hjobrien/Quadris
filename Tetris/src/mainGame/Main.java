@@ -71,10 +71,6 @@ public class Main extends Application{
 		nextBlock.setGridLinesVisible(true);
 		mainGame.add(nextBlock, 2,0);
 		mainGame.add(grid, 0, 0,1,4);
-		//we haven't been using this at all
-		//but might want to for styling?
-//		Canvas canvas = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
-//		GraphicsContext g = canvas.getGraphicsContext2D();
 		
 		Scene boardScene = new Scene(mainGame, SCREEN_WIDTH+150, SCREEN_HEIGHT);
 		
@@ -144,7 +140,6 @@ public class Main extends Application{
 			this.paused = true;
 		}
 	}
-		
 
 	private void configureGrid(GridPane grid) {
 		for (int i = 0; i < BOARD_WIDTH; i++){
@@ -160,8 +155,4 @@ public class Main extends Application{
 			grid.setGridLinesVisible(true);
 		}
 	}
-	
-	
-
-
 }
