@@ -47,6 +47,17 @@ public class Board {
 		}
 	}
 	
+	public void updateBoardWithOldBlock(Block b, int row, int column){
+		ArrayList<ArrayList<Tile>> blockShape = b.getShape();
+		for (int i = 0; i < blockShape.size(); i++){
+			for (int j = 0; j < blockShape.get(i).size(); j++){
+				if (!tileAt(i + row, j + column).isFilled()){
+					update(i + row, j + column, blockShape.get(i).get(j));
+				}
+			}
+		}
+	}
+	
 	//changes the fields of the tiles in Board based on the tile passed in
 	public void update(int i, int j, Tile t){
 		this.boardState.get(i).get(j).setActive(t.isActive());
@@ -62,15 +73,6 @@ public class Board {
 		return this.boardState;
 	}
 	
-//	public void display(){
-//		for (int i = 0; i < this.boardState.size(); i++){
-//			for (int j = 0; j < this.boardState.get(i).size(); j++){
-//				System.out.print(this.boardState.get(i).get(j).isFilled());
-//			}
-//			System.out.println();
-//		}
-//	}
-	
 	public Block getFallingBlock(){
 		return fallingBlock;
 	}
@@ -79,7 +81,7 @@ public class Board {
 		this.fallingBlock = fallingBlock;
 	}
 
-	public boolean checkBlockSpace() {
+	public boolean checkDown() {
 		//checks if the board has filled up
 		for (int i = 0; i < boardState.get(0).size(); i++){
 			Tile firstTile = tileAt(0, i);
@@ -174,14 +176,16 @@ public class Board {
 		} else if (string.equals("z")){
 			tryToRotate("left");
  		} else if (string.equals("down")){
- 			blockDown();
+ 			if (checkDown()){
+ 				blockDown();
+ 			}
  		} else if (string.equals("up")){
  			blockUp();
  		}
 		
 	}
 
-	//TODO
+	//TODO rotations
 	/* currently condenses the board to a block
 	 * I would like to have some method that tries to make that block a square
 	 * if it can't, nothing will happen because that means blocks are in the way.
@@ -261,7 +265,8 @@ public class Board {
 				}
 			}
 			removeFallingBlock();
-			updateBoardWithNewBlock(b);
+			//sketchy numbers
+			updateBoardWithOldBlock(b, blockRow(rowsErased, 0) - 1, blockColumn(columnsErased, 0) - 2);
 			
 		} else {
 			System.out.println("Can't rotate");
@@ -278,7 +283,8 @@ public class Board {
 		}
 		
 	}
-
+	
+	//TODO making the block a square
 
 	private Block makeBlockSquare(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
 			ArrayList<Integer> columnsErased) {
@@ -462,6 +468,8 @@ public class Board {
 	} 
 
 
+	//TODO rotations and reflections
+	
 	public Block rotRight(Block b){
 		Block temp = new Block(b);	
 		b = new Block(reflectY(b, temp));
@@ -499,19 +507,7 @@ public class Board {
 		return b;
 	}
 	
-	private ArrayList<ArrayList<Tile>> makeBoard(){
-		ArrayList<ArrayList<Tile>> newBoard = new ArrayList<ArrayList<Tile>>();
-		for (ArrayList<Tile> currentRow : boardState){
-			ArrayList<Tile> newRow = new ArrayList<Tile>();
-			for (Tile t : currentRow){
-				newRow.add(t);
-			}
-			newBoard.add(newRow);
-
-		}
-		return newBoard;
-		
-	}
+	//TODO moving right and left
 
 	private boolean checkRight() {
 		for (ArrayList<Tile> a : boardState){
@@ -579,6 +575,21 @@ public class Board {
 		}
 	}
 	
+	//TODO makes board replica and clears the board
+	
+	private ArrayList<ArrayList<Tile>> makeBoard(){
+		ArrayList<ArrayList<Tile>> newBoard = new ArrayList<ArrayList<Tile>>();
+		for (ArrayList<Tile> currentRow : boardState){
+			ArrayList<Tile> newRow = new ArrayList<Tile>();
+			for (Tile t : currentRow){
+				newRow.add(t);
+			}
+			newBoard.add(newRow);
+		}
+		return newBoard;
+		
+	}
+	
 	public void clearBoard(){
 		for(int i = 0; i < boardState.size(); i++){
 			for(int j = 0; j < boardState.get(i).size(); j++){
@@ -591,6 +602,8 @@ public class Board {
 	public GridPane getGrid(){
 		return grid;
 	}
+	
+	//TODO clearing lines
 	
 	public boolean checkFullRow() {
 		for (ArrayList<Tile> row : boardState){
