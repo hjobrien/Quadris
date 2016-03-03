@@ -576,5 +576,28 @@ public class Board {
 	public GridPane getGrid(){
 		return grid;
 	}
+	
+	public boolean checkFullRow() {
+		for (ArrayList<Tile> row : boardState){
+			boolean full = true;
+			int index = 0;
+			while (full && index < row.size()){
+				if (!row.get(index).isFilled()){
+					full = false;
+				}
+				index++;
+			}
+			if (full){
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	public void clearLine() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -33,12 +33,15 @@ public class Engine {
 	public void update() {
 		if(!isPaused){ //little hacky, could be improved
 			if (board.getFallingBlock().isFalling()){
-				
 				if (board.checkBlockSpace()){
 					board.blockDown();
 				} else {
-					board.setNotFalling();
-					addBlock();
+					if (board.checkFullRow()){
+						board.clearLine();
+					} else {
+						board.setNotFalling();
+						addBlock();
+					}
 				}
 			}
 		}
