@@ -1,0 +1,331 @@
+extra code from when we used ArrayLists
+
+
+
+	//TODO rotations
+	/* currently condenses the board to a block
+	 * I would like to have some method that tries to make that block a square
+	 * if it can't, nothing will happen because that means blocks are in the way.
+	 * if it can, it will resize to a square, then perform the translation, then tell 
+	 * the board it's new shape
+	 */
+	
+//	private void tryToRotate(String string) {
+//		Tile[][] block = makeBoard();
+//		ArrayList<Integer> columnsErased = new ArrayList<Integer>();
+//		ArrayList<Integer> rowsErased = new ArrayList<Integer>();
+//		
+//		//gets rid of any rows that don't have active tiles
+//		for (int row = block.length - 1; row >= 0; row--){
+//			boolean rowCleared = true;
+//			int column = 0;
+//			while (rowCleared && column < block[row].length){
+//				if(block[row][column].isActive()){
+//					rowCleared = false;
+//				}
+//				column++;
+//			}
+//			if (rowCleared){
+//				block.remove(row);
+//				rowsErased.add(row);
+//			}
+//		}
+//		
+//		//gets rid of any columns that don't have active tiles
+//		for (int column = block[0].length - 1; column >= 0; column --){
+//			boolean columnCleared = true;
+//			int row = 0;
+//			while (columnCleared && row < block.length){
+//				if (block[row][column].isActive()){
+//					columnCleared = false;
+//				}
+//				row++;
+//			}
+//			if (columnCleared){
+//				for (int i = 0; i < block.length; i++){
+//					block[i].remove(column);
+//				}
+//				columnsErased.add(column);
+//			}
+//		}
+//		
+//		//returns blockSquare or empty double arrayList if it can't make a square
+//		Block b = new Block(block);
+//		if (block.length != block[0].length){
+//			b = makeBlockSquare(block, rowsErased, columnsErased);
+//		}
+//		
+//		//prints old and new shape or that it can't rotate
+//		if (!b.getShape().equals(new Tile[b.getShape().length][b.getShape()[0].length])){
+//			if (debug){
+//				for (int i = 0; i < b.getShape().length; i++){
+//					for (int j = 0; j < b.getShape()[i].length; j++){
+//						System.out.print(b.getShape()[i][j].isFilled());
+//					}
+//					System.out.println();
+//				}
+//			}
+//			
+//			if (string.equals("right")){
+//				b = rotRight(b);
+//			} else if (string.equals("left")){
+//				b = rotLeft(b);
+//			}
+//			
+//			if (debug){
+//				System.out.println();
+//				for (int i = 0; i < b.getShape().length; i++){
+//					for (int j = 0; j < b.getShape()[i].length; j++){
+//						System.out.print(b.getShape()[i][j].isFilled());
+//					}
+//					System.out.println();
+//				}
+//			}
+//			removeFallingBlock();
+//			//sketchy numbers
+//			updateBoardWithOldBlock(b, blockRow(rowsErased, 0) - 1, blockColumn(columnsErased, 0) - 2);
+//			
+//		} else {
+//			System.out.println("Can't rotate");
+//		}
+//	}
+	
+	//TODO making the block a square
+
+//	private Block makeBlockSquare(Tile[][] block, ArrayList<Integer> rowsErased,
+//			ArrayList<Integer> columnsErased) {
+//		while (block[0].length < block.length){
+//			if (checkSpaceOnRight(block, rowsErased, columnsErased)){
+//				for (int i = 0; i < block.length; i++){
+//					block[i].add(new Tile(false, false));
+//				}
+//			} else {
+//				if (checkSpaceOnLeft(block, rowsErased, columnsErased)){
+//					for (int i = 0; i < block.length; i++){
+//						block[i].add(0, new Tile(false, false));
+//					}
+//				} else {
+//					return new Block(new Tile[][]);
+//				}
+//			}
+//		}
+//		while (block[0].length > block.length){
+//			if (checkSpaceUnder(block, rowsErased, columnsErased)){
+//				Tile[] row = new Tile[];
+//				for (int i = 0; i < block[0].length; i++){
+//					row.add(new Tile(false, false));
+//				}
+//				block.add(row);
+//			} else {
+//				if (checkSpaceAbove(block, rowsErased, columnsErased)){
+//					Tile[] row = new Tile[]();
+//					for (int i = 0; i < block[0].length; i++){
+//						row.add(new Tile(false, false));
+//					}
+//					block.add(0, row);
+//				} else {
+//					return new Block(new Tile[][]);
+//				}
+//			}
+//		}
+//		return new Block(block);
+//	}
+//	
+//	private boolean checkSpaceAbove(Tile[][] block, ArrayList<Integer> rowsErased,
+//			ArrayList<Integer> columnsErased) {
+//		if (!rowsErased.contains(0)){
+//			return false;
+//		}
+//		boolean spaceAbove = true;
+//		int rowLength = 0;
+//		while (spaceAbove && rowLength < block[0].length){
+//			int column = blockColumn(columnsErased, rowLength);
+//			int row = aboveRow(rowsErased);
+//			if (column == -1 || row == -1 || boardState[row][column].isFilled()){
+//				return false;
+//			}
+//		}
+//		return spaceAbove;
+//	}
+//
+//	private boolean checkSpaceUnder(Tile[][] block, ArrayList<Integer> rowsErased,
+//			ArrayList<Integer> columnsErased) {
+//		if (!rowsErased.contains(boardState.length - 1)){
+//			return false;
+//		}
+//		boolean spaceUnder = true;
+//		int rowLength = 0;
+//		while (spaceUnder && rowLength < block[0].length){
+//			int column = blockColumn(columnsErased, rowLength);
+//			int row = underRow(rowsErased);
+//			if (column == -1 || row == -1 || boardState[row][column].isFilled()){
+//				return false;
+//			}
+//			rowLength++;
+//		}
+//		return spaceUnder;
+//	}
+//
+//	private boolean checkSpaceOnRight(Tile[][] block, ArrayList<Integer> rowsErased,
+//			ArrayList<Integer> columnsErased){
+//		if (!columnsErased.contains(boardState[0].length - 1)){
+//			return false;
+//		}
+//		boolean spaceOnRight = true;
+//		int columnHeight = 0;
+//		while (spaceOnRight && columnHeight < block.length){
+//			int row = blockRow(rowsErased, columnHeight);
+//			int column = rightColumn(columnsErased);
+//			if (column == -1 || row == -1 || boardState[row][column].isFilled()){
+//				return false;
+//			}
+//			columnHeight++;
+//		}
+//		return spaceOnRight;
+//	}
+//	
+//	private boolean checkSpaceOnLeft(Tile[][] block, ArrayList<Integer> rowsErased,
+//			ArrayList<Integer> columnsErased){
+//		if (!columnsErased.contains(0)){
+//			return false;
+//		}
+//		boolean spaceOnLeft = true;
+//		int columnHeight = 0;
+//		while (spaceOnLeft && columnHeight < block.length){
+//			int row = blockRow(rowsErased, columnHeight);
+//			int column = leftColumn(columnsErased);
+//			if (column == -1 || row == -1 || boardState[row][column].isFilled()){
+//				return false;
+//			}
+//			columnHeight++;
+//		}
+//		return spaceOnLeft;
+//	}
+//
+//	private int blockColumn(ArrayList<Integer> columnsErased, int rowLength) {
+//		int index = 0;
+//		for (int i = boardState[0].length - 1; i >= 0; i--){
+//			if (index > columnsErased.size() - 1|| columnsErased[index] != i){
+//				return i - rowLength;
+//			}
+//			index++;
+//		}
+//		return -1;
+//	}
+//
+//	private int blockRow(ArrayList<Integer> rowsErased, int columnHeight) {
+//		int index = 0;
+//		for (int i = boardState.length - 1; i >= 0; i--){
+//			if (rowsErased[index] != i){
+//				return i - columnHeight;
+//			}
+//			index++;
+//		}
+//		return -1;
+//	}
+//	
+//	private int aboveRow(ArrayList<Integer> rowsErased) {
+//		int index = rowsErased.size() - 1;
+//		for (int i = 0; i < boardState.length; i++){
+//			if (index < 0){
+//				index = 0;
+//			}
+//			if (rowsErased[index] != i){
+//				return i - 1;
+//			}
+//			index--;
+//		}
+//		return -1;
+//	}
+//	
+//	private int underRow(ArrayList<Integer> rowsErased) {
+//		int index = 0;
+//		for (int i = boardState.length - 1; i >= 0; i--){
+//			if (index > rowsErased.size() - 1 || rowsErased[index] != i){
+//				return i + 1;
+//			}
+//		}
+//		return -1;
+//	}
+//
+//	private int rightColumn(ArrayList<Integer> columnsErased) {
+//		int index = 0;
+//		for (int i = boardState[0].length - 1; i >= 0; i--){
+//			if (index > columnsErased.size() - 1 || columnsErased[index] != i){
+//				return i + 1;
+//			}
+//			index++;
+//		}
+//		return -1;
+//	}
+//	
+//	private int leftColumn(ArrayList<Integer> columnsErased){
+//		int index = columnsErased.size() - 1;
+//		for (int i = 0; i < boardState.length; i++){
+//			if (index < 0){
+//				index = 0;
+//			}
+//			if (columnsErased[index] != i){
+//				return i - 1;
+//			}
+//			index--;
+//		}
+//		return -1;
+//	} 
+//
+
+	//TODO rotations and reflections
+	
+//	public Block rotRight(Block b){
+//		Block temp = new Block(b);	
+//		b = new Block(reflectY(b, temp));
+//		b = new Block(reflectXY(b, temp));
+//		return b;
+//	}
+//	
+//	public Block rotLeft(Block b){
+//		Block temp = new Block(b);
+//		b = new Block(reflectXY(b, temp));
+//		b = new Block(reflectY(b, temp));
+//		return b;
+//	}
+//
+//	private Block reflectXY(Block b, Block temp) {
+//		Tile[][] tempMap = temp.getShape();
+//		Tile[][] emptyShape = new Tile[][]{};
+//
+//		for(int i = 0; i < tempMap.length; i++){
+//			Tile[] e = new Tile[]();
+//			for(int j = 0; j < tempMap[0].length; j++){
+//				e.add(tempMap[j][i]);
+//			}
+//			emptyShape.add(e);
+//		}
+//		b.setShape(emptyShape);
+//		return b;
+//	}
+//
+//	private Block reflectY(Block b, Block temp) {
+//		Tile[][] tempMap = temp.getShape();
+//		for(int i = 0; i < tempMap.length; i++){
+//			Collections.reverse(b.getShape()[i]);
+//		}
+//		return b;
+//	}
+
+
+//	//TODO makes board replica and clears the board
+//	
+//	private Tile[][] makeBoard(){
+//		Tile[][] newBoard = new Tile[][]{};
+//		for (Tile[] currentRow : boardState){
+//			Tile[] newRow = new Tile[]();
+//			for (Tile t : currentRow){
+//				newRow.add(t);
+//			}
+//			newBoard.add(newRow);
+//		}
+//		return newBoard;
+//		
+//	}
+//	
