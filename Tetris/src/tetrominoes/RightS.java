@@ -29,7 +29,6 @@ public class RightS extends Block {
 		ArrayList<Tile> thirdLine = new ArrayList<Tile>();
 		thirdLine.add(new Tile(false, false));
 		thirdLine.add(new Tile(true, true, color));
-		thirdLine.add(new Tile(true, true));
 
 		shape.add(firstLine);
 		shape.add(secondLine);

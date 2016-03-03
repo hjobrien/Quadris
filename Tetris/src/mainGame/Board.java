@@ -1,6 +1,7 @@
 package mainGame;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javafx.scene.layout.GridPane;
 import tetrominoes.Block;
@@ -430,37 +431,48 @@ public class Board {
 			index--;
 		}
 		return -1;
-	}
+	} 
 
 
 	public Block rotRight(Block b){
-		ArrayList<ArrayList<Tile>> tempMap = b.getShape();
-		b = reflectY(b, tempMap);
-		b = reflectXY(b, tempMap);
+		Block temp = new Block(b);
+		System.out.println(b.toString());
+		
+		
+		b = new Block(reflectY(b, temp));
+		System.out.println(b.toString());
+		
+		b = new Block(reflectXY(b, temp));
+		System.out.println(b.toString());
 		return b;
 	}
 	
 	public Block rotLeft(Block b){
-		ArrayList<ArrayList<Tile>> tempMap = b.getShape();
-		b = reflectXY(b, tempMap);
-		b = reflectY(b, tempMap);
+		Block temp = new Block(b);
+		b = new Block(reflectXY(b, temp));
+		b = new Block(reflectY(b, temp));
 		return b;
 	}
 
-	private Block reflectXY(Block b, ArrayList<ArrayList<Tile>> tempMap) {
+	private Block reflectXY(Block b, Block temp) {
+		ArrayList<ArrayList<Tile>> tempMap = new ArrayList<ArrayList<Tile>>(temp.getShape());
+		ArrayList<ArrayList<Tile>> emptyShape = new ArrayList<ArrayList<Tile>>();
+
 		for(int i = 0; i < tempMap.size(); i++){
-			for(int j = 0; j < tempMap.get(i).size(); j++){
-				b.getShape().get(i).set(j, tempMap.get(j).get(i));
+			ArrayList<Tile> e = new ArrayList<Tile>();
+			for(int j = 0; j < tempMap.get(0).size(); j++){
+				e.add(tempMap.get(j).get(i));
 			}
+			emptyShape.add(e);
 		}
+		b.setShape(emptyShape);
 		return b;
 	}
 
-	private Block reflectY(Block b, ArrayList<ArrayList<Tile>> tempMap) {
+	private Block reflectY(Block b, Block temp) {
+		ArrayList<ArrayList<Tile>> tempMap = temp.getShape();
 		for(int i = 0; i < tempMap.size(); i++){
-			for(int j = 0; j < tempMap.get(i).size(); j++){
-				b.getShape().get(i).set(tempMap.get(i).size() - 1 - j, tempMap.get(i).get(j));
-			}
+			Collections.reverse(b.getShape().get(i));
 		}
 		return b;
 	}
