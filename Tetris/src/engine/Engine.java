@@ -36,8 +36,9 @@ public class Engine {
 				if (board.checkDown()){
 					board.blockDown();
 				} else {
-					if (board.checkFullRow()){
-						board.clearLine();
+					ArrayList<Integer> linesToClear = board.getFullRows();
+					if (!linesToClear.isEmpty()){
+						board.clearLines(linesToClear);
 					} else {
 						board.setNotFalling();
 						addBlock();

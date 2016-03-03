@@ -59,6 +59,10 @@ public class Block {
 		return falling;
 	}
 	
+	public void setFalling(){
+		falling = true;
+	}
+	
 	public void stoppedFalling(){
 		falling = false;
 	}

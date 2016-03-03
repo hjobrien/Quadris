@@ -69,6 +69,17 @@ public class Board {
 		return this.boardState.get(i).get(j);
 	}
 	
+	public boolean isEmpty(){
+		for (ArrayList<Tile> row : boardState){
+			for (Tile t : row){
+				if (t.isFilled()){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public ArrayList<ArrayList<Tile>> getBoardState(){
 		return this.boardState;
 	}
@@ -605,7 +616,8 @@ public class Board {
 	
 	//TODO clearing lines
 	
-	public boolean checkFullRow() {
+	public ArrayList<Integer> getFullRows() {
+		ArrayList<Integer> fullRows = new ArrayList<Integer>();
 		for (ArrayList<Tile> row : boardState){
 			boolean full = true;
 			int index = 0;
@@ -616,16 +628,31 @@ public class Board {
 				index++;
 			}
 			if (full){
-				return true;
+				fullRows.add(boardState.indexOf(row));
 			}
 		}
-		return false;
+		return fullRows;
 	}
 
 
-	public void clearLine() {
-		// TODO Auto-generated method stub
-		
+	public void clearLines(ArrayList<Integer> linesToClear) {
+		setNotFalling();
+		linesToClear.sort(null);
+		for (int i = 0; i < linesToClear.get(0); i++){
+			for (Tile t : boardState.get(i)){
+				if (t.isFilled()){
+					t.setActive(true);
+				}
+			}
+		}
+		for (int i = 0; i < linesToClear.size(); i++){
+			for (int j = 0; j < boardState.get(i).size(); j++){
+				update(linesToClear.get(i), j, new Tile(false, false));
+			}
+		}
+		if (isEmpty()){
+			fallingBlock.stoppedFalling();
+		}
 	}
 
 }
