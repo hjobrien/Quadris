@@ -93,11 +93,17 @@ public class Main extends Application{
 				engine.getBoard().pressed("right");
 			} else if (e.getCode() == KeyCode.LEFT){
 				engine.getBoard().pressed("left");
-			} else if (e.getCode() == KeyCode.UP){
-				engine.getBoard().pressed("up");
-			} else if (e.getCode() == KeyCode.DOWN){
-				engine.getBoard().pressed("down");
-			}
+			} else if (e.getCode() == KeyCode.X){
+				engine.getBoard().pressed("x");
+			} else if (e.getCode() == KeyCode.Z){
+				engine.getBoard().pressed("z");
+ 			} else if (e.getCode() == KeyCode.DOWN){
+ 				engine.getBoard().pressed("down");
+ 			} else if (debug){
+ 				if (e.getCode() == KeyCode.UP){
+ 					engine.getBoard().pressed("up");
+ 				}
+ 			}
 		});  
 
 		timer = new AnimationTimer(){

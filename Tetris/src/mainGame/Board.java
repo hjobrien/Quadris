@@ -133,6 +133,18 @@ public class Board {
 			}
 		}
 	}
+	
+	//only used in debugging
+	public void blockUp(){ 
+		for (int i = 0; i < boardState.size(); i++){
+			for (int j = 0; j < boardState.get(i).size(); j++){
+				if (tileAt(i, j).isActive()){
+					update(i - 1, j, tileAt(i, j));
+					update(i, j, new Tile(false, false));
+				}
+			}
+		}
+	}
 
 	//goes over the whole grid and sets each tile to not falling
 	public void setNotFalling() {
@@ -152,16 +164,19 @@ public class Board {
 		if (string.equals("right")){
 			if (checkRight()){
 				moveRight();
-				 
 			}
 		} else if (string.equals("left")){
 			if (checkLeft()){
 				moveLeft();
 			}
-		} else if (string.equals("up")){
+		} else if (string.equals("x")){
 			tryToRotate("right");
-		} else if (string.equals("down")){
+		} else if (string.equals("z")){
 			tryToRotate("left");
+ 		} else if (string.equals("down")){
+ 			blockDown();
+ 		} else if (string.equals("up")){
+ 			blockUp();
  		}
 		
 	}
