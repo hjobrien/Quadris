@@ -152,6 +152,7 @@ public class Board {
 		if (string.equals("right")){
 			if (checkRight()){
 				moveRight();
+				 
 			}
 		} else if (string.equals("left")){
 			if (checkLeft()){
@@ -159,11 +160,9 @@ public class Board {
 			}
 		} else if (string.equals("up")){
 			tryToRotate("right");
-//			fallingBlock.rotRight();
 		} else if (string.equals("down")){
 			tryToRotate("left");
-//			fallingBlock.rotLeft();
-		}
+ 		}
 		
 	}
 
@@ -246,12 +245,26 @@ public class Board {
 					System.out.println();
 				}
 			}
+			removeFallingBlock();
+			updateBoardWithNewBlock(b);
 			
 		} else {
 			System.out.println("Can't rotate");
 		}
 	}
 	
+	private void removeFallingBlock() {
+		for(int i = 0; i < boardState.size(); i++){
+			for(int j = 0; j < boardState.get(0).size(); j++){
+				if(boardState.get(i).get(j).isActive()){
+					boardState.get(i).set(j, new Tile(false, false));
+				}
+			}
+		}
+		
+	}
+
+
 	private Block makeBlockSquare(ArrayList<ArrayList<Tile>> block, ArrayList<Integer> rowsErased,
 			ArrayList<Integer> columnsErased) {
 		while (block.get(0).size() < block.size()){
@@ -435,15 +448,9 @@ public class Board {
 
 
 	public Block rotRight(Block b){
-		Block temp = new Block(b);
-		System.out.println(b.toString());
-		
-		
+		Block temp = new Block(b);	
 		b = new Block(reflectY(b, temp));
-		System.out.println(b.toString());
-		
 		b = new Block(reflectXY(b, temp));
-		System.out.println(b.toString());
 		return b;
 	}
 	
