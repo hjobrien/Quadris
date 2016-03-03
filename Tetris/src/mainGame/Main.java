@@ -118,7 +118,10 @@ public class Main extends Application{
 			public void handle(long time){
 
 				long now = System.currentTimeMillis();
-				if(now-pastTime >= 500){
+				if (now - pastTime >= 100){
+					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+				}
+				if(now-pastTime >= 1000){
 					if (!paused){
 						score++;
 					}
