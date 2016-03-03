@@ -88,20 +88,26 @@ public class Main extends Application{
 			}
 			else if(e.getCode() == KeyCode.P){
 //				changePause();
-				engine.togglePause();
+				paused = engine.togglePause();
 			} else if (e.getCode() == KeyCode.RIGHT){
-				engine.getBoard().pressed("right");
+				if (!paused)
+					engine.getBoard().pressed("right");
 			} else if (e.getCode() == KeyCode.LEFT){
-				engine.getBoard().pressed("left");
+				if (!paused)
+					engine.getBoard().pressed("left");
 			} else if (e.getCode() == KeyCode.X){
-				engine.getBoard().pressed("x");
+				if (!paused)
+					engine.getBoard().pressed("x");
 			} else if (e.getCode() == KeyCode.Z){
-				engine.getBoard().pressed("z");
+				if (!paused)
+					engine.getBoard().pressed("z");
  			} else if (e.getCode() == KeyCode.DOWN){
- 				engine.getBoard().pressed("down");
+ 				if (!paused)
+					engine.getBoard().pressed("down");
  			} else if (debug){
  				if (e.getCode() == KeyCode.UP){
- 					engine.getBoard().pressed("up");
+ 					if (!paused)
+ 						engine.getBoard().pressed("up");
  				}
  			}
 		});  
@@ -118,7 +124,9 @@ public class Main extends Application{
 			public void handle(long time){
 
 				long now = System.currentTimeMillis();
-				engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+				if (!paused){
+					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+				}
 				if(now-pastTime >= 1000){
 					if (!paused){
 						timeScore++;

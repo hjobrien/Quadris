@@ -94,9 +94,9 @@ public class Engine {
 		return this.board;
 	}
 
-	public void togglePause() {
+	public boolean togglePause() {
 		isPaused = !isPaused;
-		
+		return isPaused;
 	}
 	
 	public void draw(Board board, int height, int width){
