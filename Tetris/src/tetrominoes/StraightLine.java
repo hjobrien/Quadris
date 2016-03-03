@@ -1,7 +1,5 @@
 package tetrominoes;
 
-import java.util.ArrayList;
-
 import javafx.scene.paint.Color;
 
 public class StraightLine extends Block {
@@ -16,16 +14,10 @@ public class StraightLine extends Block {
 		}
 	}
 	
-	public static ArrayList<ArrayList<Tile>> getStraightLineShape(){
-		ArrayList<ArrayList<Tile>> shape = new ArrayList<ArrayList<Tile>>();
-		ArrayList<Tile> secondLine = new ArrayList<Tile>();
-		secondLine.add(new Tile(true, true, color));
-		secondLine.add(new Tile(true, true, color));
-		secondLine.add(new Tile(true, true, color));
-		secondLine.add(new Tile(true, true, color));
-
-		shape.add(secondLine);
-
+	public static Tile[][] getStraightLineShape(){
+		Tile shape[][]={
+			    {new Tile(true, true, color), new Tile(true, true, color), new Tile(true, true, color), new Tile(true, true, color)},
+			};
 		return shape;
 	}
 

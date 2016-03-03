@@ -1,28 +1,33 @@
 package tetrominoes;
 
-import java.util.ArrayList;
-
 public class Block {
-	private ArrayList<ArrayList<Tile>> shape = new ArrayList<ArrayList<Tile>>();
+	Tile[][] shape = new Tile[][]{};
 	
-	public boolean debug = true;
+	public boolean debug = false;
 	
 	
 //	private boolean[][] shape = new boolean[4][4];
 	private boolean falling = true;
 	
 	//still in development
-	private int[][] locationInGrid;
+//	private int[][] locationInGrid;
 	
-	public Block(ArrayList<ArrayList<Tile>> size){
+	public Block(Tile[][] size){
 		this.shape = size;
 	}
 	
-	public Block(Block b){
-		this.shape = new ArrayList<ArrayList<Tile>>(b.getShape());
-	}
+//	public Block(Block b){
+//		Tile[][] bShape = b.getShape();
+//		Tile[][] size = new Tile[bShape.length][bShape[0].length];
+//		for (int i = 0; i < bShape.length; i++){
+//			for (int j = 0; j < bShape[i].length; j++){
+//				size 
+//			}
+//		}
+//		this.shape = b.getShape();
+//	}
 	
-	public ArrayList<ArrayList<Tile>> getShape(){
+	public Tile[][] getShape(){
 		return shape;
 	}
 	
@@ -69,7 +74,7 @@ public class Block {
 	
 	public String toString(){
 		String s = "";
-		for(ArrayList<Tile> row : shape){
+		for(Tile[] row : shape){
 			for(Tile t : row){
 				if(t.isFilled())
 					s += "x";
@@ -81,9 +86,8 @@ public class Block {
 		return s;
 	}
 
-	public void setShape(ArrayList<ArrayList<Tile>> emptyShape) {
+	public void setShape(Tile[][] emptyShape) {
 		this.shape = emptyShape;
-		
 	}
 
 }

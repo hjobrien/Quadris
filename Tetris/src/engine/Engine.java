@@ -49,7 +49,7 @@ public class Engine {
 		//checkForCompleteRows();
 	}
 
-	public ArrayList<ArrayList<Tile>> getBoardState(){
+	public Tile[][] getBoardState(){
 		return board.getBoardState();
 	}
 
@@ -105,7 +105,7 @@ public class Engine {
 		for (int i = 0; i < height; i++){
 			for (int j = 0; j < width; j++){
 				
-				Tile current = board.getBoardState().get(i).get(j);
+				Tile current = board.getBoardState()[i][j];
 				if (current.isFilled()){
 					Rectangle r = new Rectangle(29, 29);
 					r.setFill(current.getColor());
