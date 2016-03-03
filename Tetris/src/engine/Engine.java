@@ -107,15 +107,11 @@ public class Engine {
 				
 				Tile current = board.getBoardState().get(i).get(j);
 				if (current.isFilled()){
-					Rectangle r = new Rectangle();
-					r.setHeight(29);
-					r.setWidth(29);
+					Rectangle r = new Rectangle(29, 29);
 					r.setFill(current.getColor());
 					board.getGrid().add(r, j,i);
 				} else {
-					Rectangle r = new Rectangle();
-					r.setHeight(29);
-					r.setWidth(29);
+					Rectangle r = new Rectangle(29, 29);
 					r.setFill(Color.WHITE);
 					board.getGrid().add(r, j, i);
 				}
