@@ -19,6 +19,8 @@ public class Board {
 	//for debugging
 	private boolean debug = true;
 	
+	int boardScore = 0;
+	
 	public Board(int height, int width, GridPane grid){
 		ArrayList<ArrayList<Tile>> tempBoard = new ArrayList<ArrayList<Tile>>();
 		for(int i = 0; i < height; i++){
@@ -32,6 +34,9 @@ public class Board {
 		this.grid = grid;
 	}
 	
+	public int getBoardScore(){
+		return boardScore;
+	}
 	
 	//adds a block near the top of the screen
 	//might need to be altered for when the stack gets very high
@@ -105,9 +110,9 @@ public class Board {
 		int lastIndex = boardState.size() - 1;
 		for (int i = 0; i < boardState.get(lastIndex).size(); i++){
 			if (tileAt(lastIndex, i).isActive()){
-				if (debug){
-					System.out.println("block has space beneath = false");
-				}
+//				if (debug){
+//					System.out.println("block has space beneath = false");
+//				}
 				return false;
 			}
 		}
@@ -119,16 +124,16 @@ public class Board {
 				if (thisT.isActive()){
 					Tile nextT = boardState.get(i + 1).get(j);
 					if (nextT.isFilled() && !nextT.isActive()){
-						if (debug){
-							System.out.println("block has space beneath = false");
-						}
+//						if (debug){
+//							System.out.println("block has space beneath = false");
+//						}
 						return false;
 					}
 				}
 			}
 		}
 		if (debug){
-			System.out.println("block has space beneath = true");
+//			System.out.println("block has space beneath = true");
 		}
 		return true;
 	}
@@ -187,6 +192,7 @@ public class Board {
 		} else if (string.equals("z")){
 			tryToRotate("left");
  		} else if (string.equals("down")){
+ 			boardScore += 2;
  			if (checkDown()){
  				blockDown();
  			}
@@ -649,6 +655,7 @@ public class Board {
 			for (int j = 0; j < boardState.get(i).size(); j++){
 				update(linesToClear.get(i), j, new Tile(false, false));
 			}
+			boardScore += 100;
 		}
 		if (isEmpty()){
 			fallingBlock.stoppedFalling();

@@ -29,7 +29,7 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
-	private	int score = 0;
+	private	int timeScore = 0;
 	
 	boolean paused = false;
 	
@@ -55,7 +55,7 @@ public class Main extends Application{
 		for(int i = 0; i < 3; i++){
 			mainGame.getRowConstraints().add(new RowConstraints(150));
 		}
-		Label scoreText = new Label("Score: " + score);
+		Label scoreText = new Label("Score: " + timeScore);
 		StringProperty valueProperty = new SimpleStringProperty();
 		valueProperty.setValue("0");
 		scoreText.textProperty().bind(valueProperty);
@@ -118,14 +118,12 @@ public class Main extends Application{
 			public void handle(long time){
 
 				long now = System.currentTimeMillis();
-				if (now - pastTime >= 100){
-					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
-				}
+				engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
 				if(now-pastTime >= 1000){
 					if (!paused){
-						score++;
+						timeScore++;
 					}
-					valueProperty.set("\tScore: " + score);
+					valueProperty.set("\tScore: " + (timeScore + engine.getBoard().getBoardScore()));
 					if (engine.getBoard().isFull()){
 						timer.stop();
 					}

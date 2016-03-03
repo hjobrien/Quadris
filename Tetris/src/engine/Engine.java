@@ -3,7 +3,6 @@ package engine;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import mainGame.Board;
