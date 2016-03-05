@@ -14,6 +14,9 @@ public class Block {
 	
 	public Block(Tile[][] size){
 		this.shape = size;
+		
+		//x, y of bottom right corner
+		locationInGrid = new int[]{size[0].length / 2 + 5, size.length};
 	}
 	
 	public Tile[][] getShape(){
