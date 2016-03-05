@@ -8,8 +8,8 @@ public class Square extends Block {
 	//[change this index for rotations][x coordinate][y coordinate]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
-			{new Tile(true, true, color), new Tile(true, true, color)},
-		    {new Tile(true, true, color), new Tile(true, true, color)}
+			{new Tile(color), new Tile(color)},
+		    {new Tile(color), new Tile(color)}
 		}
 	};
 	
