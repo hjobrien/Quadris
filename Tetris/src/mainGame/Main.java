@@ -147,7 +147,14 @@ public class Main extends Application{
 		stage.show();
 
 	}
-
+	
+	private void changePause(){
+		if (paused){
+			this.paused = false;
+		} else {
+			this.paused = true;
+		}
+	}
 
 	private void configureGrid(GridPane grid) {
 		for (int i = 0; i < BOARD_WIDTH; i++){

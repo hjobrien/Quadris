@@ -8,13 +8,13 @@ public class RightS extends Block {
 	//[change this index for rotations][x coordinate][y coordinate]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
-		    {new Tile(false, false), new Tile(true, true, color)},
-		    {new Tile(true, true, color), new Tile(true, true, color)},
-			{new Tile(true, true, color), new Tile(false, false)},
+		    {new Tile(), new Tile(color)},
+		    {new Tile(color), new Tile(color)},
+			{new Tile(color), new Tile()},
 		},
 		new Tile [][]{
-			{new Tile(true, true, color),new Tile(true, true, color),new Tile(false, false)},
-			{new Tile(false, false),new Tile(true, true, color),new Tile(true, true, color)},
+			{new Tile(color),new Tile(color),new Tile()},
+			{new Tile(),new Tile(color),new Tile(color)},
 		}
 	};
 	

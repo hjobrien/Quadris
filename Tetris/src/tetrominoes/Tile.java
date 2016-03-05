@@ -12,10 +12,23 @@ public class Tile {
 		this.filled = filled;
 		this.color = Color.WHITE;
 	}
+	
 	public Tile(boolean active, boolean filled, Color c){
 		this.active = active;
 		this.filled = filled;
 		this.color = c;
+	}
+	
+	public Tile(){
+		this.active = false;
+		this.filled = false;
+		this.color = Color.WHITE;
+	}
+	
+	public Tile(Color c){
+		this.active = true;
+		this.filled = true;
+		this.color = Color.WHITE;
 	}
 
 	public boolean isActive() {
