@@ -10,55 +10,15 @@ public class Block {
 	private boolean falling = true;
 	
 	//still in development
-//	private int[][] locationInGrid;
+	private int[] locationInGrid = new int[2];
 	
 	public Block(Tile[][] size){
 		this.shape = size;
 	}
 	
-//	public Block(Block b){
-//		Tile[][] bShape = b.getShape();
-//		Tile[][] size = new Tile[bShape.length][bShape[0].length];
-//		for (int i = 0; i < bShape.length; i++){
-//			for (int j = 0; j < bShape[i].length; j++){
-//				size 
-//			}
-//		}
-//		this.shape = b.getShape();
-//	}
-	
 	public Tile[][] getShape(){
 		return shape;
 	}
-	
-//	public void rotRight(){
-//		ArrayList<ArrayList<Tile>> tempMap = shape;
-//		reflectY(tempMap);
-//		reflectXY(tempMap);
-//	}
-//	
-//	public void rotLeft(){
-//		ArrayList<ArrayList<Tile>> tempMap = shape;
-//		reflectXY(tempMap);
-//		reflectY(tempMap);
-//	}
-//
-//	private void reflectXY(ArrayList<ArrayList<Tile>> tempMap) {
-//		for(int i = 0; i < tempMap.size(); i++){
-//			for(int j = 0; j < tempMap.get(0).size(); j++){
-//				shape.get(i).set(j, tempMap.get(j).get(i));
-//			}
-//		}
-//		
-//	}
-//
-//	private void reflectY(ArrayList<ArrayList<Tile>> tempMap) {
-//		for(int i = 0; i < tempMap.size(); i++){
-//			for(int j = 0; j < tempMap.get(0).size(); j++){
-//				shape.get(i).set(j, tempMap.get(j).get(i));
-//			}
-//		}
-//	}
 	
 	public boolean isFalling(){
 		return falling;
@@ -89,5 +49,32 @@ public class Block {
 	public void setShape(Tile[][] emptyShape) {
 		this.shape = emptyShape;
 	}
+	
+	public void setGridLocation(int[] point){
+		this.locationInGrid = point;
+	}
+	
+	public void setGridLocation(int x, int y){
+		this.locationInGrid = new int[]{x, y};
+	}
+	
+	public int[] getGridLocation(){
+		return this.locationInGrid;
+	}
+	
+	public void moveRight(){
+		this.locationInGrid = new int[]{ locationInGrid[0], locationInGrid[1] + 1};
+	}
 
+	public void moveLeft(){
+		this.locationInGrid = new int[]{ locationInGrid[0], locationInGrid[1] - 1};
+	}
+	
+	public void moveUp(){
+		this.locationInGrid = new int[]{ locationInGrid[0] - 1, locationInGrid[1]};
+	}
+	
+	public void moveDown(){
+		this.locationInGrid = new int[]{ locationInGrid[0] + 1, locationInGrid[1]};
+	}
 }

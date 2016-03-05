@@ -175,26 +175,30 @@ public class Board {
 		return this.full;
 	}
 
-	public void pressed(String string) {
-		if (string.equals("right")){
+	public void pressed(Move m) {
+		if (m.equals(Move.RIGHT)){
 			if (checkRight()){
 				moveRight();
+				fallingBlock.moveRight();
 			}
-		} else if (string.equals("left")){
+		} else if (m.equals(Move.LEFT)){
 			if (checkLeft()){
 				moveLeft();
+				fallingBlock.moveLeft();
 			}
-//		} else if (string.equals("x")){
-//			tryToRotate("right");
-//		} else if (string.equals("z")){
-//			tryToRotate("left");
- 		} else if (string.equals("down")){
- 			boardScore += 2;
+		} else if (m.equals(Move.ROT_RIGHT)){
+//			rotate(Move.ROT_RIGHT);
+		} else if (m.equals(Move.ROT_LEFT)){
+//			rotate(Move.ROT_LEFT);
+ 		} else if (m.equals(Move.DOWN)){
  			if (checkDown()){
+ 	 			boardScore += 2;
  				blockDown();
+				fallingBlock.moveDown();
  			}
- 		} else if (string.equals("up")){
+ 		} else if (m.equals(Move.UP)){
  			blockUp();
+			fallingBlock.moveUp();
  		}
 		
 	}
