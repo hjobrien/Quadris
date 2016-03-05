@@ -28,7 +28,7 @@ public class Tile {
 	public Tile(Color c){
 		this.active = true;
 		this.filled = true;
-		this.color = Color.WHITE;
+		this.color = c;
 	}
 
 	public boolean isActive() {
