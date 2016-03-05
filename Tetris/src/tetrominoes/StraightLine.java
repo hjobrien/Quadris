@@ -5,7 +5,21 @@ import javafx.scene.paint.Color;
 public class StraightLine extends Block {
 
 	private static Color color = Color.PURPLE;
-
+	//[change this index for rotations][x coordinate][y coordinate]
+	private static Tile[][][] configurations = new Tile[][][]{
+		new Tile [][]{
+			{new Tile(true, true, color), new Tile(true, true, color), new Tile(true, true, color), new Tile(true, true, color)}
+		},
+		new Tile [][]{
+			{new Tile(true, true, color)},
+			{new Tile(true, true, color)},
+			{new Tile(true, true, color)},
+			{new Tile(true, true, color)},
+		}
+	};
+	
+	private static int rotationIndex = 0;
+		
 	
 	public StraightLine() {
 		super(getStraightLineShape());
@@ -15,10 +29,7 @@ public class StraightLine extends Block {
 	}
 	
 	public static Tile[][] getStraightLineShape(){
-		Tile shape[][]={
-			    {new Tile(true, true, color), new Tile(true, true, color), new Tile(true, true, color), new Tile(true, true, color)},
-			};
-		return shape;
+		return configurations[rotationIndex];
 	}
 
 }
