@@ -89,27 +89,23 @@ public class Main extends Application{
 			else if(e.getCode() == KeyCode.P){
 //				changePause();
 				paused = engine.togglePause();
-			} else if (e.getCode() == KeyCode.RIGHT){
-				if (!paused)
-					engine.getBoard().pressed("right");
-			} else if (e.getCode() == KeyCode.LEFT){
-				if (!paused)
-					engine.getBoard().pressed("left");
-			} else if (e.getCode() == KeyCode.X){
-				if (!paused)
-					engine.getBoard().pressed("x");
-			} else if (e.getCode() == KeyCode.Z){
-				if (!paused)
-					engine.getBoard().pressed("z");
- 			} else if (e.getCode() == KeyCode.DOWN){
- 				if (!paused)
-					engine.getBoard().pressed("down");
- 			} else if (debug){
- 				if (e.getCode() == KeyCode.UP){
- 					if (!paused)
- 						engine.getBoard().pressed("up");
- 				}
- 			}
+			} else if (!paused){
+				if (e.getCode() == KeyCode.RIGHT){
+					engine.getBoard().pressed(Move.RIGHT);
+				} else if (e.getCode() == KeyCode.LEFT){
+					engine.getBoard().pressed(Move.LEFT);
+				} else if (e.getCode() == KeyCode.X){
+					engine.getBoard().pressed(Move.ROT_RIGHT);
+				} else if (e.getCode() == KeyCode.Z){
+					engine.getBoard().pressed(Move.ROT_LEFT);
+	 			} else if (e.getCode() == KeyCode.DOWN){
+	 				engine.getBoard().pressed(Move.DOWN);
+	 			} else if (debug){
+	 				if (e.getCode() == KeyCode.UP){
+	 					engine.getBoard().pressed(Move.UP);
+	 				}
+	 			}
+			}
 		});  
 
 		timer = new AnimationTimer(){
