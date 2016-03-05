@@ -14,7 +14,6 @@ public class Square extends Block {
 	};
 	
 	private static int rotationIndex = 0;
-		
 	
 	public Square() {
 		super(getSquareShape());

@@ -29,8 +29,6 @@ public class RightL extends Block {
 	
 	private static int rotationIndex = 0;
 		
-	
-	
 	public RightL() {
 		super(getRightLShape());
 		if (super.debug){

@@ -28,7 +28,6 @@ public class TBlock extends Block {
 	};
 	
 	private static int rotationIndex = 0;
-		
 
 	public TBlock() {
 		super(getTShape());
