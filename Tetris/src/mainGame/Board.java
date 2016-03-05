@@ -203,16 +203,16 @@ public class Board {
 		
 	}
 	
-	private void removeFallingBlock() {
-		for(int i = 0; i < boardState.length; i++){
-			for(int j = 0; j < boardState[0].length; j++){
-				if(boardState[i][j].isActive()){
-					boardState[i][j] = new Tile(false, false);
-				}
-			}
-		}
-		
-	}
+//	private void removeFallingBlock() {
+//		for(int i = 0; i < boardState.length; i++){
+//			for(int j = 0; j < boardState[0].length; j++){
+//				if(boardState[i][j].isActive()){
+//					boardState[i][j] = new Tile(false, false);
+//				}
+//			}
+//		}
+//		
+//	}
 	
 	//TODO moving right and left
 
