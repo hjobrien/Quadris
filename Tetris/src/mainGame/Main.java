@@ -105,16 +105,18 @@ public class Main extends Application{
 					engine.getBoard().pressed(Move.ROT_LEFT);
 	 			} else if (e.getCode() == KeyCode.DOWN){
 	 				engine.getBoard().pressed(Move.DOWN);
-	 			} else if (debug){
+	 			} else if (e.getCode() == KeyCode.SPACE){
+	 				engine.getBoard().pressed(Move.FULL_DOWN);
+	 			}else if (e.getCode() == KeyCode.R){
+ 					System.out.println("Game " + this.gameCounter + " score: " + (timeScore + engine.getBoard().getBoardScore()) + "\n");
+ 					engine.getBoard().clearBoard();
+ 					engine.addBlock();
+ 					this.timeScore = 0;
+ 					gameCounter++;
+ 				} else if (debug){
 	 				if (e.getCode() == KeyCode.UP){
 	 					engine.getBoard().pressed(Move.UP);
-	 				} else if (e.getCode() == KeyCode.R){
-	 					System.out.println("Game " + this.gameCounter + " score: " + (timeScore + engine.getBoard().getBoardScore()) + "\n");
-	 					engine.getBoard().clearBoard();
-	 					engine.addBlock();
-	 					this.timeScore = 0;
-	 					gameCounter++;
-	 				}
+	 				} 
 	 			}
 			}
 		});  

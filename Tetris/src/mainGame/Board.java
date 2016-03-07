@@ -121,6 +121,11 @@ public class Board {
  	 			boardScore += 2;
  				blockDown();
  			}
+ 		} else if (m == Move.FULL_DOWN){
+ 			while (checkDown()){
+ 				boardScore += 3;
+ 				blockDown();
+ 			}
  		} else if (m == Move.UP){
  			blockUp();
  		}
