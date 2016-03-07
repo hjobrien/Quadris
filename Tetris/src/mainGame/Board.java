@@ -131,6 +131,7 @@ public class Board {
 		if (debug){
 			System.out.println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
 		}
+		
 		//checks if the board has filled up
 		for (int i = 0; i < boardState[0].length; i++){
 			Tile firstTile = tileAt(0, i);
