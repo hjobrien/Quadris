@@ -107,11 +107,15 @@ public class Board {
 				moveLeft();
 			}
 		} else if (m == Move.ROT_RIGHT){
-			rotateRight();
-//			tryToRotate("right");
+			if (checkRotate(Move.ROT_RIGHT)){
+				fallingBlock.rotateRight();
+				updateFallingBlock();
+			}
 		} else if (m == Move.ROT_LEFT){
-			rotateLeft();
-//			tryToRotate("left");
+			if (checkRotate(Move.ROT_LEFT)){
+				fallingBlock.rotateLeft();
+				updateFallingBlock();
+			}
  		} else if (m == Move.DOWN){
  			boardScore += 2;
  			if (checkDown()){
@@ -262,20 +266,6 @@ public class Board {
 			}
 		}
 		fallingBlock.moveLeft();
-	}
-
-	private void rotateLeft(){
-		if (checkRotate(Move.ROT_LEFT)){
-			fallingBlock.rotateLeft();
-			updateFallingBlock();
-		}
-	}
-
-	private void rotateRight() {
-		if (checkRotate(Move.ROT_RIGHT)){
-			fallingBlock.rotateRight();
-			updateFallingBlock();
-		}
 	}
 	
 	private boolean checkRotate(Move m) {
