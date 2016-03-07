@@ -186,11 +186,13 @@ public class Board {
 				moveLeft();
 				fallingBlock.moveLeft();
 			}
-		} else if (m.equals(Move.ROT_RIGHT)){
-//			rotate(Move.ROT_RIGHT);
-		} else if (m.equals(Move.ROT_LEFT)){
-//			rotate(Move.ROT_LEFT);
- 		} else if (m.equals(Move.DOWN)){
+		} else if (string.equals("x")){
+			rotateRight();
+//			tryToRotate("right");
+		} else if (string.equals("z")){
+//			tryToRotate("left");
+ 		} else if (string.equals("down")){
+ 			boardScore += 2;
  			if (checkDown()){
  	 			boardScore += 2;
  				blockDown();
@@ -214,7 +216,24 @@ public class Board {
 //		
 //	}
 	
+	
+//	private void removeFallingBlock() {
+//		for(int i = 0; i < boardState.length; i++){
+//			for(int j = 0; j < boardState[0].length; j++){
+//				if(boardState[i][j].isActive()){
+//					boardState[i][j] = new Tile(false, false);
+//				}
+//			}
+//		}
+//		
+//	}
+	
 	//TODO moving right and left
+
+	private void rotateRight() {
+		fallingBlock.rotateRight();
+		
+	}
 
 	private boolean checkRight() {
 		for (Tile[] a : boardState){

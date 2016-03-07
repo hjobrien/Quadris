@@ -69,6 +69,7 @@ public class Block {
 		this.locationInGrid = new int[]{ locationInGrid[0], locationInGrid[1] + 1};
 	}
 
+<<<<<<< Upstream, based on origin/master
 	public void moveLeft(){
 		this.locationInGrid = new int[]{ locationInGrid[0], locationInGrid[1] - 1};
 	}
@@ -80,4 +81,11 @@ public class Block {
 	public void moveDown(){
 		this.locationInGrid = new int[]{ locationInGrid[0] + 1, locationInGrid[1]};
 	}
+=======
+	public void rotateRight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+>>>>>>> 1f08787 --
 }
