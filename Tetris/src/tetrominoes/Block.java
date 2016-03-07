@@ -6,7 +6,6 @@ public class Block {
 	
 	public boolean debug = false;
 	
-	
 //	private boolean[][] shape = new boolean[4][4];
 	private boolean falling = true;
 	
@@ -16,8 +15,16 @@ public class Block {
 	public Block(Tile[][][] configurations){
 		this.configurations = configurations;
 		
-		//x, y of bottom right corner
-		locationInGrid = new int[]{configurations[0].length / 2 + 5, configurations.length};
+		//row, column of bottom right corner
+		int startingRowIndex = configurations[rotationIndex].length - 1;
+		int startingColumnIndex = (10 - configurations[rotationIndex][0].length) / 2 + configurations[rotationIndex][0].length - 1;
+		locationInGrid = new int[]{startingRowIndex, startingColumnIndex};
+	}
+	
+	public Block(Block b){
+		this.configurations = b.configurations;
+		this.rotationIndex = b.rotationIndex;
+		this.locationInGrid = b.locationInGrid;
 	}
 	
 	public Tile[][] getShape(){
@@ -78,13 +85,17 @@ public class Block {
 		this.locationInGrid = new int[]{ locationInGrid[0] + 1, locationInGrid[1]};
 	}
 	public void rotateRight() {
-		// TODO Auto-generated method stub
-		
+		rotationIndex--;
+		if (rotationIndex < 0){
+			rotationIndex = configurations.length - 1;
+		}
 	}
 
 	public void rotateLeft() {
-		// TODO Auto-generated method stub
-		
+		rotationIndex++;
+		if (rotationIndex > configurations.length - 1){
+			rotationIndex = 0;
+		}
 	}
 
 }

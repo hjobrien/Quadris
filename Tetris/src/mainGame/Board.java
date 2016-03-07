@@ -124,6 +124,9 @@ public class Board {
 	}
 
 	public boolean checkDown() {
+		if (debug){
+			System.out.println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
+		}
 		//checks if the board has filled up
 		for (int i = 0; i < boardState[0].length; i++){
 			Tile firstTile = tileAt(0, i);
@@ -169,7 +172,7 @@ public class Board {
 		for (int i = boardState.length - 1; i >= 0; i--){
 			for (int j = boardState[i].length - 1; j >= 0; j--){
 				if (tileAt(i, j).isActive()){
-					//updates new tile
+					//s new tile
 					update(i + 1, j, tileAt(i ,j));
 					//clears old tile
 					update(i, j, new Tile(false, false));
@@ -260,27 +263,86 @@ public class Board {
 		fallingBlock.moveLeft();
 	}
 
-	private void rotateLeft() {
-		fallingBlock.rotateLeft();
-
-		
+	private void rotateLeft(){
+		if (checkRotate(Move.ROT_LEFT)){
+			fallingBlock.rotateLeft();
+			updateFallingBlock();
+		}
 	}
 
 	private void rotateRight() {
-		fallingBlock.rotateRight();
-		
+		if (checkRotate(Move.ROT_RIGHT)){
+			fallingBlock.rotateRight();
+			updateFallingBlock();
+		}
 	}
 	
-//	private void removeFallingBlock() {
-//		for(int i = 0; i < boardState.length; i++){
-//			for(int j = 0; j < boardState[0].length; j++){
-//				if(boardState[i][j].isActive()){
-//					boardState[i][j] = new Tile(false, false);
-//				}
-//			}
-//		}
-//		
-//	}
+	private boolean checkRotate(Move m) {
+		Block tempB = new Block(fallingBlock);
+		if (m == Move.ROT_LEFT){
+			tempB.rotateLeft();
+		} else if (m == Move.ROT_RIGHT){
+			tempB.rotateRight();
+		}
+		Tile[][] tempBShape = tempB.getShape();
+		for (int i = tempBShape.length - 1; i >= 0; i--){
+			for (int j = tempBShape[i].length - 1; j >= 0; j--){
+				if (tempBShape[i][j].isActive()){
+					int[] tempBLocation = tempB.getGridLocation();
+					
+					//makes sure we arent running off the board
+					int row = tempBLocation[0] - (tempBShape.length - 1 - i);
+					int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
+					if (row >= 0 &&  column >= 0){
+						Tile t = tileAt(row, column);
+						
+						//checks to make sure flip is legal, ignoring itself in the process
+						if (t.isFilled() && !t.isActive()){
+							if (debug){
+								System.out.println("cant turn " + m);
+							}
+							return false;
+						}
+					} else {
+						if (debug){
+							System.out.println("cant turn " + m);
+						}
+						return false;
+					}
+				}
+			}
+		}
+		if (debug){
+			System.out.println("can turn " + m);
+		}
+		return true;
+	}
+
+	private void updateFallingBlock() {
+		removeFallingBlock();
+		Tile[][] fallingBlockShape = fallingBlock.getShape();
+		int[] fallingBlockLocation = fallingBlock.getGridLocation();
+		
+		for (int i = fallingBlockShape.length - 1; i >= 0; i--){
+			for (int j = fallingBlockShape[i].length - 1; j >= 0; j--){
+				//makes sure we arent running off the board
+				int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
+				int column = fallingBlockLocation[1] - (fallingBlockShape[0].length - 1 - j);
+				update(row, column, fallingBlockShape[i][j]);
+			}
+		}
+	}
+	
+	private void removeFallingBlock() {
+		for(int i = 0; i < boardState.length; i++){
+			for(int j = 0; j < boardState[0].length; j++){
+				if(boardState[i][j].isActive()){
+					boardState[i][j] = new Tile(false, false);
+				}
+			}
+		}
+		
+	}
 	
 	
 	//TODO clearing lines

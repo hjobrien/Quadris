@@ -29,6 +29,7 @@ public class Main extends Application{
 
 	private Engine engine;
 	private AnimationTimer timer;
+	private int gameCounter = 1;
 	private	int timeScore = 0;
 	
 	boolean paused = false;
@@ -87,7 +88,6 @@ public class Main extends Application{
 				System.exit(0);
 			}
 			else if(e.getCode() == KeyCode.P){
-//				changePause();
 				paused = engine.togglePause();
 			} else if (!paused){
 				if (e.getCode() == KeyCode.RIGHT){
@@ -104,9 +104,11 @@ public class Main extends Application{
 	 				if (e.getCode() == KeyCode.UP){
 	 					engine.getBoard().pressed(Move.UP);
 	 				} else if (e.getCode() == KeyCode.R){
+	 					System.out.println("Game " + this.gameCounter + " score: " + (timeScore + engine.getBoard().getBoardScore()) + "\n");
 	 					engine.getBoard().clearBoard();
 	 					engine.addBlock();
 	 					this.timeScore = 0;
+	 					gameCounter++;
 	 				}
 	 			}
 			}
