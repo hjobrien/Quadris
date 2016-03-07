@@ -56,17 +56,6 @@ public class Board {
 		}
 	}
 	
-	public void updateBoardWithOldBlock(Block b, int row, int column){
-		Tile[][] blockShape = b.getShape();
-		for (int i = 0; i < blockShape.length; i++){
-			for (int j = 0; j < blockShape[i].length; j++){
-				if (!tileAt(i + row, j + column).isFilled()){
-					update(i + row, j + column, blockShape[i][j]);
-				}
-			}
-		}
-	}
-	
 	//changes the fields of the tiles in Board based on the tile passed in
 	public void update(int i, int j, Tile t){
 		this.boardState[i][j].setActive(t.isActive());
@@ -363,6 +352,7 @@ public class Board {
 			}
 		}
 		this.boardScore = 0;
+		this.full = false;
 	}
 	
 	public GridPane getGrid(){
