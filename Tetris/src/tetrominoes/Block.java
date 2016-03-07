@@ -49,11 +49,6 @@ public class Block {
 		}
 		return s;
 	}
-
-	//what is this used for? --Hank
-	public void setShape(Tile[][] emptyShape) {
-		this.configurations[rotationIndex] = emptyShape;
-	}
 	
 	public void setGridLocation(int[] point){
 		this.locationInGrid = point;

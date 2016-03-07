@@ -314,7 +314,7 @@ public class Board {
 				update(i,j, new Tile(false,false));
 			}
 		}
-		
+		this.boardScore = 0;
 	}
 	
 	public GridPane getGrid(){

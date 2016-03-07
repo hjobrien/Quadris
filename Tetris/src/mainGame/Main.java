@@ -103,6 +103,10 @@ public class Main extends Application{
 	 			} else if (debug){
 	 				if (e.getCode() == KeyCode.UP){
 	 					engine.getBoard().pressed(Move.UP);
+	 				} else if (e.getCode() == KeyCode.R){
+	 					engine.getBoard().clearBoard();
+	 					engine.addBlock();
+	 					this.timeScore = 0;
 	 				}
 	 			}
 			}
