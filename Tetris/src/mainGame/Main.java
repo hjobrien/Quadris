@@ -86,6 +86,9 @@ public class Main extends Application{
 		engine.addBlock();
 		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
+			if (!paused){
+				engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+			}
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
 			}
@@ -128,9 +131,9 @@ public class Main extends Application{
 			public void handle(long time){
 
 				long now = System.currentTimeMillis();
-				if (!paused){
-					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
-				}
+//				if (!paused){
+//					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+//				}
 				if(now-pastTime >= 1000){
 					if (!paused){
 						timeScore++;
