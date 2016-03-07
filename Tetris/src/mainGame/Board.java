@@ -147,6 +147,7 @@ public class Board {
 				}
 			}
 		}
+		fallingBlock.moveDown();
 	}
 	
 	//only used in debugging
@@ -159,6 +160,7 @@ public class Board {
 				}
 			}
 		}
+		fallingBlock.moveUp();
 	}
 
 	//goes over the whole grid and sets each tile to not falling
@@ -176,31 +178,27 @@ public class Board {
 	}
 
 	public void pressed(Move m) {
-		if (m.equals(Move.RIGHT)){
+		if (m == Move.RIGHT){
 			if (checkRight()){
 				moveRight();
-				fallingBlock.moveRight();
 			}
-		} else if (m.equals(Move.LEFT)){
+		} else if (m == Move.LEFT){
 			if (checkLeft()){
 				moveLeft();
-				fallingBlock.moveLeft();
 			}
-		} else if (string.equals("x")){
+		} else if (m == Move.ROT_RIGHT){
 			rotateRight();
 //			tryToRotate("right");
-		} else if (string.equals("z")){
+		} else if (m == Move.ROT_LEFT){
 //			tryToRotate("left");
- 		} else if (string.equals("down")){
+ 		} else if (m == Move.DOWN){
  			boardScore += 2;
  			if (checkDown()){
  	 			boardScore += 2;
  				blockDown();
-				fallingBlock.moveDown();
  			}
- 		} else if (m.equals(Move.UP)){
+ 		} else if (m == Move.UP){
  			blockUp();
-			fallingBlock.moveUp();
  		}
 		
 	}
@@ -266,6 +264,7 @@ public class Board {
 				}
 			}
 		}
+		fallingBlock.moveRight();
 	}
 	
 	private boolean checkLeft() {
@@ -299,6 +298,7 @@ public class Board {
 				}
 			}
 		}
+		fallingBlock.moveLeft();
 	}
 	
 	public void clearBoard(){
