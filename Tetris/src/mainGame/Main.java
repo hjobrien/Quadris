@@ -18,7 +18,9 @@ public class Main extends Application{
 	
 	
 	//change this to enable debug configurations, allows for fast switching between releases and development versions
-	boolean debug = true;
+//	boolean debug = true;
+	boolean debug = false;
+
 	
 	//height should be double width
 	private static final int SCREEN_WIDTH = 300;
@@ -157,11 +159,6 @@ public class Main extends Application{
 		for (int i = 0; i < BOARD_HEIGHT; i ++){
 			grid.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / BOARD_HEIGHT));
 		}
-		
-		//very helpful for debugging purposes
-		//maybe we want this even when not debugging?
-		if(debug){
-			grid.setGridLinesVisible(true);
-		}
+		grid.setGridLinesVisible(true);
 	}
 }

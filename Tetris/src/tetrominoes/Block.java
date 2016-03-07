@@ -5,6 +5,8 @@ public class Block {
 	private int rotationIndex = 0;
 	
 	public boolean debug = false;
+//	public boolean debug = true;
+
 	
 //	private boolean[][] shape = new boolean[4][4];
 	private boolean falling = true;

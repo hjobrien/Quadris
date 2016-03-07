@@ -16,7 +16,8 @@ public class Board {
 	boolean full = false;
 	
 	//for debugging
-	private boolean debug = true;
+	private boolean debug = false;
+//	private boolean debug = true;
 	
 	int boardScore = 0;
 	
