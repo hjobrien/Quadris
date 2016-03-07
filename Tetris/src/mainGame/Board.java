@@ -93,6 +93,35 @@ public class Board {
 	public void setFallingBlock(Block fallingBlock) {
 		this.fallingBlock = fallingBlock;
 	}
+	
+	//TODO move related things
+	
+	public void pressed(Move m) {
+		if (m == Move.RIGHT){
+			if (checkRight()){
+				moveRight();
+			}
+		} else if (m == Move.LEFT){
+			if (checkLeft()){
+				moveLeft();
+			}
+		} else if (m == Move.ROT_RIGHT){
+			rotateRight();
+//			tryToRotate("right");
+		} else if (m == Move.ROT_LEFT){
+			rotateLeft();
+//			tryToRotate("left");
+ 		} else if (m == Move.DOWN){
+ 			boardScore += 2;
+ 			if (checkDown()){
+ 	 			boardScore += 2;
+ 				blockDown();
+ 			}
+ 		} else if (m == Move.UP){
+ 			blockUp();
+ 		}
+		
+	}
 
 	public boolean checkDown() {
 		//checks if the board has filled up
@@ -162,84 +191,7 @@ public class Board {
 		}
 		fallingBlock.moveUp();
 	}
-
-	//goes over the whole grid and sets each tile to not falling
-	public void setNotFalling() {
-		for (Tile[] list : boardState){
-			for (Tile t : list){
-				t.setActive(false);
-			}
-		}
-	}
 	
-	//if full, the game is over
-	public boolean isFull(){
-		return this.full;
-	}
-
-	public void pressed(Move m) {
-		if (m == Move.RIGHT){
-			if (checkRight()){
-				moveRight();
-			}
-		} else if (m == Move.LEFT){
-			if (checkLeft()){
-				moveLeft();
-			}
-		} else if (m == Move.ROT_RIGHT){
-			rotateRight();
-//			tryToRotate("right");
-		} else if (m == Move.ROT_LEFT){
-			rotateLeft();
-//			tryToRotate("left");
- 		} else if (m == Move.DOWN){
- 			boardScore += 2;
- 			if (checkDown()){
- 	 			boardScore += 2;
- 				blockDown();
- 			}
- 		} else if (m == Move.UP){
- 			blockUp();
- 		}
-		
-	}
-	
-//	private void removeFallingBlock() {
-//		for(int i = 0; i < boardState.length; i++){
-//			for(int j = 0; j < boardState[0].length; j++){
-//				if(boardState[i][j].isActive()){
-//					boardState[i][j] = new Tile(false, false);
-//				}
-//			}
-//		}
-//		
-//	}
-	
-	
-//	private void removeFallingBlock() {
-//		for(int i = 0; i < boardState.length; i++){
-//			for(int j = 0; j < boardState[0].length; j++){
-//				if(boardState[i][j].isActive()){
-//					boardState[i][j] = new Tile(false, false);
-//				}
-//			}
-//		}
-//		
-//	}
-	
-	//TODO moving right and left
-
-	private void rotateLeft() {
-		fallingBlock.rotateLeft();
-
-		
-	}
-
-	private void rotateRight() {
-		fallingBlock.rotateRight();
-		
-	}
-
 	private boolean checkRight() {
 		for (Tile[] a : boardState){
 			
@@ -307,6 +259,45 @@ public class Board {
 		}
 		fallingBlock.moveLeft();
 	}
+
+	private void rotateLeft() {
+		fallingBlock.rotateLeft();
+
+		
+	}
+
+	private void rotateRight() {
+		fallingBlock.rotateRight();
+		
+	}
+	
+//	private void removeFallingBlock() {
+//		for(int i = 0; i < boardState.length; i++){
+//			for(int j = 0; j < boardState[0].length; j++){
+//				if(boardState[i][j].isActive()){
+//					boardState[i][j] = new Tile(false, false);
+//				}
+//			}
+//		}
+//		
+//	}
+	
+	
+	//TODO clearing lines
+	
+	//if full, the game is over
+	public boolean isFull(){
+		return this.full;
+	}
+
+	//goes over the whole grid and sets each tile to not falling
+	public void setNotFalling() {
+		for (Tile[] list : boardState){
+			for (Tile t : list){
+				t.setActive(false);
+			}
+		}
+	}
 	
 	public void clearBoard(){
 		for(int i = 0; i < boardState.length; i++){
@@ -320,8 +311,6 @@ public class Board {
 	public GridPane getGrid(){
 		return grid;
 	}
-	
-	//TODO clearing lines
 	
 	public ArrayList<Integer> getFullRows() {
 		ArrayList<Integer> fullRows = new ArrayList<Integer>();
