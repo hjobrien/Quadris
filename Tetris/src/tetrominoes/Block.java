@@ -1,7 +1,8 @@
 package tetrominoes;
 
 public class Block {
-	Tile[][] shape = new Tile[][]{};
+	private Tile[][][] configurations = new Tile[][][]{};
+	private int rotationIndex = 0;
 	
 	public boolean debug = false;
 	
@@ -12,15 +13,15 @@ public class Block {
 	//still in development
 	private int[] locationInGrid = new int[2];
 	
-	public Block(Tile[][] size){
-		this.shape = size;
+	public Block(Tile[][][] configurations){
+		this.configurations = configurations;
 		
 		//x, y of bottom right corner
-		locationInGrid = new int[]{size[0].length / 2 + 5, size.length};
+		locationInGrid = new int[]{configurations[0].length / 2 + 5, configurations.length};
 	}
 	
 	public Tile[][] getShape(){
-		return shape;
+		return configurations[rotationIndex];
 	}
 	
 	public boolean isFalling(){
@@ -37,7 +38,7 @@ public class Block {
 	
 	public String toString(){
 		String s = "";
-		for(Tile[] row : shape){
+		for(Tile[] row : getShape()){
 			for(Tile t : row){
 				if(t.isFilled())
 					s += "x";
@@ -49,8 +50,9 @@ public class Block {
 		return s;
 	}
 
+	//what is this used for? --Hank
 	public void setShape(Tile[][] emptyShape) {
-		this.shape = emptyShape;
+		this.configurations[rotationIndex] = emptyShape;
 	}
 	
 	public void setGridLocation(int[] point){
@@ -81,6 +83,11 @@ public class Block {
 		this.locationInGrid = new int[]{ locationInGrid[0] + 1, locationInGrid[1]};
 	}
 	public void rotateRight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void rotateLeft() {
 		// TODO Auto-generated method stub
 		
 	}

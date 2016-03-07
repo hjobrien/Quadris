@@ -16,20 +16,17 @@ public class RightS extends Block {
 			{new Tile(color),new Tile(color),new Tile()},
 			{new Tile(),new Tile(color),new Tile(color)},
 		}
-	};
-	
-	private static int rotationIndex = 0;
-		
+	};		
 	
 	public RightS() {
-		super(getRightSShape());
+		super(configurations);
 		if (super.debug){
 			System.out.println("made Right S");
 		}
 	}
 	
-	public static Tile[][] getRightSShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getRightSShape(){
+		return getShape();
 	}
 
 }

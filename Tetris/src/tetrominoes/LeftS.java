@@ -17,21 +17,17 @@ public class LeftS extends Block{
 			{new Tile(),new Tile(color),new Tile(color)},
 			{new Tile(color),new Tile(color),new Tile()},
 		}
-	};
-	
-	private static int rotationIndex = 0;
-		
-	
-	
+	};		
 
+	
 	public LeftS() {
-		super(getLeftSShape());
+		super(configurations);
 		if (super.debug){
 			System.out.println("made left S");
 		}
 	}
 	
-	public static Tile[][] getLeftSShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getLeftSShape(){
+		return getShape();
 	}
 }

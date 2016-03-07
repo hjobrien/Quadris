@@ -27,10 +27,9 @@ public class LeftL extends Block {
 		}
 	};
 	
-	private static int rotationIndex = 0;
 	
 	public LeftL() {
-		super(getLeftLShape());
+		super(configurations);
 		
 		if (super.debug){
 			System.out.println("made left L");
@@ -38,7 +37,7 @@ public class LeftL extends Block {
 	}
 
 	//i feel like there should be a better way to do this
-	public static Tile[][] getLeftLShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getLeftLShape(){
+		return getShape();
 	}
 }

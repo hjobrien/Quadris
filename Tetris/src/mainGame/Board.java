@@ -190,6 +190,7 @@ public class Board {
 			rotateRight();
 //			tryToRotate("right");
 		} else if (m == Move.ROT_LEFT){
+			rotateLeft();
 //			tryToRotate("left");
  		} else if (m == Move.DOWN){
  			boardScore += 2;
@@ -227,6 +228,12 @@ public class Board {
 //	}
 	
 	//TODO moving right and left
+
+	private void rotateLeft() {
+		fallingBlock.rotateLeft();
+
+		
+	}
 
 	private void rotateRight() {
 		fallingBlock.rotateRight();

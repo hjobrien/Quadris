@@ -26,18 +26,16 @@ public class RightL extends Block {
 			{new Tile(color),new Tile(),new Tile()},
 		}
 	};
-	
-	private static int rotationIndex = 0;
-		
+			
 	public RightL() {
-		super(getRightLShape());
+		super(configurations);
 		if (super.debug){
 			System.out.println("made right L");
 		}
 	}
 	
-	public static Tile[][] getRightLShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getRightLShape(){
+		return getShape();
 	}
 
 }

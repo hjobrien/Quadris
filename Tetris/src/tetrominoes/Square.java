@@ -13,16 +13,15 @@ public class Square extends Block {
 		}
 	};
 	
-	private static int rotationIndex = 0;
 	
 	public Square() {
-		super(getSquareShape());
+		super(configurations);
 		if (super.debug){
 			System.out.println("made square");
 		}
 	}
 	
-	public static Tile[][] getSquareShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getSquareShape(){
+		return getShape();
 	}
 }

@@ -27,17 +27,15 @@ public class TBlock extends Block {
 		}
 	};
 	
-	private static int rotationIndex = 0;
-
 	public TBlock() {
-		super(getTShape());
+		super(configurations);
 		if (super.debug){
 			System.out.println("made T");
 		}
 	}
 	
-	public static Tile[][] getTShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getTShape(){
+		return getShape();
 	}
 
 }

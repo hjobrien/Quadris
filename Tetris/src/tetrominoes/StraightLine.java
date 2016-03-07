@@ -16,20 +16,17 @@ public class StraightLine extends Block {
 			{new Tile(color)},
 			{new Tile(color)},
 		}
-	};
-	
-	private static int rotationIndex = 0;
-		
+	};		
 	
 	public StraightLine() {
-		super(getStraightLineShape());
+		super(configurations);
 		if (super.debug){
 			System.out.println("made straight line");
 		}
 	}
 	
-	public static Tile[][] getStraightLineShape(){
-		return configurations[rotationIndex];
+	public Tile[][] getStraightLineShape(){
+		return getShape();
 	}
 
 }
