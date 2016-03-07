@@ -117,7 +117,6 @@ public class Board {
 				updateFallingBlock();
 			}
  		} else if (m == Move.DOWN){
- 			boardScore += 2;
  			if (checkDown()){
  	 			boardScore += 2;
  				blockDown();
