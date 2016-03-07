@@ -91,7 +91,7 @@ public class Main extends Application{
 			}
 			else if(e.getCode() == KeyCode.P){
 				paused = engine.togglePause();
-			} else if (!paused){
+			} else if (!paused && engine.getBoard().rowsAreNotFalling()){
 				if (e.getCode() == KeyCode.RIGHT){
 					engine.getBoard().pressed(Move.RIGHT);
 				} else if (e.getCode() == KeyCode.LEFT){

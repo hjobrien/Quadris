@@ -12,6 +12,8 @@ public class Board {
 	private GridPane grid;
 	public boolean blockAdded = false;
 	
+	private boolean rowsNotFalling = true;
+	
 	//would indicate the game is over
 	boolean full = false;
 	
@@ -30,6 +32,10 @@ public class Board {
 		}
 		this.boardState = tempBoard;
 		this.grid = grid;
+	}
+	
+	public boolean rowsAreNotFalling(){
+		return rowsNotFalling;
 	}
 	
 	public int getBoardScore(){
@@ -149,6 +155,7 @@ public class Board {
 		int lastIndex = boardState.length - 1;
 		for (int i = 0; i < boardState[0].length; i++){
 			if (tileAt(lastIndex, i).isActive()){
+				rowsNotFalling = true;
 				return false;
 			}
 		}
@@ -160,6 +167,7 @@ public class Board {
 				if (thisT.isActive()){
 					Tile nextT = boardState[i + 1][j];
 					if (nextT.isFilled() && !nextT.isActive()){
+						rowsNotFalling = true;
 						return false;
 					}
 				}
@@ -381,6 +389,7 @@ public class Board {
 
 
 	public void clearLines(ArrayList<Integer> linesToClear) {
+		rowsNotFalling = false;
 		setNotFalling();
 		linesToClear.sort(null);
 		for (int i = 0; i < linesToClear.get(0); i++){
