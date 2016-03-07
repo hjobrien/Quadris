@@ -6,7 +6,7 @@ public class LeftS extends Block{
 	
 	private static Color color = Color.GREEN;
 
-	//[change this index for rotations][x coordinate][y coordinate]
+	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
 			    {new Tile(color), new Tile()},

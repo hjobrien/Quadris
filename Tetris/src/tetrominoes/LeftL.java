@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 public class LeftL extends Block {
 	
 	private static Color color = Color.ORANGE;
-	//[change this index for rotations][x coordinate][y coordinate]
+	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
 			{new Tile(),new Tile(color)},
