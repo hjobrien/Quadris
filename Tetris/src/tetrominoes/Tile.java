@@ -7,18 +7,7 @@ public class Tile {
 	private boolean filled;
 	private Color color;
 	
-	public Tile(boolean active, boolean filled){
-		this.active = active;
-		this.filled = filled;
-		this.color = Color.WHITE;
-	}
-	
-	public Tile(boolean active, boolean filled, Color c){
-		this.active = active;
-		this.filled = filled;
-		this.color = c;
-	}
-	
+	//all tiles are either initialized inactive, unfilled, white, or active, filled, color
 	public Tile(){
 		this.active = false;
 		this.filled = false;
@@ -49,9 +38,8 @@ public class Tile {
 	public Color getColor() {
 		return color;
 	}
-	public void setColor(Color color2) {
-		this.color = color2;
-		
+	public void setColor(Color c) {
+		this.color = c;
 	}
 
 }

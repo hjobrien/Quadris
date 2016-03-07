@@ -16,8 +16,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 	
-	
-	//change this to enable debug configurations, allows for fast switching between releases and development versions
 //	boolean debug = true;
 	boolean debug = false;
 
@@ -64,7 +62,6 @@ public class Main extends Application{
 		scoreText.textProperty().bind(valueProperty);
 		mainGame.add(scoreText, 2,3);
 		
-//		mainGame.setGridLinesVisible(true);
 		for (int i = 0; i < 4; i++){
 			nextBlock.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / BOARD_WIDTH));
 		}

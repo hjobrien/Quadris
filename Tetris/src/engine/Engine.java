@@ -27,8 +27,6 @@ public class Engine {
 		this.nextPieceBoard = nextPieceBoard;
 	}
 
-	//do collision detection here I think
-	//when I tried to debug this, it was never reached by the program
 	public void update() {
 		if(!isPaused){ //little hacky, could be improved
 			if (board.getFallingBlock().isFalling()){
@@ -45,8 +43,6 @@ public class Engine {
 				}
 			}
 		}
-		//TODO
-		//checkForCompleteRows();
 	}
 
 	public Tile[][] getBoardState(){

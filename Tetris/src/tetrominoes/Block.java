@@ -7,11 +7,9 @@ public class Block {
 	public boolean debug = false;
 //	public boolean debug = true;
 
-	
-//	private boolean[][] shape = new boolean[4][4];
 	private boolean falling = true;
 	
-	//still in development
+	//gives coordinates of block's bottom right tile in the form {row, column}
 	private int[] locationInGrid = new int[2];
 	
 	public Block(Tile[][][] configurations){

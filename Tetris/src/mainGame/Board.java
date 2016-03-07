@@ -25,7 +25,7 @@ public class Board {
 		Tile[][] tempBoard = new Tile[height][width];
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
-				tempBoard[i][j] = new Tile(false, false);			//not active, not filled
+				tempBoard[i][j] = new Tile();			//not active, not filled
 			}
 		}
 		this.boardState = tempBoard;
@@ -149,9 +149,6 @@ public class Board {
 		int lastIndex = boardState.length - 1;
 		for (int i = 0; i < boardState[0].length; i++){
 			if (tileAt(lastIndex, i).isActive()){
-//				if (debug){
-//					System.out.println("block has space beneath = false");
-//				}
 				return false;
 			}
 		}
@@ -163,16 +160,10 @@ public class Board {
 				if (thisT.isActive()){
 					Tile nextT = boardState[i + 1][j];
 					if (nextT.isFilled() && !nextT.isActive()){
-//						if (debug){
-//							System.out.println("block has space beneath = false");
-//						}
 						return false;
 					}
 				}
 			}
-		}
-		if (debug){
-//			System.out.println("block has space beneath = true");
 		}
 		return true;
 	}
@@ -182,10 +173,10 @@ public class Board {
 		for (int i = boardState.length - 1; i >= 0; i--){
 			for (int j = boardState[i].length - 1; j >= 0; j--){
 				if (tileAt(i, j).isActive()){
-					//s new tile
+					//creates new tile
 					update(i + 1, j, tileAt(i ,j));
 					//clears old tile
-					update(i, j, new Tile(false, false));
+					update(i, j, new Tile());
 				}
 			}
 		}
@@ -198,7 +189,7 @@ public class Board {
 			for (int j = 0; j < boardState[i].length; j++){
 				if (tileAt(i, j).isActive()){
 					update(i - 1, j, tileAt(i, j));
-					update(i, j, new Tile(false, false));
+					update(i, j, new Tile());
 				}
 			}
 		}
@@ -232,7 +223,7 @@ public class Board {
 				Tile currentTile = boardState[i][j];
 				if (currentTile.isActive()){
 					update(i, j + 1, currentTile);
-					update(i, j, new Tile(false, false));
+					update(i, j, new Tile());
 				}
 			}
 		}
@@ -266,7 +257,7 @@ public class Board {
 				Tile currentTile = boardState[i][j];
 				if (currentTile.isActive()){
 					update(i, j - 1, currentTile);
-					update(i, j, new Tile(false, false));
+					update(i, j, new Tile());
 				}
 			}
 		}
@@ -333,7 +324,7 @@ public class Board {
 		for(int i = 0; i < boardState.length; i++){
 			for(int j = 0; j < boardState[0].length; j++){
 				if(boardState[i][j].isActive()){
-					boardState[i][j] = new Tile(false, false);
+					boardState[i][j] = new Tile();
 				}
 			}
 		}
@@ -360,7 +351,7 @@ public class Board {
 	public void clearBoard(){
 		for(int i = 0; i < boardState.length; i++){
 			for(int j = 0; j < boardState[i].length; j++){
-				update(i,j, new Tile(false,false));
+				update(i,j, new Tile());
 			}
 		}
 		this.boardScore = 0;
@@ -401,7 +392,7 @@ public class Board {
 		}
 		for (int i = 0; i < linesToClear.size(); i++){
 			for (int j = 0; j < boardState[i].length; j++){
-				update(linesToClear.get(0), j, new Tile(false, false));
+				update(linesToClear.get(0), j, new Tile());
 			}
 			boardScore += 100;
 		}
