@@ -391,7 +391,7 @@ public class Board {
 		}
 		for (int i = 0; i < linesToClear.size(); i++){
 			for (int j = 0; j < boardState[i].length; j++){
-				update(linesToClear.get(0), j, new Tile());
+				update(linesToClear.get(i), j, new Tile());
 			}
 			boardScore += 100;
 		}
