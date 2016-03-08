@@ -90,9 +90,6 @@ public class Main extends Application{
 		engine.addBlock();
 		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
-			if (!paused){
-				engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
-			}
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
 			}
@@ -128,9 +125,12 @@ public class Main extends Application{
 	 					engine.getBoard().pressed(Move.UP);
 	 				} 
 	 			}
+				if (!paused){
+					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+				}
 			}
 		});  			
-		int startingTimePerTurn = 1000;
+		int startingTimePerTurn = 500;
 
 		timer = new AnimationTimer(){
 			private int timePerTurn = startingTimePerTurn;
@@ -143,11 +143,9 @@ public class Main extends Application{
 			@Override
 			public void handle(long time){
 				long now = System.currentTimeMillis();
-				if(now-pastTime >= timePerTurn){
-					if (!paused){
-						score++;
-//						timePerTurn -= 25;
-					}
+				if(!paused && now-pastTime >= timePerTurn){
+					score++;
+//					timePerTurn -= 25;
 					valueProperty.set("\tScore: " + (score + engine.getBoard().getBoardScore()));
 					if (engine.getBoard().isFull()){
 						timer.stop();
