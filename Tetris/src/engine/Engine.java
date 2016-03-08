@@ -20,11 +20,6 @@ public class Engine {
 	private static Block nextBlock = generateRandomBlock();
 	private static boolean isPaused = false;
 
-	public Engine(Board board, Board nextPieceBoard){
-		this.board = board;
-		this.nextPieceBoard = nextPieceBoard;
-	}
-
 	public static void update() {
 		if(!isPaused){ //little hacky, could be improved
 			if (board.getFallingBlock().isFalling()){
@@ -46,7 +41,7 @@ public class Engine {
 	public Tile[][] getBoardState(){
 		return board.getBoardState();
 	}
-
+	
 	//Adds a random block to the board
 	public static void addBlock() {
 		board.setFallingBlock(nextBlock);
@@ -79,7 +74,6 @@ public class Engine {
 		case 6: 
 			return new Square();
 		}
-		
 //		shouldnt ever happen
 		return new StraightLine();
 	}
