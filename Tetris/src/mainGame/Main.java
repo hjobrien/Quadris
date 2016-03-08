@@ -35,7 +35,7 @@ public class Main extends Application{
 	private Engine engine;
 	private AnimationTimer timer;
 	private int gameCounter = 1;
-	private	int timeScore = 0;
+	private	int score = 0;
 	
 	boolean paused = false;
 	
@@ -63,7 +63,7 @@ public class Main extends Application{
 		for(int i = 0; i < 3; i++){
 			mainGame.getRowConstraints().add(new RowConstraints(150));
 		}
-		Label scoreText = new Label("Score: " + timeScore);
+		Label scoreText = new Label("Score: " + score);
 		StringProperty valueProperty = new SimpleStringProperty();
 		valueProperty.setValue("0");
 		scoreText.textProperty().bind(valueProperty);
@@ -118,10 +118,10 @@ public class Main extends Application{
 	 			} else if (e.getCode() == KeyCode.SPACE){
 	 				engine.getBoard().pressed(Move.FULL_DOWN);
 	 			}else if (e.getCode() == KeyCode.R){
- 					System.out.println("Game " + this.gameCounter + " score: " + (timeScore + engine.getBoard().getBoardScore()) + "\n");
+ 					System.out.println("Game " + this.gameCounter + " score: " + (score + engine.getBoard().getBoardScore()) + "\n");
  					engine.getBoard().clearBoard();
  					engine.addBlock();
- 					this.timeScore = 0;
+ 					this.score = 0;
  					gameCounter++;
  				} else if (debug){
 	 				if (e.getCode() == KeyCode.UP){
@@ -129,28 +129,26 @@ public class Main extends Application{
 	 				} 
 	 			}
 			}
-		});  
+		});  			
+		int startingTimePerTurn = 1000;
 
 		timer = new AnimationTimer(){
+			private int timePerTurn = startingTimePerTurn;
 			private long pastTime;
 			@Override
 			public void start(){
 				pastTime = System.currentTimeMillis();
 				super.start();
 			}
-			
 			@Override
 			public void handle(long time){
-
 				long now = System.currentTimeMillis();
-//				if (!paused){
-//					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
-//				}
-				if(now-pastTime >= 1000){
+				if(now-pastTime >= timePerTurn){
 					if (!paused){
-						timeScore++;
+						score++;
+//						timePerTurn -= 25;
 					}
-					valueProperty.set("\tScore: " + (timeScore + engine.getBoard().getBoardScore()));
+					valueProperty.set("\tScore: " + (score + engine.getBoard().getBoardScore()));
 					if (engine.getBoard().isFull()){
 						timer.stop();
 					}
