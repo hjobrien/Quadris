@@ -26,7 +26,7 @@ public class Main extends Application{
 	private static final int SCREEN_WIDTH = 300;
 	private static final int SCREEN_HEIGHT = SCREEN_WIDTH * 2;
 	
-	private static final int GAME_WIDTH = SCREEN_WIDTH + 150;
+	private static final int GAME_WIDTH = SCREEN_WIDTH + 175;
 	private static final int GAME_HEIGHT = SCREEN_HEIGHT;
 	
 	public static final int BOARD_HEIGHT = 20;
