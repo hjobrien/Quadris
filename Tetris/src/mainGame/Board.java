@@ -3,6 +3,8 @@ package mainGame;
 import java.util.ArrayList;
 
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import tetrominoes.Block;
 import tetrominoes.Tile;
 
@@ -11,7 +13,8 @@ public class Board {
 	private Block fallingBlock;
 	private GridPane grid;
 	public boolean blockAdded = false;
-	
+	private Rectangle[][] boardRects;
+
 	private boolean rowsNotFalling = true;
 	
 	//would indicate the game is over
@@ -32,6 +35,22 @@ public class Board {
 		}
 		this.boardState = tempBoard;
 		this.grid = grid;
+		
+		Rectangle[][] tempBoardRects = new Rectangle[height][width];
+
+		for (int i = 0; i < height; i++){
+			for (int j = 0; j < width; j++){
+				Rectangle r = new Rectangle(29, 29);
+				r.setFill(Color.WHITE);
+				tempBoardRects[i][j] = r;
+				grid.add(r, j,i);
+			}
+		}
+		this.boardRects = tempBoardRects;
+	}
+	
+	public Rectangle[][] getBoardRects(){
+		return this.boardRects;
 	}
 	
 	public boolean rowsAreNotFalling(){
@@ -379,6 +398,10 @@ public class Board {
 
 
 	public void clearLines(ArrayList<Integer> linesToClear) {
+		//rewards a "tetris"
+		if (linesToClear.size() == 4){
+			boardScore += 500;
+		}
 		rowsNotFalling = false;
 		setNotFalling();
 		linesToClear.sort(null);
@@ -391,7 +414,7 @@ public class Board {
 		}
 		for (int i = 0; i < linesToClear.size(); i++){
 			for (int j = 0; j < boardState[i].length; j++){
-				update(linesToClear.get(0), j, new Tile());
+				update(linesToClear.get(i), j, new Tile());
 			}
 			boardScore += 100;
 		}

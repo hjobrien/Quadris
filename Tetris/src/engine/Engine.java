@@ -88,7 +88,6 @@ public class Engine {
 	}
 	
 	
-
 	public static void setValues(Board b1, Board b2) {
 		board = b1;
 		nextPieceBoard = b2;
