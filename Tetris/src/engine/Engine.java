@@ -21,19 +21,10 @@ public class Engine {
 	private Board nextPieceBoard;
 	private Block nextBlock = generateRandomBlock();
 	private boolean isPaused = false;
-	private Rectangle[][] boardRects = new Rectangle[20][10];
 
 	public Engine(Board board, Board nextPieceBoard){
 		this.board = board;
 		this.nextPieceBoard = nextPieceBoard;
-		for (int i = 0; i < boardRects.length; i++){
-			for (int j = 0; j < boardRects[i].length; j++){
-				Rectangle r = new Rectangle(29, 29);
-				r.setFill(Color.WHITE);
-				boardRects[i][j] = r;
-				board.getGrid().add(r, j,i);
-			}
-		}
 	}
 
 	public void update() {
@@ -112,9 +103,9 @@ public class Engine {
 				
 				Tile current = board.getBoardState()[i][j];
 				if (current.isFilled()){
-					boardRects[i][j].setFill(current.getColor());
+					board.getBoardRects()[i][j].setFill(current.getColor());
 				} else {
-					boardRects[i][j].setFill(Color.WHITE);
+					board.getBoardRects()[i][j].setFill(Color.WHITE);
 				}
 			}
 		}
