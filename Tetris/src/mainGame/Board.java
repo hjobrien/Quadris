@@ -398,6 +398,10 @@ public class Board {
 
 
 	public void clearLines(ArrayList<Integer> linesToClear) {
+		//rewards a "tetris"
+		if (linesToClear.size() == 4){
+			boardScore += 500;
+		}
 		rowsNotFalling = false;
 		setNotFalling();
 		linesToClear.sort(null);
