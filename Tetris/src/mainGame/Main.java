@@ -1,6 +1,7 @@
 package mainGame;
 
 import engine.Engine;
+import engine.Renderer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,7 +33,6 @@ public class Main extends Application{
 	public static final int BOARD_HEIGHT = 20;
 	public static final int BOARD_WIDTH = 10;
 
-	private Engine engine;
 	private AnimationTimer timer;
 	private int gameCounter = 1;
 	private	int score = 0;
@@ -54,7 +54,7 @@ public class Main extends Application{
 		//from engine when we need it and we wont have to be translating boardStates
 		GridPane grid = new GridPane();
 		GridPane nextBlock = new GridPane();
-		this.engine = new Engine(new Board(BOARD_HEIGHT, BOARD_WIDTH, grid), new Board(4,4,nextBlock));
+		Engine.setValues(new Board(BOARD_HEIGHT, BOARD_WIDTH, grid), new Board(4,4,nextBlock));
 		GridPane mainGame = new GridPane();
 		mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
 		mainGame.getColumnConstraints().add(new ColumnConstraints(20));
@@ -85,48 +85,48 @@ public class Main extends Application{
 		
 		configureGrid(grid);
 		
-		engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+		Renderer.draw(Engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
 		
-		engine.addBlock();
+		Engine.addBlock();
 		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
 			}
 			else if(e.getCode() == KeyCode.P){
-				paused = engine.togglePause();
+				paused = Engine.togglePause();
 				if(paused){
 					main.getChildren().add(pauseView);
 				}
 				else{
 					main.getChildren().remove(pauseView);
 				}
-			} else if (!paused && engine.getBoard().rowsAreNotFalling()){
+			} else if (!paused && Engine.getBoard().rowsAreNotFalling()){
 				if (e.getCode() == KeyCode.RIGHT){
-					engine.getBoard().pressed(Move.RIGHT);
+					Engine.getBoard().pressed(Move.RIGHT);
 				} else if (e.getCode() == KeyCode.LEFT){
-					engine.getBoard().pressed(Move.LEFT);
+					Engine.getBoard().pressed(Move.LEFT);
 				} else if (e.getCode() == KeyCode.X){
-					engine.getBoard().pressed(Move.ROT_RIGHT);
+					Engine.getBoard().pressed(Move.ROT_RIGHT);
 				} else if (e.getCode() == KeyCode.Z){
-					engine.getBoard().pressed(Move.ROT_LEFT);
+					Engine.getBoard().pressed(Move.ROT_LEFT);
 	 			} else if (e.getCode() == KeyCode.DOWN){
-	 				engine.getBoard().pressed(Move.DOWN);
+	 				Engine.getBoard().pressed(Move.DOWN);
 	 			} else if (e.getCode() == KeyCode.SPACE){
-	 				engine.getBoard().pressed(Move.FULL_DOWN);
+	 				Engine.getBoard().pressed(Move.FULL_DOWN);
 	 			}else if (e.getCode() == KeyCode.R){
- 					System.out.println("Game " + this.gameCounter + " score: " + (score + engine.getBoard().getBoardScore()) + "\n");
- 					engine.getBoard().clearBoard();
- 					engine.addBlock();
+ 					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
+ 					Engine.getBoard().clearBoard();
+ 					Engine.addBlock();
  					this.score = 0;
  					gameCounter++;
  				} else if (debug){
 	 				if (e.getCode() == KeyCode.UP){
-	 					engine.getBoard().pressed(Move.UP);
+	 					Engine.getBoard().pressed(Move.UP);
 	 				} 
 	 			}
 				if (!paused){
-					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+					Renderer.draw(Engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
 				}
 			}
 		});  			
@@ -146,12 +146,12 @@ public class Main extends Application{
 				if(!paused && now-pastTime >= timePerTurn){
 					score++;
 //					timePerTurn -= 25;
-					valueProperty.set("\tScore: " + (score + engine.getBoard().getBoardScore()));
-					if (engine.getBoard().isFull()){
+					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()));
+					if (Engine.getBoard().isFull()){
 						timer.stop();
 					}
-					engine.update();
-					engine.draw(engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+					Engine.update();
+					Renderer.draw(Engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
 					pastTime = now;
 				}
 			}
