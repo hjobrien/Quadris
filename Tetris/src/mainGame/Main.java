@@ -33,11 +33,14 @@ public class Main extends Application{
 	
 	public static final int BOARD_HEIGHT = 20;
 	public static final int BOARD_WIDTH = 10;
+	
+	public static final int MAX_MILLIS_PER_TURN = 1000;
+	public static final int MIN_MILLIS_PER_TURN = 100;
 
 	private AnimationTimer timer;
 	private int gameCounter = 1;
 	private	int score = 0;
-	private double timePerTurn = 1000;
+	private double timePerTurn = MAX_MILLIS_PER_TURN;
 	
 	boolean paused = false;
 	
@@ -84,8 +87,9 @@ public class Main extends Application{
 		main.getChildren().add(mainGame);
 		Scene boardScene = new Scene(main, GAME_WIDTH, GAME_HEIGHT);
 		stage.setScene(boardScene);
-		StackPane pauseView = showPausedView();
-		
+		StackPane pauseView = constructPauseView();
+		pauseView.setVisible(false);
+		main.getChildren().add(pauseView);
 		configureGrid(grid);
 		
 		Renderer.draw(Engine.getBoard());
@@ -97,19 +101,14 @@ public class Main extends Application{
 				System.exit(0);
 			} else if(e.getCode() == KeyCode.P){
 				paused = Engine.togglePause();
-				if(paused){
-					main.getChildren().add(pauseView);
-				}
-				else{
-					main.getChildren().remove(pauseView);
-				}
+				pauseView.setVisible(paused);
 			} else if (e.getCode() == KeyCode.R){
 					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
 					Engine.getBoard().clearBoard();
 					Engine.addBlock();
 					this.score = 0;
 					gameCounter++;
-					timePerTurn = 1000;
+					timePerTurn = MAX_MILLIS_PER_TURN;
 					timer.start();
 			} else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full){
 				if (e.getCode() == KeyCode.RIGHT){
@@ -164,11 +163,11 @@ public class Main extends Application{
 
 			}
 			private double updateTime(double turnTime) {
-				if(turnTime > 100){
-					return 1000 - 0.09 * (score + Engine.getBoard().getBoardScore());
+				if(turnTime > MIN_MILLIS_PER_TURN){
+					return MAX_MILLIS_PER_TURN - 0.09 * (score + Engine.getBoard().getBoardScore());
 				}
 				else{
-					return 100;
+					return MIN_MILLIS_PER_TURN;
 				}
 			}
 		};
@@ -179,7 +178,7 @@ public class Main extends Application{
 
 	}
 
-	private StackPane showPausedView() {
+	private StackPane constructPauseView() {
 	    final Label label = new Label("Quadris");
 	    label.setStyle("-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
 	    GridPane pausePane = new GridPane();
@@ -202,11 +201,11 @@ public class Main extends Application{
 	    pausePane.add(scoreButton, 1,2);
 	    
 	    StackPane infoPane = new StackPane();
-	    infoPane.setStyle("-fx-background-color: rgba(100, 100, 100, 0.0);");	    
+	    infoPane.setStyle("-fx-background-color: rgba(100, 0, 100, 1);");	  
+	    infoPane.setVisible(false);
 	    
 	    helpButton.setOnAction(e ->{
-	    	infoPane.setStyle("-fx-background-color: rgba(0, 100, 100, 1);");
-	    	pausePane.setStyle("-fx-background-color: rgba(0, 100, 100, 0.0);");
+	    	infoPane.setVisible(true);
 	    });
 	    
 	    
