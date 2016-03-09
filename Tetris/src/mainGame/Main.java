@@ -92,8 +92,7 @@ public class Main extends Application{
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
-			}
-			else if(e.getCode() == KeyCode.P){
+			} else if(e.getCode() == KeyCode.P){
 				paused = Engine.togglePause();
 				if(paused){
 					main.getChildren().add(pauseView);
@@ -101,7 +100,14 @@ public class Main extends Application{
 				else{
 					main.getChildren().remove(pauseView);
 				}
-			} else if (!paused && Engine.getBoard().rowsAreNotFalling()){
+			} else if (e.getCode() == KeyCode.R){
+					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
+					Engine.getBoard().clearBoard();
+					Engine.addBlock();
+					this.score = 0;
+					gameCounter++;
+					timer.start();
+			} else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full){
 				if (e.getCode() == KeyCode.RIGHT){
 					Engine.getBoard().pressed(Move.RIGHT);
 				} else if (e.getCode() == KeyCode.LEFT){
@@ -114,13 +120,7 @@ public class Main extends Application{
 	 				Engine.getBoard().pressed(Move.DOWN);
 	 			} else if (e.getCode() == KeyCode.SPACE){
 	 				Engine.getBoard().pressed(Move.FULL_DOWN);
-	 			}else if (e.getCode() == KeyCode.R){
- 					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
- 					Engine.getBoard().clearBoard();
- 					Engine.addBlock();
- 					this.score = 0;
- 					gameCounter++;
- 				} else if (debug){
+	 			} else if (debug){
 	 				if (e.getCode() == KeyCode.UP){
 	 					Engine.getBoard().pressed(Move.UP);
 	 				} 
@@ -130,6 +130,8 @@ public class Main extends Application{
 				}
 			}
 		});  			
+		
+//		stage.addEventFilter(eventType, eventFilter);
 		int startingTimePerTurn = 500;
 
 		timer = new AnimationTimer(){
@@ -147,10 +149,10 @@ public class Main extends Application{
 					score++;
 //					timePerTurn -= 25;
 					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()));
+					Engine.update();
 					if (Engine.getBoard().isFull()){
 						timer.stop();
 					}
-					Engine.update();
 					Renderer.draw(Engine.getBoard());
 					pastTime = now;
 				}

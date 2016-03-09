@@ -67,8 +67,10 @@ public class Board {
 		int offset = (this.boardState[0].length - b.getShape()[0].length) / 2;
 		Tile[][] blockShape = b.getShape();
 		for (int i = 0; i < blockShape.length; i++){
-			for (int j = 0; j < blockShape[i].length; j++){
-				if (!tileAt(i, j+offset).isFilled()){
+		 	for (int j = 0; j < blockShape[i].length; j++){
+				if (tileAt(i, j+offset).isFilled()){
+					this.full = true;
+				} else {
 					update(i, j+offset, blockShape[i][j]);
 				}
 			}
@@ -149,14 +151,6 @@ public class Board {
 	public boolean checkDown() {
 		if (debug){
 			System.out.println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
-		}
-		
-		//checks if the board has filled up
-		for (int i = 0; i < boardState[0].length; i++){
-			Tile firstTile = tileAt(0, i);
-			if (firstTile.isFilled() && !firstTile.isActive()){
-				full = true;
-			}
 		}
 		
 		//checks if the block is at the bottom of the screen
