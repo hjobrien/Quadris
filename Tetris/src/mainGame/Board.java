@@ -28,8 +28,8 @@ public class Board {
 	int boardScore = 0;
 	
 	public Board(int height, int width, GridPane grid){
-		Tile[][] tempBoard = new Tile[height][width];
-		for(int i = 0; i < height; i++){
+		Tile[][] tempBoard = new Tile[height + 3][width];
+		for(int i = 0; i < height + 3; i++){
 			for(int j = 0; j < width; j++){
 				tempBoard[i][j] = new Tile();			//not active, not filled
 			}
@@ -73,10 +73,10 @@ public class Board {
 		Tile[][] blockShape = b.getShape();
 		for (int i = 0; i < blockShape.length; i++){
 		 	for (int j = 0; j < blockShape[i].length; j++){
-				if (tileAt(i, j+offset).isFilled()){
+				if (tileAt(i + 3, j+offset).isFilled()){
 					this.full = true;
 				} else {
-					update(i, j+offset, blockShape[i][j]);
+					update(i + 3, j+offset, blockShape[i][j]);
 				}
 			}
 		}

@@ -16,7 +16,7 @@ public class Block {
 		this.configurations = configurations;
 		
 		//row, column of bottom right corner
-		int startingRowIndex = configurations[rotationIndex].length - 1;
+		int startingRowIndex = configurations[rotationIndex].length - 1 + 3;
 		int startingColumnIndex = (10 - configurations[rotationIndex][0].length) / 2 + configurations[rotationIndex][0].length - 1;
 		locationInGrid = new int[]{startingRowIndex, startingColumnIndex};
 	}
