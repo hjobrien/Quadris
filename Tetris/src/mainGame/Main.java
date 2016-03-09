@@ -143,7 +143,6 @@ public class Main extends Application{
 			}
 			@Override
 			public void handle(long time){
-				System.out.println(timePerTurn);
 				long now = System.currentTimeMillis();
 				if(!paused && now-pastTime >= timePerTurn){
 					score++;
