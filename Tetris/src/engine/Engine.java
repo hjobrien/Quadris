@@ -15,22 +15,22 @@ import tetrominoes.TBlock;
 import tetrominoes.Tile;
 
 public class Engine {
-	private static Board board;
+	private static Board mainBoard;
 	private static Board nextPieceBoard;
 	private static Block nextBlock = generateRandomBlock();
 	private static boolean isPaused = false;
 
 	public static void update() {
 		if(!isPaused){ //little hacky, could be improved
-			if (board.getFallingBlock().isFalling()){
-				if (board.checkDown()){
-					board.blockDown();
+			if (mainBoard.getFallingBlock().isFalling()){
+				if (mainBoard.checkDown()){
+					mainBoard.blockDown();
 				} else {
-					ArrayList<Integer> linesToClear = board.getFullRows();
+					ArrayList<Integer> linesToClear = mainBoard.getFullRows();
 					if (!linesToClear.isEmpty()){
-						board.clearLines(linesToClear);
+						mainBoard.clearLines(linesToClear);
 					} else {
-						board.setNotFalling();
+						mainBoard.setNotFalling();
 						addBlock();
 					}
 				}
@@ -39,13 +39,13 @@ public class Engine {
 	}
 
 	public Tile[][] getBoardState(){
-		return board.getBoardState();
+		return mainBoard.getBoardState();
 	}
 	
 	//Adds a random block to the board
 	public static void addBlock() {
-		board.setFallingBlock(nextBlock);
-		board.updateBoardWithNewBlock(nextBlock);
+		mainBoard.setFallingBlock(nextBlock);
+		mainBoard.updateBoardWithNewBlock(nextBlock);
 		nextBlock = generateRandomBlock();	
 		nextPieceBoard.clearBoard();
 		Renderer.draw(nextPieceBoard);
@@ -79,7 +79,7 @@ public class Engine {
 	}
 
 	public static Board getBoard(){
-		return board;
+		return mainBoard;
 	}
 
 	public static boolean togglePause() {
@@ -89,7 +89,7 @@ public class Engine {
 	
 	
 	public static void setValues(Board b1, Board b2) {
-		board = b1;
+		mainBoard = b1;
 		nextPieceBoard = b2;
 		
 	}

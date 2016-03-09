@@ -14,9 +14,6 @@ public class Board {
 	private GridPane grid;
 	public boolean blockAdded = false;
 	private Rectangle[][] boardRects;
-//	private int height;
-//	private int width;
-	private boolean hasBeenDrawn;
 
 	private boolean rowsNotFalling = true;
 	
@@ -50,17 +47,7 @@ public class Board {
 			}
 		}
 		this.boardRects = tempBoardRects;
-//		this.height = height;
-//		this.width = width;
 	}
-	
-//	public int getHeight() {
-//		return height;
-//	}
-//
-//	public int getWidth() {
-//		return width;
-//	}
 
 	public Rectangle[][] getBoardRects(){
 		return this.boardRects;
@@ -411,7 +398,7 @@ public class Board {
 
 
 	public void clearLines(ArrayList<Integer> linesToClear) {
-		//rewards a "tetris"
+		//rewards a "quadris"
 		if (linesToClear.size() == 4){
 			boardScore += 500;
 		}
@@ -434,14 +421,6 @@ public class Board {
 		if (isEmpty()){
 			fallingBlock.stoppedFalling();
 		}
-	}
-
-	public boolean hasBeenDrawn() {
-		return hasBeenDrawn;
-	}
-
-	public void setHasBeenDrawn(boolean hasBeenDrawn) {
-		this.hasBeenDrawn = hasBeenDrawn;
 	}
 
 }
