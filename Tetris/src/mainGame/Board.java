@@ -27,6 +27,9 @@ public class Board {
 	
 	int boardScore = 0;
 	
+	//three extra blocks so that the straight all blocks 
+	//(particularly the straight line) can rotate
+	//when they are initialized
 	public Board(int height, int width, GridPane grid){
 		Tile[][] tempBoard = new Tile[height + 3][width];
 		for(int i = 0; i < height + 3; i++){
