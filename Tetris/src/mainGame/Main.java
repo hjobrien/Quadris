@@ -65,7 +65,8 @@ public class Main extends Application{
 		for(int i = 0; i < 3; i++){
 			mainGame.getRowConstraints().add(new RowConstraints(150));
 		}
-		Label scoreText = new Label("Score: " + score);
+		Label scoreText = new Label("Score: " + score + 
+				"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 		StringProperty valueProperty = new SimpleStringProperty();
 		valueProperty.setValue("0");
 		scoreText.textProperty().bind(valueProperty);
@@ -149,7 +150,8 @@ public class Main extends Application{
 				if(!paused && now-pastTime >= timePerTurn){
 					score++;
 //					timePerTurn -= 25;
-					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()));
+					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()) + 
+							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 					Engine.update();
 					if (Engine.getBoard().isFull()){
 						timer.stop();

@@ -14,7 +14,8 @@ public class Board {
 	private GridPane grid;
 	public boolean blockAdded = false;
 	private Rectangle[][] boardRects;
-
+	private int numOfFullRows = 0;
+	
 	private boolean rowsNotFalling = true;
 	
 	//would indicate the game is over
@@ -59,6 +60,10 @@ public class Board {
 	
 	public int getBoardScore(){
 		return boardScore;
+	}
+	
+	public int getNumOfFullRows(){
+		return this.numOfFullRows;
 	}
 	
 	//adds a block near the top of the screen
@@ -322,10 +327,13 @@ public class Board {
 		
 		for (int i = fallingBlockShape.length - 1; i >= 0; i--){
 			for (int j = fallingBlockShape[i].length - 1; j >= 0; j--){
-				//makes sure we arent running off the board
-				int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
-				int column = fallingBlockLocation[1] - (fallingBlockShape[0].length - 1 - j);
-				update(row, column, fallingBlockShape[i][j]);
+				if (fallingBlockShape[i][j].isFilled()){
+					//makes sure we arent running off the board
+					int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
+					int column = fallingBlockLocation[1] - (fallingBlockShape[0].length - 1 - j);
+					
+					update(row, column, fallingBlockShape[i][j]);
+				}
 			}
 		}
 	}
@@ -365,6 +373,7 @@ public class Board {
 			}
 		}
 		this.boardScore = 0;
+		this.numOfFullRows = 0;
 		this.full = false;
 	}
 	
@@ -384,6 +393,7 @@ public class Board {
 				index++;
 			}
 			if (full){
+				numOfFullRows++;
 				fullRows.add(i);
 			}
 		}
