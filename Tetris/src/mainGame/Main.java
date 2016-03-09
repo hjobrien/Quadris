@@ -11,10 +11,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.TransformChangedEvent;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -129,9 +131,8 @@ public class Main extends Application{
 					Renderer.draw(Engine.getBoard());
 				}
 			}
-		});  			
+		});  
 		
-//		stage.addEventFilter(eventType, eventFilter);
 		int startingTimePerTurn = 500;
 
 		timer = new AnimationTimer(){
