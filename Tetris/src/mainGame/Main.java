@@ -37,6 +37,7 @@ public class Main extends Application{
 	private AnimationTimer timer;
 	private int gameCounter = 1;
 	private	int score = 0;
+	private double timePerTurn = 1000;
 	
 	boolean paused = false;
 	
@@ -108,6 +109,7 @@ public class Main extends Application{
 					Engine.addBlock();
 					this.score = 0;
 					gameCounter++;
+					timePerTurn = 1000;
 					timer.start();
 			} else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full){
 				if (e.getCode() == KeyCode.RIGHT){
@@ -132,11 +134,8 @@ public class Main extends Application{
 				}
 			}
 		});  
-		
-		int startingTimePerTurn = 500;
 
 		timer = new AnimationTimer(){
-			private int timePerTurn = startingTimePerTurn;
 			private long pastTime;
 			@Override
 			public void start(){
@@ -148,7 +147,6 @@ public class Main extends Application{
 				long now = System.currentTimeMillis();
 				if(!paused && now-pastTime >= timePerTurn){
 					score++;
-//					timePerTurn -= 25;
 					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()) + 
 							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 					Engine.update();
@@ -157,6 +155,15 @@ public class Main extends Application{
 					}
 					Renderer.draw(Engine.getBoard());
 					pastTime = now;
+					timePerTurn = updateTime(timePerTurn);
+				}
+			}
+			private double updateTime(double turnTime) {
+				if(turnTime > 100){
+					return turnTime - 0.09;
+				}
+				else{
+					return 100;
 				}
 			}
 		};
