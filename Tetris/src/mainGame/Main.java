@@ -145,8 +145,10 @@ public class Main extends Application{
 			@Override
 			public void handle(long time){
 				long now = System.currentTimeMillis();
-				if(!paused && now-pastTime >= timePerTurn){
+				if(debug){
 					System.out.println(timePerTurn);
+				}
+				if(!paused && now-pastTime >= timePerTurn){
 					score++;
 					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()) + 
 							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
@@ -159,10 +161,11 @@ public class Main extends Application{
 				}
 				timePerTurn = updateTime(timePerTurn);
 
+
 			}
 			private double updateTime(double turnTime) {
 				if(turnTime > 100){
-					return turnTime - 0.09;
+					return 1000 - 0.09 * (score + Engine.getBoard().getBoardScore());
 				}
 				else{
 					return 100;
@@ -184,26 +187,27 @@ public class Main extends Application{
 	    pausePane.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
 	    pausePane.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH - SCREEN_WIDTH));
 	    pausePane.getRowConstraints().add(new RowConstraints(540));
-	    Button helpButton = new Button("Help");
+	    
+	    Button helpButton = new Button("Instructions");
 	    helpButton.setMinWidth(175);
 	    helpButton.setMinHeight(30);
 	    helpButton.setStyle("-fx-background-color: rgba(108, 116, 118, 1);");	    
-	    helpButton.setOnAction(e->{
-	    	
-	    });
 
 	    Button scoreButton = new Button("High Scores");
 	    scoreButton.setMinWidth(175);
 	    scoreButton.setMinHeight(30);
-	    scoreButton.setStyle("-fx-background-color: rgba(108, 116, 118, 1);");	    
-
-
-
-	    
+	    scoreButton.setStyle("-fx-background-color: rgba(108, 116, 118, 1);"); 
 	    
 	    pausePane.add(helpButton, 1,1);
 	    pausePane.add(scoreButton, 1,2);
 	    
+	    StackPane infoPane = new StackPane();
+	    infoPane.setStyle("-fx-background-color: rgba(100, 100, 100, 0.0);");	    
+	    
+	    helpButton.setOnAction(e ->{
+	    	infoPane.setStyle("-fx-background-color: rgba(0, 100, 100, 1);");
+	    	pausePane.setStyle("-fx-background-color: rgba(0, 100, 100, 0.0);");
+	    });
 	    
 	    
 	    
@@ -213,7 +217,7 @@ public class Main extends Application{
 	    
 		StackPane glass = new StackPane();
 	    StackPane.setAlignment(label, Pos.CENTER);
-	    glass.getChildren().addAll(label,pausePane);
+	    glass.getChildren().addAll(infoPane, label, pausePane);
 	    glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");	    
 	    return glass;
 	}
