@@ -85,7 +85,7 @@ public class Main extends Application{
 		
 		configureGrid(grid);
 		
-		Renderer.draw(Engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+		Renderer.draw(Engine.getBoard());
 		
 		Engine.addBlock();
 		
@@ -126,7 +126,7 @@ public class Main extends Application{
 	 				} 
 	 			}
 				if (!paused){
-					Renderer.draw(Engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+					Renderer.draw(Engine.getBoard());
 				}
 			}
 		});  			
@@ -151,7 +151,7 @@ public class Main extends Application{
 						timer.stop();
 					}
 					Engine.update();
-					Renderer.draw(Engine.getBoard(), BOARD_HEIGHT, BOARD_WIDTH);
+					Renderer.draw(Engine.getBoard());
 					pastTime = now;
 				}
 			}
