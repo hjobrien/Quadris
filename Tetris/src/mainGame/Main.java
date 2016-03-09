@@ -146,6 +146,7 @@ public class Main extends Application{
 			public void handle(long time){
 				long now = System.currentTimeMillis();
 				if(!paused && now-pastTime >= timePerTurn){
+					System.out.println(timePerTurn);
 					score++;
 					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()) + 
 							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
@@ -155,8 +156,9 @@ public class Main extends Application{
 					}
 					Renderer.draw(Engine.getBoard());
 					pastTime = now;
-					timePerTurn = updateTime(timePerTurn);
 				}
+				timePerTurn = updateTime(timePerTurn);
+
 			}
 			private double updateTime(double turnTime) {
 				if(turnTime > 100){
@@ -185,9 +187,17 @@ public class Main extends Application{
 	    Button helpButton = new Button("Help");
 	    helpButton.setMinWidth(175);
 	    helpButton.setMinHeight(30);
+	    helpButton.setStyle("-fx-background-color: rgba(108, 116, 118, 1);");	    
+	    helpButton.setOnAction(e->{
+	    	
+	    });
+
 	    Button scoreButton = new Button("High Scores");
 	    scoreButton.setMinWidth(175);
 	    scoreButton.setMinHeight(30);
+	    scoreButton.setStyle("-fx-background-color: rgba(108, 116, 118, 1);");	    
+
+
 
 	    
 	    
