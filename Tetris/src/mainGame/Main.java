@@ -8,15 +8,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.transform.TransformChangedEvent;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -70,7 +69,7 @@ public class Main extends Application{
 		StringProperty valueProperty = new SimpleStringProperty();
 		valueProperty.setValue("0");
 		scoreText.textProperty().bind(valueProperty);
-		mainGame.add(scoreText, 2,3);
+		mainGame.add(scoreText, 2,2);
 		
 		for (int i = 0; i < 4; i++){
 			nextBlock.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / BOARD_WIDTH));
@@ -171,10 +170,33 @@ public class Main extends Application{
 	private StackPane showPausedView() {
 	    final Label label = new Label("Quadris");
 	    label.setStyle("-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
+	    GridPane pausePane = new GridPane();
 
+	    pausePane.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
+	    pausePane.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH - SCREEN_WIDTH));
+	    pausePane.getRowConstraints().add(new RowConstraints(540));
+	    Button helpButton = new Button("Help");
+	    helpButton.setMinWidth(175);
+	    helpButton.setMinHeight(30);
+	    Button scoreButton = new Button("High Scores");
+	    scoreButton.setMinWidth(175);
+	    scoreButton.setMinHeight(30);
+
+	    
+	    
+	    pausePane.add(helpButton, 1,1);
+	    pausePane.add(scoreButton, 1,2);
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 		StackPane glass = new StackPane();
 	    StackPane.setAlignment(label, Pos.CENTER);
-	    glass.getChildren().addAll(label);
+	    glass.getChildren().addAll(label,pausePane);
 	    glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");	    
 	    return glass;
 	}
