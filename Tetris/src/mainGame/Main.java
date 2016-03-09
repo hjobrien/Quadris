@@ -11,10 +11,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.TransformChangedEvent;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -92,8 +94,7 @@ public class Main extends Application{
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
 				System.exit(0);
-			}
-			else if(e.getCode() == KeyCode.P){
+			} else if(e.getCode() == KeyCode.P){
 				paused = Engine.togglePause();
 				if(paused){
 					main.getChildren().add(pauseView);
@@ -101,7 +102,14 @@ public class Main extends Application{
 				else{
 					main.getChildren().remove(pauseView);
 				}
-			} else if (!paused && Engine.getBoard().rowsAreNotFalling()){
+			} else if (e.getCode() == KeyCode.R){
+					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
+					Engine.getBoard().clearBoard();
+					Engine.addBlock();
+					this.score = 0;
+					gameCounter++;
+					timer.start();
+			} else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full){
 				if (e.getCode() == KeyCode.RIGHT){
 					Engine.getBoard().pressed(Move.RIGHT);
 				} else if (e.getCode() == KeyCode.LEFT){
@@ -114,13 +122,7 @@ public class Main extends Application{
 	 				Engine.getBoard().pressed(Move.DOWN);
 	 			} else if (e.getCode() == KeyCode.SPACE){
 	 				Engine.getBoard().pressed(Move.FULL_DOWN);
-	 			}else if (e.getCode() == KeyCode.R){
- 					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
- 					Engine.getBoard().clearBoard();
- 					Engine.addBlock();
- 					this.score = 0;
- 					gameCounter++;
- 				} else if (debug){
+	 			} else if (debug){
 	 				if (e.getCode() == KeyCode.UP){
 	 					Engine.getBoard().pressed(Move.UP);
 	 				} 
@@ -129,7 +131,8 @@ public class Main extends Application{
 					Renderer.draw(Engine.getBoard());
 				}
 			}
-		});  			
+		});  
+		
 		int startingTimePerTurn = 500;
 
 		timer = new AnimationTimer(){
@@ -147,10 +150,10 @@ public class Main extends Application{
 					score++;
 //					timePerTurn -= 25;
 					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()));
+					Engine.update();
 					if (Engine.getBoard().isFull()){
 						timer.stop();
 					}
-					Engine.update();
 					Renderer.draw(Engine.getBoard());
 					pastTime = now;
 				}
