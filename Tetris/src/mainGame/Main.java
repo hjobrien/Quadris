@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -101,7 +102,12 @@ public class Main extends Application{
 				System.exit(0);
 			} else if(e.getCode() == KeyCode.P){
 				paused = Engine.togglePause();
-				pauseView.setVisible(paused);
+				if(paused){
+					pause(pauseView);
+				}
+				else{
+					unpause(pauseView);
+				}
 			} else if (e.getCode() == KeyCode.R){
 					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
 					Engine.getBoard().clearBoard();
@@ -176,6 +182,21 @@ public class Main extends Application{
 		
 		stage.show();
 
+	}
+
+	private void pause(StackPane pauseView) {
+		pauseView.setVisible(true);
+		
+	}
+
+	private void unpause(StackPane pauseView) {
+		pauseView.setVisible(false);
+		for(Node child : pauseView.getChildren()){
+			if((child instanceof StackPane)){
+				child.setVisible(false);
+			}
+		}
+		
 	}
 
 	private StackPane constructPauseView() {
