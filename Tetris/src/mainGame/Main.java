@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -32,8 +33,11 @@ public class Main extends Application{
 	private static final int GAME_WIDTH = SCREEN_WIDTH + 175;
 	private static final int GAME_HEIGHT = SCREEN_HEIGHT;
 	
-	public static final int BOARD_HEIGHT = 20;
-	public static final int BOARD_WIDTH = 10;
+	private static final int HELP_HEIGHT = GAME_HEIGHT - 210;
+	private static final int HELP_WIDTH = GAME_WIDTH;
+	
+	public static final int VERTICAL_TILES = 20;
+	public static final int HORIZONTAL_TILES = 10;
 	
 	public static final int MAX_MILLIS_PER_TURN = 1000;
 	public static final int MIN_MILLIS_PER_TURN = 100;
@@ -60,7 +64,7 @@ public class Main extends Application{
 		//from engine when we need it and we wont have to be translating boardStates
 		GridPane grid = new GridPane();
 		GridPane nextBlock = new GridPane();
-		Engine.setValues(new Board(BOARD_HEIGHT, BOARD_WIDTH, grid), new Board(4,4,nextBlock));
+		Engine.setValues(new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid), new Board(4,4,nextBlock));
 		GridPane mainGame = new GridPane();
 		mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
 		mainGame.getColumnConstraints().add(new ColumnConstraints(20));
@@ -77,10 +81,10 @@ public class Main extends Application{
 		mainGame.add(scoreText, 2,2);
 		
 		for (int i = 0; i < 4; i++){
-			nextBlock.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / BOARD_WIDTH));
+			nextBlock.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / HORIZONTAL_TILES));
 		}
 		for (int i = 0; i < 4; i ++){
-			nextBlock.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / BOARD_HEIGHT));
+			nextBlock.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / VERTICAL_TILES));
 		}
 		nextBlock.setGridLinesVisible(true);
 		mainGame.add(nextBlock, 2,0);
@@ -184,6 +188,7 @@ public class Main extends Application{
 
 	}
 
+	//maybe do more here, for right now it's its own method
 	private void pause(StackPane pauseView) {
 		pauseView.setVisible(true);
 		
@@ -221,12 +226,30 @@ public class Main extends Application{
 	    pausePane.add(helpButton, 1,1);
 	    pausePane.add(scoreButton, 1,2);
 	    
-	    StackPane infoPane = new StackPane();
-	    infoPane.setStyle("-fx-background-color: rgba(100, 0, 100, 1);");	  
-	    infoPane.setVisible(false);
+	    StackPane helpPane = new StackPane();
+	    helpPane.setMaxHeight(HELP_HEIGHT);
+	    helpPane.setMaxWidth(HELP_WIDTH);
+
+	    helpPane.setStyle("-fx-background-color: rgba(100, 0, 100, 0.5);");	  
+	    helpPane.setVisible(false);
+	    
+	    TextArea buttonMapping = new TextArea(
+	    		  "\n\n\n"
+	    		+ "Left Arrow:\t     Move Left\n"
+	    		+ "Right Arrow:\t   Move Right\n"
+	    		+ "Down Arrow:\t Speed Down\n"
+	    		+ "Z:\t\t\t   Rotate Left\n"
+	    		+ "X:\t\t\t Rotate Right\n"
+	    		+ "Spacebar:\t   Drop Piece\n"
+	    		+ "R:\t\t\t\t Restart\n"
+	    		+ "P:\t\t\t\t   Pause");
+	    buttonMapping.getStylesheets().add("stylesheets/TextAreaStyle.css");
+        buttonMapping.setStyle("-fx-text-fill: white;");
+	    StackPane.setAlignment(buttonMapping, Pos.CENTER);
+	    helpPane.getChildren().add(buttonMapping);
 	    
 	    helpButton.setOnAction(e ->{
-	    	infoPane.setVisible(true);
+	    	helpPane.setVisible(true);
 	    });
 	    
 	    
@@ -237,17 +260,18 @@ public class Main extends Application{
 	    
 		StackPane glass = new StackPane();
 	    StackPane.setAlignment(label, Pos.CENTER);
-	    glass.getChildren().addAll(infoPane, label, pausePane);
+	    StackPane.setAlignment(helpPane, Pos.BOTTOM_CENTER);
+	    glass.getChildren().addAll(helpPane, label, pausePane);
 	    glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");	    
 	    return glass;
 	}
 
 	private void configureGrid(GridPane grid) {
-		for (int i = 0; i < BOARD_WIDTH; i++){
-			grid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / BOARD_WIDTH));
+		for (int i = 0; i < HORIZONTAL_TILES; i++){
+			grid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / HORIZONTAL_TILES));
 		}
-		for (int i = 0; i < BOARD_HEIGHT; i ++){
-			grid.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / BOARD_HEIGHT));
+		for (int i = 0; i < VERTICAL_TILES; i ++){
+			grid.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / VERTICAL_TILES));
 		}
 		grid.setGridLinesVisible(true);
 	}
