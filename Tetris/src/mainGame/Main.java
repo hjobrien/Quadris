@@ -1,5 +1,11 @@
 package mainGame;
 
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
 import engine.Engine;
 import engine.Renderer;
 import javafx.animation.AnimationTimer;
@@ -43,8 +49,10 @@ public class Main extends Application{
 	public static final int MIN_MILLIS_PER_TURN = 100;
 
 	private AnimationTimer timer;
+	private PrintStream scorePrinter;
+	private Scanner scoreReader;
 	private int gameCounter = 1;
-	private	int score = 0;
+	private	int timeScore = 0;
 	private double timePerTurn = MAX_MILLIS_PER_TURN;
 	
 	boolean paused = false;
@@ -57,6 +65,16 @@ public class Main extends Application{
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		File scoreFile = new File("src/gameLogs/High Scores");
+		scorePrinter = new PrintStream(scoreFile);
+		if(!scoreFile.exists()){
+			scoreFile.createNewFile();
+			for(int i = 0; i < 10; i++){
+				scorePrinter.println("0");
+			}
+		}
+		scoreReader = new Scanner(scoreFile);
+		ArrayList<Integer> highScores = getHighScores(scoreReader);
 		StackPane main = new StackPane();
 		
 		
@@ -73,7 +91,7 @@ public class Main extends Application{
 		for(int i = 0; i < 3; i++){
 			mainGame.getRowConstraints().add(new RowConstraints(150));
 		}
-		Label scoreText = new Label("Score: " + score + 
+		Label scoreText = new Label("Score: " + timeScore + 
 				"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 		StringProperty valueProperty = new SimpleStringProperty();
 		valueProperty.setValue("0");
@@ -103,6 +121,8 @@ public class Main extends Application{
 		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
+				scorePrinter.close();
+				scoreReader.close();
 				System.exit(0);
 			} else if(e.getCode() == KeyCode.P){
 				paused = Engine.togglePause();
@@ -113,10 +133,13 @@ public class Main extends Application{
 					unpause(pauseView);
 				}
 			} else if (e.getCode() == KeyCode.R){
-					System.out.println("Game " + this.gameCounter + " score: " + (score + Engine.getBoard().getBoardScore()) + "\n");
+					int score = getScore();
+					System.out.println("Game " + this.gameCounter + " score: " + score  + "\n");
+					updateHighScores(score, highScores); // updatesArray List by reference
+					printScores(highScores);
 					Engine.getBoard().clearBoard();
 					Engine.addBlock();
-					this.score = 0;
+					this.timeScore = 0;
 					gameCounter++;
 					timePerTurn = MAX_MILLIS_PER_TURN;
 					timer.start();
@@ -158,8 +181,8 @@ public class Main extends Application{
 					System.out.println(timePerTurn);
 				}
 				if(!paused && now-pastTime >= timePerTurn){
-					score++;
-					valueProperty.set("\tScore: " + (score + Engine.getBoard().getBoardScore()) + 
+					timeScore++;
+					valueProperty.set("\tScore: " + (timeScore + Engine.getBoard().getBoardScore()) + 
 							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 					Engine.update();
 					if (Engine.getBoard().isFull()){
@@ -174,7 +197,7 @@ public class Main extends Application{
 			}
 			private double updateTime(double turnTime) {
 				if(turnTime > MIN_MILLIS_PER_TURN){
-					return MAX_MILLIS_PER_TURN - 0.09 * (score + Engine.getBoard().getBoardScore());
+					return MAX_MILLIS_PER_TURN - 0.09 * (timeScore + Engine.getBoard().getBoardScore());
 				}
 				else{
 					return MIN_MILLIS_PER_TURN;
@@ -186,6 +209,31 @@ public class Main extends Application{
 		
 		stage.show();
 
+	}
+
+	private void printScores(ArrayList<Integer> highScores) {
+		scorePrinter.close();
+		for(Integer i : highScores){
+			scorePrinter.println(i);
+		}
+	}
+
+	private void updateHighScores(int score, ArrayList<Integer> highScores) {
+		highScores.add(score);
+		Collections.sort(highScores, Collections.reverseOrder());
+		highScores.remove(highScores.size()); //removes 11th high score
+	}
+
+	private int getScore() {
+		return (timeScore + Engine.getBoard().getBoardScore());
+	}
+
+	private ArrayList<Integer> getHighScores(Scanner scoreReader2) {
+		ArrayList<Integer> scores = new ArrayList<Integer>(10);
+		while(scoreReader2.hasNextInt()){
+			scores.add(scoreReader2.nextInt());
+		}
+		return scores;
 	}
 
 	//maybe do more here, for right now it's its own method
@@ -251,9 +299,6 @@ public class Main extends Application{
 	    helpButton.setOnAction(e ->{
 	    	helpPane.setVisible(true);
 	    });
-	    
-	    
-	    
 	    
 	    
 	    

@@ -74,8 +74,7 @@ public class Engine {
 		case 6: 
 			return new Square();
 		}
-//		shouldnt ever happen
-		return new StraightLine();
+		throw new RuntimeException("bad random num");
 	}
 
 	public static Board getBoard(){
