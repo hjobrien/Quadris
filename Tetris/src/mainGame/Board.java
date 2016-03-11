@@ -160,30 +160,99 @@ public class Board {
 		if (debug){
 			System.out.println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
 		}
+
+		if (checkBlockAtBottom() || checkUnderneath()){
+			if (!rowsNotFalling){
+				int lowestEmptyRow = getLowestEmptyRow();
+				if (existRowsAbove(lowestEmptyRow)){
+					setBlocksUnderToInactive(lowestEmptyRow);
+					return true;
+				} else {
+					rowsNotFalling = true;
+				}
+			}
+			return false;
+		}
 		
-		//checks if the block is at the bottom of the screen
-		int lastIndex = boardState.length - 1;
-		for (int i = 0; i < boardState[0].length; i++){
-			if (tileAt(lastIndex, i).isActive()){
-				rowsNotFalling = true;
-				return false;
+		return true;
+		/* if lowestEmptyRow has blocks above it:
+		* set blocks under lowestEmptyLine to inactive
+		* keep blocks above lowestEmptyLine active
+		*/
+
+		
+		
+	}
+
+	private void setBlocksUnderToInactive(int lowestEmptyRow) {
+		for (int i = lowestEmptyRow; i < boardState.length; i++){
+			for (Tile t : boardState[i]){
+				if (t.isFilled()){
+					t.setActive(false);
+				}
 			}
 		}
 		
-		//checks if there is an inactive tile (block that already fell) below
+	}
+
+	private boolean existRowsAbove(int lowestEmptyRow) {
+		for (int i = lowestEmptyRow; i >= 0; i--){
+			for (int j = 0; j < boardState[0].length; j++){
+				if (boardState[i][j].isFilled()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private int getLowestEmptyRow() {
+		boolean foundEmptyRow = false;
+		int row = boardState.length - 1;
+		while (!foundEmptyRow && row >= 0){
+			boolean rowIsEmpty = true;
+			int column = 0;
+			while (rowIsEmpty && column < boardState[0].length){
+				if (boardState[row][column].isFilled()){
+					rowIsEmpty = false;
+				} else {
+					column++;
+				}
+			}
+			if (rowIsEmpty){
+				foundEmptyRow = true;
+			} else {
+				row --;
+			}
+		}
+		return row;
+	}
+
+	//checks if there is an inactive tile (block that already fell) below
+	private boolean checkUnderneath() {
 		for (int i = 0; i < boardState.length; i++){
 			for (int j = 0; j < boardState[i].length; j++){
 				Tile thisT = boardState[i][j];
 				if (thisT.isActive()){
 					Tile nextT = boardState[i + 1][j];
 					if (nextT.isFilled() && !nextT.isActive()){
-						rowsNotFalling = true;
-						return false;
+						return true;
 					}
 				}
 			}
 		}
-		return true;
+		return false;
+	}
+
+	//checks if the block is at the bottom of the screen
+	private boolean checkBlockAtBottom() {
+		int lastIndex = boardState.length - 1;
+		for (int i = 0; i < boardState[0].length; i++){
+			if (tileAt(lastIndex, i).isActive()){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	//moves all the blocks down 1 row
@@ -409,22 +478,24 @@ public class Board {
 		if (linesToClear.size() == 4){
 			boardScore += 500;
 		}
-		rowsNotFalling = false;
-		setNotFalling();
-		linesToClear.sort(null);
-		for (int i = 0; i < linesToClear.get(0); i++){
-			for (Tile t : boardState[i]){
-				if (t.isFilled()){
-					t.setActive(true);
-				}
-			}
-		}
+
 		for (int i = 0; i < linesToClear.size(); i++){
 			for (int j = 0; j < boardState[i].length; j++){
 				update(linesToClear.get(i), j, new Tile());
 			}
 			boardScore += 100;
 		}
+		
+		rowsNotFalling = false;
+		setNotFalling();
+		for (int i = 0; i < linesToClear.get(linesToClear.size() - 1); i++){
+			for (Tile t : boardState[i]){
+				if (t.isFilled()){
+					t.setActive(true);
+				}
+			}
+		}
+
 		if (isEmpty()){
 			fallingBlock.stoppedFalling();
 		}
