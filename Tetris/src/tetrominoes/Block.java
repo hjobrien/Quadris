@@ -1,5 +1,7 @@
 package tetrominoes;
 
+import engine.BlockType;
+
 public class Block {
 	private Tile[][][] configurations = new Tile[][][]{};
 	private int rotationIndex = 0;
@@ -9,12 +11,14 @@ public class Block {
 
 	private boolean falling = true;
 	
+	private  BlockType type;
+	
 	//gives coordinates of block's bottom right tile in the form {row, column}
 	private int[] locationInGrid = new int[2];
 	
-	public Block(Tile[][][] configurations){
+	public Block(Tile[][][] configurations, BlockType type){
 		this.configurations = configurations;
-		
+		this.type = type;
 		//row, column of bottom right corner
 		int startingRowIndex = configurations[rotationIndex].length - 1 + 3;
 		int startingColumnIndex = (10 - configurations[rotationIndex][0].length) / 2 + configurations[rotationIndex][0].length - 1;
@@ -96,6 +100,10 @@ public class Block {
 		if (rotationIndex > configurations.length - 1){
 			rotationIndex = 0;
 		}
+	}
+
+	public BlockType getType() {
+		return type;
 	}
 
 }

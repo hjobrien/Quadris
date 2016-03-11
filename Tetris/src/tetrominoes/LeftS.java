@@ -1,9 +1,11 @@
 package tetrominoes;
 
+import engine.BlockType;
 import javafx.scene.paint.Color;
 
 public class LeftS extends Block{
 	
+	private static BlockType type = BlockType.LEFT_S;
 	private static Color color = Color.GREEN;
 
 	//[change this index for rotations][row][column]
@@ -21,7 +23,7 @@ public class LeftS extends Block{
 
 	
 	public LeftS() {
-		super(configurations);
+		super(configurations, type);
 		if (super.debug){
 			System.out.println("made left S");
 		}

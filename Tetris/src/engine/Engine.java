@@ -26,6 +26,7 @@ public class Engine {
 				if (board.checkDown()){
 					board.blockDown();
 				} else {
+					//log state
 					ArrayList<Integer> linesToClear = board.getFullRows();
 					if (!linesToClear.isEmpty()){
 						board.clearLines(linesToClear);

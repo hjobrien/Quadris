@@ -1,10 +1,13 @@
 package tetrominoes;
 
+import engine.BlockType;
 import javafx.scene.paint.Color;
 
 public class StraightLine extends Block {
-
+	
+	private static BlockType type = BlockType.LINE;
 	private static Color color = Color.PURPLE;
+	
 	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
 		
@@ -21,7 +24,7 @@ public class StraightLine extends Block {
 	};		
 	
 	public StraightLine() {
-		super(configurations);
+		super(configurations, type);
 		if (super.debug){
 			System.out.println("made straight line");
 		}

@@ -1,10 +1,13 @@
 package tetrominoes;
 
+import engine.BlockType;
 import javafx.scene.paint.Color;
 
 public class TBlock extends Block {
 		
+	private static BlockType type = BlockType.T_BLOCK;
 	private static Color color = Color.AQUAMARINE;
+	
 	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
@@ -28,7 +31,7 @@ public class TBlock extends Block {
 	};
 	
 	public TBlock() {
-		super(configurations);
+		super(configurations, type);
 		if (super.debug){
 			System.out.println("made T");
 		}

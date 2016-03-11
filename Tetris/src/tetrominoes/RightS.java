@@ -1,10 +1,13 @@
 package tetrominoes;
 
+import engine.BlockType;
 import javafx.scene.paint.Color;
 
 public class RightS extends Block {
 	
+	private static BlockType type = BlockType.RIGHT_S;
 	private static Color color = Color.BLUE;
+	
 	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
@@ -19,7 +22,7 @@ public class RightS extends Block {
 	};		
 	
 	public RightS() {
-		super(configurations);
+		super(configurations, type);
 		if (super.debug){
 			System.out.println("made Right S");
 		}

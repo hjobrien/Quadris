@@ -1,10 +1,13 @@
 package tetrominoes;
 
+import engine.BlockType;
 import javafx.scene.paint.Color;
 
 public class LeftL extends Block {
 	
+	private static BlockType type = BlockType.LEFT_L;
 	private static Color color = Color.ORANGE;
+	
 	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
 		new Tile [][]{
@@ -29,7 +32,7 @@ public class LeftL extends Block {
 	
 	
 	public LeftL() {
-		super(configurations);
+		super(configurations, type);
 		
 		if (super.debug){
 			System.out.println("made left L");
