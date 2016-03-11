@@ -1,8 +1,10 @@
 package mainGame;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -28,8 +30,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 	
-//	boolean debug = true;
-	boolean debug = false;
+	boolean debug = true;
+//	boolean debug = false;
 
 	
 	//height should be double width
@@ -55,6 +57,10 @@ public class Main extends Application{
 	private	int timeScore = 0;
 	private double timePerTurn = MAX_MILLIS_PER_TURN;
 	
+	private TextArea scoreList = null;
+	
+	private ArrayList<Integer> highScores = null; //need to put this here because i can't make a local variable passed to a method in the listener
+	
 	boolean paused = false;
 	
 
@@ -65,19 +71,7 @@ public class Main extends Application{
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		File scoreFile = new File("src/gameLogs/High Scores");
-		if(!scoreFile.exists()){
-			scoreFile.createNewFile();
-			scorePrinter = new PrintStream(scoreFile);
-			for(int i = 0; i < 10; i++){
-				scorePrinter.println("0");
-			}
-		}
-		scoreReader = new Scanner(scoreFile);
-		ArrayList<Integer> highScores = getHighScores(scoreReader);
-		scorePrinter = new PrintStream(scoreFile);
-		printScores(highScores);
-		
+		initializeScorePrinter();
 		StackPane main = new StackPane();
 		
 		
@@ -121,9 +115,9 @@ public class Main extends Application{
 		Renderer.draw(Engine.getBoard());
 		
 		Engine.addBlock();
-		
 		stage.addEventFilter(KeyEvent.KEY_PRESSED,e -> {
 			if(e.getCode() == KeyCode.ESCAPE){
+				writeScores(highScores);
 				scorePrinter.close();
 				scoreReader.close();
 				System.exit(0);
@@ -136,16 +130,26 @@ public class Main extends Application{
 					unpause(pauseView);
 				}
 			} else if (e.getCode() == KeyCode.R){
-					int score = getScore();
-					System.out.println("Game " + this.gameCounter + " score: " + score  + "\n");
-					updateHighScores(score, highScores); // updatesArray List by reference
-					printScores(highScores);
-					Engine.getBoard().clearBoard();
-					Engine.addBlock();
-					this.timeScore = 0;
-					gameCounter++;
-					timePerTurn = MAX_MILLIS_PER_TURN;
-					timer.start();
+				int score = getScore();
+				System.out.println("Game " + this.gameCounter + " score: " + score  + "\n");
+				updateHighScores(score, highScores); // updates ArrayList by reference, can't do it well because of 'final or effectively final' issue
+				writeScores(highScores);
+				scoreList.setText(
+						"\n\tHigh Scores:\n\n"
+						+ getScoresForDisplay(highScores));
+				Engine.getBoard().clearBoard();
+				Engine.addBlock();
+				this.timeScore = 0;
+				gameCounter++;
+				timePerTurn = MAX_MILLIS_PER_TURN;
+				timer.start();
+				try {
+					initializeScorePrinter();
+				} catch (Exception e1) {
+					throw new RuntimeException("Error on file re-generation");
+				}
+
+					
 			} else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full){
 				if (e.getCode() == KeyCode.RIGHT){
 					Engine.getBoard().pressed(Move.RIGHT);
@@ -180,9 +184,9 @@ public class Main extends Application{
 			@Override
 			public void handle(long time){
 				long now = System.currentTimeMillis();
-				if(debug){
-					System.out.println(timePerTurn);
-				}
+//				if(debug){
+//					System.out.println(timePerTurn);
+//				}
 				if(!paused && now-pastTime >= timePerTurn){
 					timeScore++;
 					valueProperty.set("\tScore: " + (timeScore + Engine.getBoard().getBoardScore()) + 
@@ -213,8 +217,29 @@ public class Main extends Application{
 		stage.show();
 
 	}
+	
+	private void initializeScorePrinter() throws IOException{
+		File scoreFile = new File("src/gameLogs/High Scores");
+		scoreReader = new Scanner(scoreFile);
+		if(!scoreFile.exists()){
+			scoreFile.createNewFile();
+			highScores = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0,0,0,0,0,0));
+		}
+		else{
+			highScores = readScores(scoreReader);
+		}		
+		scorePrinter = new PrintStream(scoreFile);
+	}
+	
+	private ArrayList<Integer> readScores(Scanner fileReader){
+		ArrayList<Integer> scores = new ArrayList<Integer>(10);
+		while(fileReader.hasNextInt()){
+			scores.add(fileReader.nextInt());
+		}
+		return scores;
+	}
 
-	private void printScores(ArrayList<Integer> highScores) {
+	private void writeScores(ArrayList<Integer> highScores) {
 		for(int i = 0; i < highScores.size() - 1; i++){
 			scorePrinter.println(highScores.get(i));
 		}
@@ -222,7 +247,7 @@ public class Main extends Application{
 		
 	}
 	
-	private String getScoresForPrinting(ArrayList<Integer> highScores){
+	private String getScoresForDisplay(ArrayList<Integer> highScores){
 		String scores = "";
 		for(int i = 0; i < highScores.size(); i++){
 			scores  = scores + (i+1) + ".\t\t\t\t\t\t" + highScores.get(i) + "\n";
@@ -231,23 +256,18 @@ public class Main extends Application{
 	}
 
 	private void updateHighScores(int score, ArrayList<Integer> highScores) {
+		if(debug){
+			System.out.println(score);
+		}
 		highScores.add(score);
 		Collections.sort(highScores, Collections.reverseOrder());
-		if(!highScores.isEmpty()){
-			highScores.remove(highScores.size()); //removes 11th high score
+		if(!highScores.isEmpty() && highScores.size() > 10){
+			highScores.remove(highScores.size()-1); //removes 11th high score
 		}
 	}
 
 	private int getScore() {
 		return (timeScore + Engine.getBoard().getBoardScore());
-	}
-
-	private ArrayList<Integer> getHighScores(Scanner scoreReader2) {
-		ArrayList<Integer> scores = new ArrayList<Integer>(10);
-		while(scoreReader2.hasNextInt()){
-			scores.add(scoreReader2.nextInt());
-		}
-		return scores;
 	}
 
 	//maybe do more here, for right now it's its own method
@@ -323,9 +343,9 @@ public class Main extends Application{
 	    scorePane.setStyle("-fx-background-color: rgba(100, 0, 100, 0.5);");
 	    scorePane.setVisible(false);
 	    
-	    TextArea scoreList = new TextArea(
+	    scoreList = new TextArea(
 	    		"\n\tHigh Scores:\n\n"
-	    		+ getScoresForPrinting(highScores));
+	    		+ getScoresForDisplay(highScores));
 	    scoreList.getStylesheets().add("stylesheets/TextAreaStyle.css");
 	    scoreList.setEditable(false); //keeps pesky users from typing in it
         scoreList.setStyle("-fx-text-fill: white;");
@@ -336,12 +356,6 @@ public class Main extends Application{
         	helpPane.setVisible(false);
 	    	scorePane.setVisible(true);
 	    });
-
-	    
-	    
-	    
-	    
-	    
 	    
 		StackPane glass = new StackPane();
 	    StackPane.setAlignment(nameLabel, Pos.CENTER);
