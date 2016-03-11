@@ -113,7 +113,7 @@ public class Main extends Application{
 		main.getChildren().add(mainGame);
 		Scene boardScene = new Scene(main, GAME_WIDTH, GAME_HEIGHT);
 		stage.setScene(boardScene);
-		StackPane pauseView = constructPauseView();
+		StackPane pauseView = constructPauseView(highScores);
 		pauseView.setVisible(false);
 		main.getChildren().add(pauseView);
 		configureGrid(grid);
@@ -218,8 +218,16 @@ public class Main extends Application{
 		for(int i = 0; i < highScores.size() - 1; i++){
 			scorePrinter.println(highScores.get(i));
 		}
-		scorePrinter.print(highScores.get(highScores.size() -1)); // so we don't indent after the last score was printed
+		scorePrinter.print(highScores.get(highScores.size() - 1)); // so we don't indent after the last score was printed
 		
+	}
+	
+	private String getScoresForPrinting(ArrayList<Integer> highScores){
+		String scores = "";
+		for(int i = 0; i < highScores.size(); i++){
+			scores  = scores + (i+1) + ".\t\t\t\t\t\t" + highScores.get(i) + "\n";
+		}
+		return scores;
 	}
 
 	private void updateHighScores(int score, ArrayList<Integer> highScores) {
@@ -258,14 +266,14 @@ public class Main extends Application{
 		
 	}
 
-	private StackPane constructPauseView() {
-	    final Label label = new Label("Quadris");
-	    label.setStyle("-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
-	    GridPane pausePane = new GridPane();
+	private StackPane constructPauseView(ArrayList<Integer> highScores) {
+	    final Label nameLabel = new Label("Quadris");
+	    nameLabel.setStyle("-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
+	    GridPane pauseGrid = new GridPane();
 
-	    pausePane.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
-	    pausePane.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH - SCREEN_WIDTH));
-	    pausePane.getRowConstraints().add(new RowConstraints(540));
+	    pauseGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
+	    pauseGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH - SCREEN_WIDTH));
+	    pauseGrid.getRowConstraints().add(new RowConstraints(540));
 	    
 	    Button helpButton = new Button("Instructions");
 	    helpButton.setMinWidth(175);
@@ -277,10 +285,12 @@ public class Main extends Application{
 	    scoreButton.setMinHeight(30);
 	    scoreButton.setStyle("-fx-background-color: rgba(108, 116, 118, 1);"); 
 	    
-	    pausePane.add(helpButton, 1,1);
-	    pausePane.add(scoreButton, 1,2);
+	    pauseGrid.add(helpButton, 1,1);
+	    pauseGrid.add(scoreButton, 1,2);
 	    
 	    StackPane helpPane = new StackPane();
+	    StackPane scorePane = new StackPane();
+
 	    helpPane.setMaxHeight(HELP_HEIGHT);
 	    helpPane.setMaxWidth(HELP_WIDTH);
 
@@ -297,22 +307,47 @@ public class Main extends Application{
 	    		+ "Spacebar:\t   Drop Piece\n"
 	    		+ "R:\t\t\t\t Restart\n"
 	    		+ "P:\t\t\t\t   Pause");
+	    buttonMapping.setEditable(false); //keeps pesky users from typing in it
 	    buttonMapping.getStylesheets().add("stylesheets/TextAreaStyle.css");
         buttonMapping.setStyle("-fx-text-fill: white;");
 	    StackPane.setAlignment(buttonMapping, Pos.CENTER);
 	    helpPane.getChildren().add(buttonMapping);
 	    
 	    helpButton.setOnAction(e ->{
+	    	scorePane.setVisible(false);
 	    	helpPane.setVisible(true);
 	    });
+	    
+	    scorePane.setMaxHeight(HELP_HEIGHT);
+	    scorePane.setMaxWidth(HELP_WIDTH);
+	    scorePane.setStyle("-fx-background-color: rgba(100, 0, 100, 0.5);");
+	    scorePane.setVisible(false);
+	    
+	    TextArea scoreList = new TextArea(
+	    		"\n\tHigh Scores:\n\n"
+	    		+ getScoresForPrinting(highScores));
+	    scoreList.getStylesheets().add("stylesheets/TextAreaStyle.css");
+	    scoreList.setEditable(false); //keeps pesky users from typing in it
+        scoreList.setStyle("-fx-text-fill: white;");
+        StackPane.setAlignment(scoreList, Pos.CENTER);
+        scorePane.getChildren().add(scoreList);
+        
+        scoreButton.setOnAction(e ->{
+        	helpPane.setVisible(false);
+	    	scorePane.setVisible(true);
+	    });
+
+	    
+	    
 	    
 	    
 	    
 	    
 		StackPane glass = new StackPane();
-	    StackPane.setAlignment(label, Pos.CENTER);
+	    StackPane.setAlignment(nameLabel, Pos.CENTER);
 	    StackPane.setAlignment(helpPane, Pos.BOTTOM_CENTER);
-	    glass.getChildren().addAll(helpPane, label, pausePane);
+	    StackPane.setAlignment(scorePane, Pos.BOTTOM_CENTER);
+	    glass.getChildren().addAll(nameLabel, helpPane, scorePane, pauseGrid);
 	    glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");	    
 	    return glass;
 	}
