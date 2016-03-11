@@ -318,15 +318,26 @@ public class Main extends Application{
 	    helpPane.setVisible(false);
 	    
 	    TextArea buttonMapping = new TextArea(
-	    		  "\n\n\n"
-	    		+ "Left Arrow:\t     Move Left\n"
-	    		+ "Right Arrow:\t   Move Right\n"
-	    		+ "Down Arrow:\t Speed Down\n"
-	    		+ "Z:\t\t\t   Rotate Left\n"
-	    		+ "X:\t\t\t Rotate Right\n"
-	    		+ "Spacebar:\t   Drop Piece\n"
-	    		+ "R:\t\t\t\t Restart\n"
-	    		+ "P:\t\t\t\t   Pause");
+
+	    	      "\n\n"
+
+	    	    + getInstructions("Left Arrow:", "Move left")
+
+	    	    + getInstructions("Right Arrow:", "Move right")
+
+	    	    + getInstructions("Down Arrow:", "Speed down")
+
+	    	    + getInstructions("Z:", "Rotate Left")
+
+	    	    + getInstructions("X:", "Rotate Right")
+
+	    	    + getInstructions("Spacebar:", "Drop Piece")
+
+	    	    + getInstructions("R:", "Restart")
+
+	    	    + getInstructions("P:", "Pause")
+
+	    	    );
 	    buttonMapping.setEditable(false); //keeps pesky users from typing in it
 	    buttonMapping.getStylesheets().add("stylesheets/TextAreaStyle.css");
         buttonMapping.setStyle("-fx-text-fill: white;");
@@ -337,6 +348,7 @@ public class Main extends Application{
 	    	scorePane.setVisible(false);
 	    	helpPane.setVisible(true);
 	    });
+	    
 	    
 	    scorePane.setMaxHeight(HELP_HEIGHT);
 	    scorePane.setMaxWidth(HELP_WIDTH);
@@ -364,6 +376,10 @@ public class Main extends Application{
 	    glass.getChildren().addAll(nameLabel, helpPane, scorePane, pauseGrid);
 	    glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");	    
 	    return glass;
+	}
+
+	public String getInstructions(String s1, String s2){
+	    return "\n" + String.format("%20.20s\t\t%s", s1, s2);    
 	}
 
 	private void configureGrid(GridPane grid) {

@@ -447,6 +447,7 @@ public class Board {
 		this.boardScore = 0;
 		this.numOfFullRows = 0;
 		this.full = false;
+		this.rowsNotFalling = true;
 	}
 	
 	public GridPane getGrid(){
