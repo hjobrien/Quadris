@@ -66,15 +66,18 @@ public class Main extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 		File scoreFile = new File("src/gameLogs/High Scores");
-		scorePrinter = new PrintStream(scoreFile);
 		if(!scoreFile.exists()){
 			scoreFile.createNewFile();
+			scorePrinter = new PrintStream(scoreFile);
 			for(int i = 0; i < 10; i++){
 				scorePrinter.println("0");
 			}
 		}
 		scoreReader = new Scanner(scoreFile);
 		ArrayList<Integer> highScores = getHighScores(scoreReader);
+		scorePrinter = new PrintStream(scoreFile);
+		printScores(highScores);
+		
 		StackPane main = new StackPane();
 		
 		
@@ -212,16 +215,19 @@ public class Main extends Application{
 	}
 
 	private void printScores(ArrayList<Integer> highScores) {
-		scorePrinter.close();
-		for(Integer i : highScores){
-			scorePrinter.println(i);
+		for(int i = 0; i < highScores.size() - 1; i++){
+			scorePrinter.println(highScores.get(i));
 		}
+		scorePrinter.print(highScores.get(highScores.size() -1)); // so we don't indent after the last score was printed
+		
 	}
 
 	private void updateHighScores(int score, ArrayList<Integer> highScores) {
 		highScores.add(score);
 		Collections.sort(highScores, Collections.reverseOrder());
-		highScores.remove(highScores.size()); //removes 11th high score
+		if(!highScores.isEmpty()){
+			highScores.remove(highScores.size()); //removes 11th high score
+		}
 	}
 
 	private int getScore() {
