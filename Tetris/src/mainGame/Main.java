@@ -67,6 +67,8 @@ public class Main extends Application{
 	private int gameCounter = 1;
 	private	int timeScore = 0;
 	private double timePerTurn = MAX_MILLIS_PER_TURN;
+	
+	//can be changed if not desired
 	private boolean dropDownTerminatesBlock = true;
 	
 	private TextArea scoreList = null;
