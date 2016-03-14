@@ -67,6 +67,7 @@ public class Main extends Application{
 	private int gameCounter = 1;
 	private	int timeScore = 0;
 	private double timePerTurn = MAX_MILLIS_PER_TURN;
+	private boolean dropDownTerminatesBlock = true;
 	
 	private TextArea scoreList = null;
 	
@@ -177,6 +178,9 @@ public class Main extends Application{
 	 				Engine.getBoard().pressed(Move.DOWN);
 	 			} else if (e.getCode() == KeyCode.SPACE){
 	 				Engine.getBoard().pressed(Move.FULL_DOWN);
+	 				if (dropDownTerminatesBlock){
+	 					Engine.update();
+	 				}
 	 			} else if (DEBUG_MODE){
 	 				if (e.getCode() == KeyCode.UP){
 	 					Engine.getBoard().pressed(Move.UP);
@@ -218,7 +222,8 @@ public class Main extends Application{
 			}
 			private double updateTime(double turnTime) {
 				if(turnTime > MIN_MILLIS_PER_TURN){
-					return MAX_MILLIS_PER_TURN - 0.09 * (timeScore + Engine.getBoard().getBoardScore());
+					return MAX_MILLIS_PER_TURN - (0.09 * getScore());
+//					return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
 				}
 				else{
 					return MIN_MILLIS_PER_TURN;
