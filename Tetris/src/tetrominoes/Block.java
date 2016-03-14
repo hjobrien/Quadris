@@ -6,6 +6,10 @@ public class Block {
 	private Tile[][][] configurations = new Tile[][][]{};
 	private int rotationIndex = 0;
 	
+	public int getRotationIndex() {
+		return rotationIndex;
+	}
+
 	public boolean debug = false;
 //	public boolean debug = true;
 

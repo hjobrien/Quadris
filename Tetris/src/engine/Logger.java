@@ -43,7 +43,7 @@ public class Logger {
 		boolean[][] isFilled = tileToBoolean(boardState);
 		int falling = fallingBlock.getType().getValue();
 		int next = nextBlock.getType().getValue();
-		logger.print("\n" + falling + ", " + next + ", " + toPrintableVersion(isFilled));
+		logger.print("\n" + falling + ", " + fallingBlock.getRotationIndex() + ", " + fallingBlock.getGridLocation()[0] + ", " + fallingBlock.getGridLocation()[1]  + ", " + next + ", " + toPrintableVersion(isFilled));
 	}
 
 	private static String toPrintableVersion(boolean[][] isFilled) {
