@@ -35,8 +35,8 @@ public class Main extends Application{
 	 * any generalized distribution version should likely have all off
 	 */
 	
-	public static final boolean DEBUG_MODE = true;
-//	public static final boolean DEBUG = false;
+//	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 	
 	public static final boolean LOG_MODE = true;
 //	public static final boolean LOG_MODE = false;

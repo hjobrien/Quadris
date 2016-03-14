@@ -30,7 +30,7 @@ public class Engine {
 					board.blockDown();
 				} else {
 					if(logMode){
-						
+						Logger.log(board.getBoardState(), board.getFallingBlock(), nextPieceBoard.getFallingBlock());
 					}
 					ArrayList<Integer> linesToClear = board.getFullRows();
 					if (!linesToClear.isEmpty()){
