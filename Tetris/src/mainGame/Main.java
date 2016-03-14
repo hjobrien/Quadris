@@ -40,10 +40,6 @@ public class Main extends Application{
 	
 	public static final boolean LOG_MODE = true;
 //	public static final boolean LOG_MODE = false;
-
-	
-	
-
 	
 	//height should be double width
 	private static final int SCREEN_WIDTH = 300;
@@ -76,8 +72,6 @@ public class Main extends Application{
 	private ArrayList<Integer> highScores = null; //need to put this here because i can't make a local variable passed to a method in the listener
 	
 	boolean paused = false;
-	
-
 
 	public static void main(String[] args) {	
 		launch(args);
@@ -87,7 +81,6 @@ public class Main extends Application{
 	public void start(Stage stage) throws Exception {
 		initializeScorePrinter();
 		StackPane main = new StackPane();
-		
 		
 		//if we only make 1 board and it's in engine, we can always just receive the boardState 
 		//from engine when we need it and we wont have to be translating boardStates
