@@ -30,8 +30,19 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 	
-	boolean debug = true;
-//	boolean debug = false;
+	/**
+	 * change these flags to change the run mode.
+	 * any generalized distribution version should likely have all off
+	 */
+	
+	public static final boolean DEBUG_MODE = true;
+//	public static final boolean DEBUG = false;
+	
+	public static final boolean LOG_MODE = true;
+//	public static final boolean LOG_MODE = false;
+
+	
+	
 
 	
 	//height should be double width
@@ -79,7 +90,11 @@ public class Main extends Application{
 		//from engine when we need it and we wont have to be translating boardStates
 		GridPane grid = new GridPane();
 		GridPane nextBlock = new GridPane();
-		Engine.setValues(new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid), new Board(4,4,nextBlock));
+		Engine.setMode(DEBUG_MODE, LOG_MODE);
+		Board.setMode(DEBUG_MODE);
+		Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid);
+		Board nextPieceBoard = new Board(4,4,nextBlock);
+		Engine.setValues(gameBoard, nextPieceBoard);
 		GridPane mainGame = new GridPane();
 		mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
 		mainGame.getColumnConstraints().add(new ColumnConstraints(20));
@@ -163,7 +178,7 @@ public class Main extends Application{
 	 				Engine.getBoard().pressed(Move.DOWN);
 	 			} else if (e.getCode() == KeyCode.SPACE){
 	 				Engine.getBoard().pressed(Move.FULL_DOWN);
-	 			} else if (debug){
+	 			} else if (DEBUG_MODE){
 	 				if (e.getCode() == KeyCode.UP){
 	 					Engine.getBoard().pressed(Move.UP);
 	 				} 
@@ -256,7 +271,7 @@ public class Main extends Application{
 	}
 
 	private void updateHighScores(int score, ArrayList<Integer> highScores) {
-		if(debug){
+		if(DEBUG_MODE){
 			System.out.println(score);
 		}
 		highScores.add(score);

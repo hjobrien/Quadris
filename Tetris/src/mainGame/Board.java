@@ -22,8 +22,8 @@ public class Board {
 	boolean full = false;
 	
 	//for debugging
-	private boolean debug = false;
-//	private boolean debug = true;
+	private static boolean debugMode = false;
+//	private static boolean debugMode = true;
 	
 	int boardScore = 0;
 	
@@ -157,7 +157,7 @@ public class Board {
 	}
 
 	public boolean checkDown() {
-		if (debug){
+		if (debugMode){
 			System.out.println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
 		}
 
@@ -372,13 +372,13 @@ public class Board {
 						
 						//checks to make sure flip is legal, ignoring itself in the process
 						if (t.isFilled() && !t.isActive()){
-							if (debug){
+							if (debugMode){
 								System.out.println("cant turn " + m);
 							}
 							return false;
 						}
 					} else {
-						if (debug){
+						if (debugMode){
 							System.out.println("cant turn " + m);
 						}
 						return false;
@@ -386,7 +386,7 @@ public class Board {
 				}
 			}
 		}
-		if (debug){
+		if (debugMode){
 			System.out.println("can turn " + m);
 		}
 		return true;
@@ -499,6 +499,12 @@ public class Board {
 		if (isEmpty()){
 			fallingBlock.stoppedFalling();
 		}
+	}
+	
+	
+	public static void setMode(boolean debugMode/*, boolean logMode*/) {
+		Board.debugMode = debugMode;
+//		this.logMode = logMode;
 	}
 
 }

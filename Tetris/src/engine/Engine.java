@@ -19,6 +19,9 @@ public class Engine {
 	private static Board nextPieceBoard;
 	private static Block nextBlock = generateRandomBlock();
 	private static boolean isPaused = false;
+	
+	private static boolean logMode;
+//	private static boolean debugMode;
 
 	public static void update() {
 		if(!isPaused){ //little hacky, could be improved
@@ -26,7 +29,9 @@ public class Engine {
 				if (board.checkDown()){
 					board.blockDown();
 				} else {
-					//log state
+					if(logMode){
+						
+					}
 					ArrayList<Integer> linesToClear = board.getFullRows();
 					if (!linesToClear.isEmpty()){
 						board.clearLines(linesToClear);
@@ -92,6 +97,11 @@ public class Engine {
 		board = b1;
 		nextPieceBoard = b2;
 		
+	}
+
+	public static void setMode(boolean debugMode, boolean logMode) {
+//		Engine.debugMode = debugMode;
+		Engine.logMode = logMode;
 	}
 
 }
