@@ -163,7 +163,6 @@ public class Main extends Application{
 				} catch (Exception e1) {
 					throw new RuntimeException("Error on file re-generation");
 				}
-
 					
 			} else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full){
 				if (e.getCode() == KeyCode.RIGHT){
@@ -356,7 +355,6 @@ public class Main extends Application{
 	    buttonMapping.setEditable(false); //keeps pesky users from typing in it
 	    buttonMapping.getStylesheets().add("stylesheets/TextAreaStyle.css");
         buttonMapping.setStyle("-fx-text-fill: white;");
-	    StackPane.setAlignment(buttonMapping, Pos.CENTER);
 	    helpPane.getChildren().add(buttonMapping);
 	    
 	    helpButton.setOnAction(e ->{
@@ -394,7 +392,7 @@ public class Main extends Application{
 	}
 
 	public String getInstructions(String s1, String s2){
-	    return "\n" + String.format("%20.20s\t\t%s", s1, s2);    
+	    return "\n" + String.format("%20s\t%s", s1, s2);    
 	}
 
 	private void configureGrid(GridPane grid) {

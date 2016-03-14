@@ -40,6 +40,8 @@ public class Engine {
 						addBlock();
 					}
 				}
+			} else {
+				addBlock();
 			}
 		}
 	}

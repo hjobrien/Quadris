@@ -117,6 +117,7 @@ public class Board {
 
 	public void setFallingBlock(Block fallingBlock) {
 		this.fallingBlock = fallingBlock;
+		this.fallingBlock.isFalling();
 	}
 	
 	//TODO move related things
@@ -499,6 +500,7 @@ public class Board {
 
 		if (isEmpty()){
 			fallingBlock.stoppedFalling();
+			rowsNotFalling = true;
 		}
 	}
 	
