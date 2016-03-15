@@ -258,8 +258,9 @@ public class Main extends Application{
 		for(int i = 0; i < highScores.size() - 1; i++){
 			scorePrinter.println(highScores.get(i));
 		}
-		scorePrinter.print(highScores.get(highScores.size() - 1)); // so we don't indent after the last score was printed
-		
+		if (!highScores.isEmpty()){
+			scorePrinter.print(highScores.get(highScores.size() - 1)); // so we don't indent after the last score was printed
+		}
 	}
 	
 	private String getScoresForDisplay(ArrayList<Integer> highScores){
