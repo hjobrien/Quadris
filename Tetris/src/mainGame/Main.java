@@ -234,12 +234,13 @@ public class Main extends Application{
 	
 	private void initializeScorePrinter() throws IOException{
 		File scoreFile = new File("src/gameLogs/High Scores");
-		scoreReader = new Scanner(scoreFile);
 		if(!scoreFile.exists()){
 			scoreFile.createNewFile();
 			highScores = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0,0,0,0,0,0));
+			scoreReader = new Scanner(scoreFile);
 		}
 		else{
+			scoreReader = new Scanner(scoreFile);
 			highScores = readScores(scoreReader);
 		}		
 		scorePrinter = new PrintStream(scoreFile);
@@ -263,8 +264,12 @@ public class Main extends Application{
 	
 	private String getScoresForDisplay(ArrayList<Integer> highScores){
 		String scores = "";
+		String a = "";
 		for(int i = 0; i < highScores.size(); i++){
-			scores  = scores + (i+1) + ".\t\t\t\t\t\t" + highScores.get(i) + "\n";
+			a = i+1 + ".";
+			a += String.format("%"+(36 - (2*Math.log10(highScores.get(i))))+"s", "");
+			scores = scores + a + highScores.get(i) + "\n";
+//			scores  = scores + (i+1) + ".\t\t\t\t\t\t" + highScores.get(i) + "\n";
 		}
 		return scores;
 	}
