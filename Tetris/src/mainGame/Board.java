@@ -96,17 +96,6 @@ public class Board {
 		return this.boardState[i][j];
 	}
 	
-	public boolean isEmpty(){
-		for (Tile[] row : boardState){
-			for (Tile t : row){
-				if (t.isFilled()){
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
 	public Tile[][] getBoardState(){
 		return this.boardState;
 	}
@@ -524,15 +513,17 @@ public class Board {
 		
 		rowsNotFalling = false;
 		setNotFalling();
+		boolean tileAboveLine = false;
 		for (int i = 0; i < linesToClear.get(linesToClear.size() - 1); i++){
 			for (Tile t : boardState[i]){
 				if (t.isFilled()){
 					t.setActive(true);
+					tileAboveLine = true;
 				}
 			}
 		}
 
-		if (isEmpty()){
+		if (!tileAboveLine){
 			fallingBlock.stoppedFalling();
 			rowsNotFalling = true;
 		}
