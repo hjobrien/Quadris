@@ -143,12 +143,16 @@ public class Board {
 			}
  		} else if (m == Move.DOWN){
  			if (checkDown()){
- 	 			boardScore += 2;
+ 				if (!Main.NINTENDO_SCORING){
+ 					boardScore += 2;
+ 				}
  				blockDown();
  			}
  		} else if (m == Move.FULL_DOWN){
  			while (checkDown()){
- 				boardScore += 3;
+ 				if (!Main.NINTENDO_SCORING){
+ 	 				boardScore += 3;
+ 				}
  				blockDown();
  			}
  		} else if (m == Move.UP){
@@ -171,6 +175,9 @@ public class Board {
 				} else {
 					rowsNotFalling = true;
 				}
+			}
+			if (Main.NINTENDO_SCORING){
+				boardScore += 1;
 			}
 			return false;
 		}
@@ -478,14 +485,41 @@ public class Board {
 	public void clearLines(ArrayList<Integer> linesToClear) {
 		//rewards a "quadris"
 		if (linesToClear.size() == 4){
-			boardScore += 500;
+			if (Main.NINTENDO_SCORING){
+				boardScore += 1200;
+			} else {
+				boardScore += 900;
+			}
+		}
+		
+		if (linesToClear.size() == 3){
+			if (Main.NINTENDO_SCORING){
+				boardScore += 300;
+			} else {
+				boardScore += 300;
+			}
+		}
+		
+		if (linesToClear.size() == 2){
+			if (Main.NINTENDO_SCORING){
+				boardScore += 120;
+			} else {
+				boardScore += 200;
+			}
+		}
+		
+		if (linesToClear.size() == 1){
+			if (Main.NINTENDO_SCORING){
+				boardScore += 40;
+			} else {
+				boardScore += 100;
+			}
 		}
 
 		for (int i = 0; i < linesToClear.size(); i++){
 			for (int j = 0; j < boardState[i].length; j++){
 				update(linesToClear.get(i), j, new Tile());
 			}
-			boardScore += 100;
 		}
 		
 		rowsNotFalling = false;

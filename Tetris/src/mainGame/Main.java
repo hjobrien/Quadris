@@ -56,6 +56,10 @@ public class Main extends Application{
 	
 	public static final int MAX_MILLIS_PER_TURN = 1000;
 	public static final int MIN_MILLIS_PER_TURN = 100;
+	
+	//if nintendo scoring = false, hank/liam scoring is used
+	public static final boolean NINTENDO_SCORING = false;
+	
 
 	private AnimationTimer timer;
 	private PrintStream scorePrinter;
@@ -201,7 +205,9 @@ public class Main extends Application{
 //					System.out.println(timePerTurn);
 //				}
 				if(!paused && now-pastTime >= timePerTurn){
-					timeScore++;
+					if (!NINTENDO_SCORING){
+						timeScore++;
+					}
 					valueProperty.set("\tScore: " + (timeScore + Engine.getBoard().getBoardScore()) + 
 							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 					Engine.update();
@@ -216,13 +222,16 @@ public class Main extends Application{
 
 			}
 			private double updateTime(double turnTime) {
-				if(turnTime > MIN_MILLIS_PER_TURN){
+				if (NINTENDO_SCORING){
+					//probably not the best algorithm
 					return MAX_MILLIS_PER_TURN - (0.09 * getScore());
-//					return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
+				} else {
+					if(turnTime > MIN_MILLIS_PER_TURN){
+						return MAX_MILLIS_PER_TURN - (0.09 * getScore());
+	//					return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
+					}
 				}
-				else{
-					return MIN_MILLIS_PER_TURN;
-				}
+				return MIN_MILLIS_PER_TURN;
 			}
 		};
 		timer.start();
