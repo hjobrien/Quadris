@@ -205,9 +205,7 @@ public class Main extends Application{
 //					System.out.println(timePerTurn);
 //				}
 				if(!paused && now-pastTime >= timePerTurn){
-					if (!NINTENDO_SCORING){
-						timeScore++;
-					}
+					
 					valueProperty.set("\tScore: " + (timeScore + Engine.getBoard().getBoardScore()) + 
 							"\nLines cleared: " + Engine.getBoard().getNumOfFullRows());
 					Engine.update();
@@ -216,6 +214,11 @@ public class Main extends Application{
 					}
 					Renderer.draw(Engine.getBoard());
 					pastTime = now;
+				}
+				if(!paused){
+					if (!NINTENDO_SCORING){
+						timeScore++;
+					}
 				}
 				timePerTurn = updateTime(timePerTurn);
 
