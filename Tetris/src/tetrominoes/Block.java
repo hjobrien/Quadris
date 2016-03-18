@@ -1,6 +1,5 @@
 package tetrominoes;
 
-import engine.BlockType;
 import mainGame.Main;
 
 public class Block {

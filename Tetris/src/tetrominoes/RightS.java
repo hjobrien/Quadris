@@ -1,6 +1,5 @@
 package tetrominoes;
 
-import engine.BlockType;
 import javafx.scene.paint.Color;
 
 public class RightS extends Block {
