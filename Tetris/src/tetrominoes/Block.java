@@ -1,6 +1,6 @@
 package tetrominoes;
 
-import mainGame.Main;
+import mainGame.Game;
 
 public class Block {
 	private Tile[][][] configurations = new Tile[][][]{};
@@ -25,7 +25,7 @@ public class Block {
 		this.type = type;
 		//row, column of bottom right corner
 		int startingRowIndex = configurations[rotationIndex].length - 1 + 3;
-		int startingColumnIndex = (Main.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2 + configurations[rotationIndex][0].length - 1;
+		int startingColumnIndex = (Game.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2 + configurations[rotationIndex][0].length - 1;
 		locationInGrid = new int[]{startingRowIndex, startingColumnIndex};
 	}
 	

@@ -28,7 +28,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class Main extends Application{
+public class Game extends Application{
 	
 	/**
 	 * change these flags to change the run mode.
@@ -76,10 +76,6 @@ public class Main extends Application{
 	private ArrayList<Integer> highScores = null; //need to put this here because i can't make a local variable passed to a method in the listener
 	
 	boolean paused = false;
-
-	public static void main(String[] args) {	
-		launch(args);
-	}
 	
 	@Override
 	public void start(Stage stage) throws Exception {
