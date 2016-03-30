@@ -1,6 +1,6 @@
 package cerulean;
 
-import javafx.scene.input.KeyCode;
+import mainGame.Move;
 
 public class Cerulean {
 
@@ -9,10 +9,7 @@ public class Cerulean {
 
   }
 
-  public static KeyCode[] win() {
-    return null;
-    // TODO Auto-generated method stub
-    
+  public static Move[] win() {
+    return new Move[]{Move.RIGHT};
   }
-
 }

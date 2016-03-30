@@ -424,7 +424,7 @@ public class Game extends Application {
     grid.setGridLinesVisible(true);
   }
   
-  public boolean getGameActive(){
+  public boolean isActive(){
     return gameIsActive;
   }
 }
