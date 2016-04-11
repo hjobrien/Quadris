@@ -103,12 +103,12 @@ public class Renderer {
     pauseView = constructPauseView(highScores);
     pauseView.setVisible(false);
     main.getChildren().add(pauseView);
-    configureGrid(grid);
+    makeBoard(grid);
     return new Scene(main, GAME_WIDTH, GAME_HEIGHT);
 
   }
 
-  private static void configureGrid(GridPane grid) {
+  private static void makeBoard(GridPane grid) {
     for (int i = 0; i < HORIZONTAL_TILES; i++) {
       grid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / HORIZONTAL_TILES));
     }

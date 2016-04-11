@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 public class UserClient extends Application {
 
   public static void main(String[] args) {
-  	Game.launch(args);
+    launch(args);
   
   }
 

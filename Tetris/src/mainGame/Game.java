@@ -1,17 +1,12 @@
 package mainGame;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Scanner;
-
+import engine.BlockAddedEvent;
+import engine.BlockAddedHandler;
 import engine.Engine;
 import engine.Renderer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -32,6 +27,10 @@ public class Game extends Application {
   public static final boolean LOG_MODE = true;
   // public static final boolean LOG_MODE = false;
 
+  public static final boolean AI_MODE = true;
+  // public static final boolean AI_MODE = false;
+
+
 
   public static final int MAX_MILLIS_PER_TURN = 1000;
   public static final int MIN_MILLIS_PER_TURN = 100;
@@ -49,35 +48,53 @@ public class Game extends Application {
   private boolean dropDownTerminatesBlock = true;
 
 
-  
+
   boolean paused = false;
 
-  private boolean gameIsActive = true;
+  private static boolean gameIsActive = true;
 
   @Override
   public void start(Stage stage) throws Exception {
+    
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
-    Engine.addBlock();
     
-    
-    stage.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-      if (e.getCode() == KeyCode.ESCAPE) {
+    if (AI_MODE) {  //do we care about these events in user mode?
+      stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
+    }
+
+    stage.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());   
+
+    stage.setScene(boardScene);
+
+    timer = configureTimer();
+    timer.start();
+
+
+    stage.show();
+    Engine.addBlock();  //needs to be towards the end of method so initial event fires correctly
+  }
+
+  private class KeyEventHandler implements EventHandler<KeyEvent> {
+
+    @Override
+    public void handle(KeyEvent key) {
+      if (key.getCode() == KeyCode.ESCAPE) {
         Renderer.writeScores();
         Renderer.close();
         System.exit(0);
-      } else if (e.getCode() == KeyCode.P) {
+      } else if (key.getCode() == KeyCode.P) {
         paused = Engine.togglePause();
         if (paused) {
           Renderer.pause();
         } else {
           Renderer.unpause();
         }
-      } else if (e.getCode() == KeyCode.R) {
+      } else if (key.getCode() == KeyCode.R) {
         resetGame();
 
       } else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full) {
-        switch(e.getCode()){
+        switch (key.getCode()) {
           case RIGHT:
             Engine.getBoard().pressed(Move.RIGHT);
             break;
@@ -99,39 +116,30 @@ public class Game extends Application {
               Engine.update();
             break;
           case UP:
-            if(DEBUG_MODE){
+            if (DEBUG_MODE) {
               Engine.getBoard().pressed(Move.UP);
             }
             break;
           default:
-              //key pressed wasn't an active key, do nothing
+            // key pressed wasn't an active key, do nothing
             break;
         }
         if (!paused) {
           Renderer.draw(Engine.getBoard());
         }
       }
-    });
-    
-    stage.setScene(boardScene);
-
-
-    timer = configureTimer();
-    timer.start();
-
-
-    stage.show();
+    }
 
   }
 
-  
+
 
   private void resetGame() {
     gameIsActive = true;
     int score = getScore();
     System.out.println("Game " + this.gameCounter + " score: " + score + "\n");
     Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
-                                         // because of 'final or effectively final' issue
+                                      // because of 'final or effectively final' issue
     Renderer.writeScores();
     Engine.getBoard().clearBoard();
     Engine.addBlock();
@@ -151,11 +159,11 @@ public class Game extends Application {
   private int getScore() {
     return (timeScore + Engine.getBoard().getBoardScore());
   }
-  
-  public boolean isActive(){
+
+  public boolean isActive() {
     return gameIsActive;
   }
-  
+
   private AnimationTimer configureTimer() {
     return new AnimationTimer() {
       private long pastTime;
@@ -171,8 +179,9 @@ public class Game extends Application {
         long now = System.currentTimeMillis();
         if (!paused && now - pastTime >= timePerTurn) {
 
-          Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(), Engine.getBoard().getNumOfFullRows());
-          
+          Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(),
+              Engine.getBoard().getNumOfFullRows());
+
           Engine.update();
           if (Engine.getBoard().isFull()) {
             timer.stop();
