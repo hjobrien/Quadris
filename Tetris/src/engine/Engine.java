@@ -3,6 +3,7 @@ package engine;
 import java.util.ArrayList;
 import java.util.Random;
 
+import cerulean.Cerulean;
 import mainGame.Board;
 import tetrominoes.Block;
 import tetrominoes.LeftL;
@@ -23,6 +24,10 @@ public class Engine {
   private static boolean logMode;
   // private static boolean debugMode;
 
+  /**
+   * is the general engine method
+   * coordinates dropping blocks, adding blocks, logging game state, and line clearing
+   */
   public static void update() {
     if (!isPaused) { // little hacky, could be improved
       if (board.getFallingBlock().isFalling()) {
@@ -48,6 +53,10 @@ public class Engine {
     }
   }
 
+  /**
+   * 
+   * @return    a 2D array of the board, each index references a possible square and if it is filled or not
+   */
   public Tile[][] getBoardState() {
     return board.getBoardState();
   }
@@ -55,6 +64,7 @@ public class Engine {
   // Adds a random block to the board
   public static void addBlock() {
     board.getGrid().fireEvent(new BlockAddedEvent(nextBlock.getType())); //needed to access Node.fireEvent, the GridPane was an accessible Node
+    Cerulean.submitBlock(nextBlock.getType(), board.getBoardState());
     board.setFallingBlock(nextBlock);
     board.updateBoardWithNewBlock(nextBlock);
     nextBlock = generateRandomBlock();
@@ -66,6 +76,10 @@ public class Engine {
     Renderer.draw(nextPieceBoard);
   }
 
+  /**
+   * 
+   * @return    a new random instance of Block
+   */
   private static Block generateRandomBlock() {
     Random r = new Random();
     int i = r.nextInt(7);
@@ -88,22 +102,39 @@ public class Engine {
     throw new RuntimeException("bad random num");
   }
 
+  /**
+   * gets the Board object the engine is monitoring
+   * @return    the Board object the engine is working with
+   */
   public static Board getBoard() {
     return board;
   }
 
+  /**
+   * toggles pause
+   * @return    the new value of the isPaused variable
+   */
   public static boolean togglePause() {
     isPaused = !isPaused;
     return isPaused;
   }
 
-
+  /**
+   * serves as a kinds of initial pseudo-constructor to set the boards the engine has to work with
+   * @param b1  the main game board
+   * @param b2  a 4x4 smaller board where the next piece is shown
+   */
   public static void setValues(Board b1, Board b2) {
     board = b1;
     nextPieceBoard = b2;
 
   }
-
+  
+  /**
+   * also serves to initialize values to the engine
+   * @param debugMode   whether the engine should operate in debugMode
+   * @param logMode     whether the engine should log its actions
+   */
   public static void setMode(boolean debugMode, boolean logMode) {
     // Engine.debugMode = debugMode;
     Engine.logMode = logMode;

@@ -60,7 +60,11 @@ public class Renderer {
                                                        // local variable passed to a method in the listener
 
 
-
+  /**
+   * called once to do the basic GUI setup things
+   * @return    A Scene containing the relevant StackPanes and GridPanes, its the main Scene
+   * @throws IOException    if file generation can't find a file or otherwise
+   */
   public static Scene makeGame() throws IOException {
     initializeScorePrinter();
     scoreList = new TextArea();
@@ -108,6 +112,10 @@ public class Renderer {
 
   }
 
+  /**
+   * formats the GridPane in a way that is appropriate
+   * @param grid    a formatted GridPane
+   */
   private static void makeBoard(GridPane grid) {
     for (int i = 0; i < HORIZONTAL_TILES; i++) {
       grid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / HORIZONTAL_TILES));
@@ -118,6 +126,11 @@ public class Renderer {
     grid.setGridLinesVisible(true);
   }
 
+  /**
+   * builds the view displayed when the game is paused
+   * @param highScores  a list of the historical high scores
+   * @return    a StackPane containing the necessary components
+   */
   private static StackPane constructPauseView(ArrayList<Integer> highScores) {
     final Label nameLabel = new Label("Quadris");
     nameLabel.setStyle(
@@ -207,11 +220,21 @@ public class Renderer {
     glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");
     return glass;
   }
-  
+  /**
+   * formats a string for the instructions view
+   * @param s1 a key to be pressed (e.g. DOWN)
+   * @param s2 the result of the key press (e.g. block down)
+   * @return a formatted string based on the parameters
+   */
   public static String getInstructions(String s1, String s2) {
     return "\n" + String.format("%20s\t%s", s1, s2);
   }
   
+  /**
+   * formats the high scores into a display-able version
+   * @param highScores  the list of historical high scores
+   * @return a string containing a formatted version of the parameter
+   */
   private static String getScoresForDisplay(ArrayList<Integer> highScores) {
     String scores = "";
     String a = "";
@@ -224,6 +247,10 @@ public class Renderer {
     return scores;
   }
   
+  /**
+   * called for each engine tick, draws the board
+   * @param board the board to be drawn
+   */
   public static void draw(Board board) {
     for (int i = 3; i < board.getBoardState().length; i++) {
       for (int j = 0; j < board.getBoardState()[i].length; j++) {
@@ -244,6 +271,9 @@ public class Renderer {
 
   }
 
+  /**
+   * ends pause view by hiding the pane
+   */
   public static void unpause() {
     pauseView.setVisible(false);
     for (Node child : pauseView.getChildren()) {
@@ -254,10 +284,19 @@ public class Renderer {
 
   }
 
+  /**
+   * updates the score shown on the right of the window
+   * @param score   the users current score
+   * @param numOfFullRows  the number of complete rows the user has created (and have then been cleared)
+   */
   public static void updateScore(int score, int numOfFullRows) {
     valueProperty.set("\tScore: " + score + "\nLines cleared: " + numOfFullRows);
   }
-
+  
+  /**
+   * builds the FileIO objects for reading and writing the high scores file
+   * @throws IOException for various file issues including FileNotFound
+   */
   public static void initializeScorePrinter() throws IOException {
     File scoreFile = new File("src/gameLogs/High Scores");
     if (!scoreFile.exists()) {
@@ -270,7 +309,12 @@ public class Renderer {
     }
     scorePrinter = new PrintStream(scoreFile);
   }
-
+  
+  /**
+   * reads in scores from persistent text-file storage
+   * @param fileReader   a Scanner on the high scores file
+   * @return    a List of integers representing the scores contained in the file
+   */
   private static ArrayList<Integer> readScores(Scanner fileReader) {
     ArrayList<Integer> scores = new ArrayList<Integer>(10);
     while (fileReader.hasNextInt()) {
@@ -279,6 +323,9 @@ public class Renderer {
     return scores;
   }
 
+  /**
+   * writes the scores to the file
+   */
   public static void writeScores() {
     for (int i = 0; i < highScores.size() - 1; i++) {
       scorePrinter.println(highScores.get(i));
@@ -289,7 +336,10 @@ public class Renderer {
     }
   }
 
-
+  /**
+   * updates the scores with the new score from the just-ended game and trims the list to keep it within 10 highscores
+   * @param score the new score to add
+   */
   public static void updateHighScores(int score) {
     if (DEBUG_MODE) {
       System.out.println(score);
@@ -301,19 +351,13 @@ public class Renderer {
     }
   }
 
+  /**
+   * cleans up the file objects when the program is ended
+   */
   public static void close() {
     scorePrinter.close();
     scoreReader.close();
   }
-
-
-
-
-
-
-
-
-
 
 
 

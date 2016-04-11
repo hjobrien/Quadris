@@ -30,6 +30,12 @@ public class Board {
   // three extra blocks so that the straight all blocks
   // (particularly the straight line) can rotate
   // when they are initialized
+  /**
+   * makes a new board with a GridPane, a height and a width
+   * @param height
+   * @param width
+   * @param grid
+   */
   public Board(int height, int width, GridPane grid) {
     Tile[][] tempBoard = new Tile[height + 3][width];
     for (int i = 0; i < height + 3; i++) {

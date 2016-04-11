@@ -39,6 +39,12 @@ public class Logger {
 		}
 	}
 	
+	/**
+	 * writes info to logging file for later analysis
+	 * @param boardState    a Tile[][] array denoting which spots are full
+	 * @param fallingBlock the block that is currently falling
+	 * @param nextBlock    the next block that is set to fall
+	 */
 	public static void log(Tile[][] boardState, Block fallingBlock, Block nextBlock){
 		boolean[][] isFilled = tileToBoolean(boardState);
 		int falling = fallingBlock.getType().getValue();
@@ -46,6 +52,11 @@ public class Logger {
 		logger.print("\n" + falling + ", " + fallingBlock.getRotationIndex() + ", " + fallingBlock.getGridLocation()[0] + ", " + fallingBlock.getGridLocation()[1]  + ", " + next + ", " + toPrintableVersion(isFilled));
 	}
 
+	/**
+	 * converts a boolean[][] to a string that prints nicely
+	 * @param isFilled  data array for the game state
+	 * @return a string that reflects the data in the array
+	 */
 	private static String toPrintableVersion(boolean[][] isFilled) {
 		String filledString = "{";
 		for(boolean[] b : isFilled){
@@ -59,7 +70,13 @@ public class Logger {
 		filledString += "}";
 		return filledString;
 	}
-
+	
+	
+  /**
+   * converts Tile[][] to boolean[][]
+   * @param boardState the data reflecting what tiles are filled
+   * @return    a boolean array reflecting the same data
+   */
 	private static boolean[][] tileToBoolean(Tile[][] boardState) {
 		boolean state[][] = new boolean[20][10];
 		for(int i = 0; i < BOARD_HEIGHT; i++){

@@ -75,6 +75,11 @@ public class Game extends Application {
     Engine.addBlock();  //needs to be towards the end of method so initial event fires correctly
   }
 
+  /**
+   * deals with keyboard input from user
+   * @author Hank
+   *
+   */
   private class KeyEventHandler implements EventHandler<KeyEvent> {
 
     @Override
@@ -133,7 +138,9 @@ public class Game extends Application {
   }
 
 
-
+  /**
+   * resets the game when called, typically afer a loss
+   */
   private void resetGame() {
     gameIsActive = true;
     int score = getScore();
@@ -155,15 +162,26 @@ public class Game extends Application {
   }
 
 
-
+  /**
+   *
+   * @return    the score as a sum of the time score and the lines cleared score
+   */
   private int getScore() {
     return (timeScore + Engine.getBoard().getBoardScore());
   }
 
+  /**
+   * 
+   * @return if the game is active e.g. not paused
+   */
   public boolean isActive() {
     return gameIsActive;
   }
 
+  /**
+   * sets up the required settings for the timer used to control the pace of the game
+   * @return    a fully configured AnimationTimer instance
+   */
   private AnimationTimer configureTimer() {
     return new AnimationTimer() {
       private long pastTime;
@@ -199,7 +217,12 @@ public class Game extends Application {
 
 
       }
-
+      
+      /**
+       * Aims to change the number of real-world seconds between each game tick without acceleration
+       * @param turnTime    the current time it takes for one tick
+       * @return    a new number of milliseconds for the next tick
+       */
       private double updateTime(double turnTime) {
         if (NINTENDO_SCORING) {
           // probably not the best algorithm
