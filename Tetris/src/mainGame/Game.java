@@ -57,11 +57,10 @@ public class Game extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     Scene boardScene = Renderer.makeGame();
-    
-
     Renderer.draw(Engine.getBoard());
-
     Engine.addBlock();
+    
+    
     stage.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
       if (e.getCode() == KeyCode.ESCAPE) {
         Renderer.writeScores();
@@ -75,44 +74,38 @@ public class Game extends Application {
           Renderer.unpause();
         }
       } else if (e.getCode() == KeyCode.R) {
-        gameIsActive = true;
-        int score = getScore();
-        System.out.println("Game " + this.gameCounter + " score: " + score + "\n");
-        Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
-                                             // because of 'final or effectively final' issue
-        Renderer.writeScores();
-        Engine.getBoard().clearBoard();
-        Engine.addBlock();
-        this.timeScore = 0;
-        gameCounter++;
-        timePerTurn = MAX_MILLIS_PER_TURN;
-        timer.start();
-        try {
-          Renderer.initializeScorePrinter();
-        } catch (Exception e1) {
-          throw new RuntimeException("Error on file re-generation");
-        }
+        resetGame();
 
       } else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full) {
-        if (e.getCode() == KeyCode.RIGHT) {
-          Engine.getBoard().pressed(Move.RIGHT);
-        } else if (e.getCode() == KeyCode.LEFT) {
-          Engine.getBoard().pressed(Move.LEFT);
-        } else if (e.getCode() == KeyCode.X) {
-          Engine.getBoard().pressed(Move.ROT_RIGHT);
-        } else if (e.getCode() == KeyCode.Z) {
-          Engine.getBoard().pressed(Move.ROT_LEFT);
-        } else if (e.getCode() == KeyCode.DOWN) {
-          Engine.getBoard().pressed(Move.DOWN);
-        } else if (e.getCode() == KeyCode.SPACE) {
-          Engine.getBoard().pressed(Move.FULL_DOWN);
-          if (dropDownTerminatesBlock) {
-            Engine.update();
-          }
-        } else if (DEBUG_MODE) {
-          if (e.getCode() == KeyCode.UP) {
-            Engine.getBoard().pressed(Move.UP);
-          }
+        switch(e.getCode()){
+          case RIGHT:
+            Engine.getBoard().pressed(Move.RIGHT);
+            break;
+          case LEFT:
+            Engine.getBoard().pressed(Move.LEFT);
+            break;
+          case X:
+            Engine.getBoard().pressed(Move.ROT_RIGHT);
+            break;
+          case Z:
+            Engine.getBoard().pressed(Move.ROT_LEFT);
+            break;
+          case DOWN:
+            Engine.getBoard().pressed(Move.DOWN);
+            break;
+          case SPACE:
+            Engine.getBoard().pressed(Move.FULL_DOWN);
+            if (dropDownTerminatesBlock)
+              Engine.update();
+            break;
+          case UP:
+            if(DEBUG_MODE){
+              Engine.getBoard().pressed(Move.UP);
+            }
+            break;
+          default:
+              //key pressed wasn't an active key, do nothing
+            break;
         }
         if (!paused) {
           Renderer.draw(Engine.getBoard());
@@ -123,7 +116,48 @@ public class Game extends Application {
     stage.setScene(boardScene);
 
 
-    timer = new AnimationTimer() {
+    timer = configureTimer();
+    timer.start();
+
+
+    stage.show();
+
+  }
+
+  
+
+  private void resetGame() {
+    gameIsActive = true;
+    int score = getScore();
+    System.out.println("Game " + this.gameCounter + " score: " + score + "\n");
+    Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
+                                         // because of 'final or effectively final' issue
+    Renderer.writeScores();
+    Engine.getBoard().clearBoard();
+    Engine.addBlock();
+    this.timeScore = 0;
+    gameCounter++;
+    timePerTurn = MAX_MILLIS_PER_TURN;
+    timer.start();
+    try {
+      Renderer.initializeScorePrinter();
+    } catch (Exception e1) {
+      throw new RuntimeException("Error on file re-generation");
+    }
+  }
+
+
+
+  private int getScore() {
+    return (timeScore + Engine.getBoard().getBoardScore());
+  }
+  
+  public boolean isActive(){
+    return gameIsActive;
+  }
+  
+  private AnimationTimer configureTimer() {
+    return new AnimationTimer() {
       private long pastTime;
 
       @Override
@@ -135,9 +169,6 @@ public class Game extends Application {
       @Override
       public void handle(long time) {
         long now = System.currentTimeMillis();
-        // if(debug){
-        // System.out.println(timePerTurn);
-        // }
         if (!paused && now - pastTime >= timePerTurn) {
 
           Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(), Engine.getBoard().getNumOfFullRows());
@@ -173,20 +204,5 @@ public class Game extends Application {
         return MIN_MILLIS_PER_TURN;
       }
     };
-    timer.start();
-
-
-    stage.show();
-
-  }
-
-  
-
-  private int getScore() {
-    return (timeScore + Engine.getBoard().getBoardScore());
-  }
-  
-  public boolean isActive(){
-    return gameIsActive;
   }
 }
