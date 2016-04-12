@@ -11,7 +11,7 @@ public class ComputerClient extends Application {
 
   
   public static void main(String[] args) {
-    launch(args);
+//    launch(args);
     
   }
 
@@ -19,8 +19,8 @@ public class ComputerClient extends Application {
 
   @Override
   public void start(Stage arg0) throws Exception {
-    Game game = new Game();
-    game.start(arg0);
+//    Game game = new Game();
+//    game.start(arg0);
     
   }
   

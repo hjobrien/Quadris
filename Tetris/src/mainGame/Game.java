@@ -3,6 +3,7 @@ package mainGame;
 import engine.BlockAddedEvent;
 import engine.BlockAddedHandler;
 import engine.Engine;
+import engine.GameMode;
 import engine.Renderer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -16,19 +17,12 @@ public class Game extends Application {
 
 
 
-  /**
-   * change these flags to change the run mode. any generalized distribution version should likely
-   * have all off
-   */
+  public static final GameMode GAME_MODE = GameMode.AI_MODE;
 
-  // public static final boolean DEBUG_MODE = true;
-  public static final boolean DEBUG_MODE = false;
+  private static boolean doDebug;
+  private static boolean doLog;
+  private static boolean useAI;
 
-  public static final boolean LOG_MODE = true;
-  // public static final boolean LOG_MODE = false;
-
-  public static final boolean AI_MODE = false;
-  // public static final boolean AI_MODE = false;
 
 
 
@@ -52,14 +46,47 @@ public class Game extends Application {
   boolean paused = false;
 
   private static boolean gameIsActive = true;
-
+  
+  
+  public static void main(String[] args){
+    //setup program settings
+    switch(GAME_MODE){
+      case DISTRO_MODE:
+        doDebug = false;
+        doLog = false;
+        useAI = false;
+        break;
+      case DEBUG_MODE:
+        doDebug = true;
+        doLog = true;
+        useAI = false;
+        break;
+      case LOGGER_MODE:
+        doDebug = false;
+        doLog = true;
+        useAI = false;
+        break;
+      case AI_MODE:
+        doDebug = false;
+        doLog = true;
+        useAI = true;
+        break;
+      default:
+        doDebug = false;
+        doLog = false;
+        useAI = false;
+        break;
+    }
+    launch(args);
+  }
+  
   @Override
   public void start(Stage stage) throws Exception {
-    
+    Renderer.setValues(doDebug, doLog);
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
     
-    if (AI_MODE) {  //do we care about these events in user mode?
+    if (useAI) {  //do we care about these events in user mode?
       stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
     }
 
@@ -121,7 +148,7 @@ public class Game extends Application {
               Engine.update();
             break;
           case UP:
-            if (DEBUG_MODE) {
+            if (doDebug) {
               Engine.getBoard().pressed(Move.UP);
             }
             break;

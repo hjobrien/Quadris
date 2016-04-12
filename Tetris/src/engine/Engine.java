@@ -3,7 +3,6 @@ package engine;
 import java.util.ArrayList;
 import java.util.Random;
 
-import cerulean.Cerulean;
 import mainGame.Board;
 import tetrominoes.Block;
 import tetrominoes.LeftL;
@@ -22,7 +21,7 @@ public class Engine {
   private static boolean isPaused = false;
 
   private static boolean logMode;
-  // private static boolean debugMode;
+//  private static boolean debugMode;
 
   /**
    * is the general engine method

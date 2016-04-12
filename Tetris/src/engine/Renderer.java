@@ -26,16 +26,10 @@ import tetrominoes.Tile;
 
 public class Renderer {
 
-  /**
-   * change these flags to change the run mode. any generalized distribution version should likely
-   * have all off
-   */
 
-  // public static final boolean DEBUG_MODE = true;
-  public static final boolean DEBUG_MODE = false;
+  private static boolean doDebug;
 
-  public static final boolean LOG_MODE = true;
-  // public static final boolean LOG_MODE = false;
+  private static boolean doLog;
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
@@ -60,6 +54,11 @@ public class Renderer {
                                                        // local variable passed to a method in the listener
 
 
+  public static void setValues(boolean doDebug, boolean doLog){
+    Renderer.doDebug = doDebug;
+    Renderer.doLog = doLog;
+  }
+  
   /**
    * called once to do the basic GUI setup things
    * @return    A Scene containing the relevant StackPanes and GridPanes, its the main Scene
@@ -75,8 +74,8 @@ public class Renderer {
     // from engine when we need it and we wont have to be translating boardStates
     GridPane grid = new GridPane();
     GridPane nextBlock = new GridPane();
-    Engine.setMode(DEBUG_MODE, LOG_MODE);
-    Board.setMode(DEBUG_MODE);
+    Engine.setMode(doDebug, doLog);
+    Board.setMode(doDebug);
     Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid);
     Board nextPieceBoard = new Board(4, 4, nextBlock);
     Engine.setValues(gameBoard, nextPieceBoard);
@@ -341,7 +340,7 @@ public class Renderer {
    * @param score the new score to add
    */
   public static void updateHighScores(int score) {
-    if (DEBUG_MODE) {
+    if (doDebug) {
       System.out.println(score);
     }
     highScores.add(score);
