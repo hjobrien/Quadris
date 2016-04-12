@@ -2,12 +2,12 @@ package cerulean;
 
 import java.util.ArrayList;
 
+import blocks.Block;
+import blocks.Tile;
 import engine.ComputationDoneEvent;
 import engine.Engine;
 import javafx.event.Event;
 import mainGame.Move;
-import tetrominoes.Block;
-import tetrominoes.Tile;
 
 /**
  * General AI class, handles game state analysis and move optimization
@@ -46,9 +46,12 @@ public class Cerulean {
    * @param boardState the current board state
    */
   public static void submitBlock(Block nextBlock, Tile[][] boardState) {
+    //TODO:
+    // ideal behavior: blocks drop normally but an array is generated each time a block is added to the game
     solutionPath = computeBestPath(nextBlock, boardState);
-
-    // using grid from engine as event target, should change to something else TODO
+    System.out.println("submitted");
+    // using grid from engine as event target, should change to something else
+    //TODO: make board extend GridPane? it'd be a node then
     Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
   }
 
@@ -57,7 +60,7 @@ public class Cerulean {
    * 
    * @param nextBlock the block just introduced to the board
    * @param boardState the board state without the block entered, all tiles are not active
-   * @return an array of moves that positons the peice in to the optimal location
+   * @return an array of moves that positions the piece in to the optimal location
    */
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
     double maxWeight = -1;
@@ -155,7 +158,6 @@ public class Cerulean {
                                                // block
         boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
                                                                           // down by minSpace blocks
-        boardCopy[j][i].setFilled(false);
       }
     }
     // board copy should now have the block dropped all the way down it can go but with no lines

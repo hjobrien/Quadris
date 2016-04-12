@@ -1,9 +1,9 @@
 package engine;
 
+import blocks.Block;
+import blocks.Tile;
 import javafx.event.Event;
 import javafx.event.EventType;
-import tetrominoes.Block;
-import tetrominoes.Tile;
 
 public class BlockAddedEvent extends Event{
 

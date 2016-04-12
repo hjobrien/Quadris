@@ -98,9 +98,9 @@ public class Game extends Application {
     if (useAI) { // do we care about these events in user mode?
       stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
     }
-    else{
+//    else{
       stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
-    }
+//    }
     //added regardless of run configuration
     stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
 

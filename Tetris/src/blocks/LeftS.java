@@ -1,4 +1,4 @@
-package tetrominoes;
+package blocks;
 
 import javafx.scene.paint.Color;
 

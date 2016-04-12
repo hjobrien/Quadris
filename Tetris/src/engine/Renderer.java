@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
+import blocks.Tile;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
@@ -22,7 +23,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import mainGame.Board;
-import tetrominoes.Tile;
 
 public class Renderer {
 
@@ -323,10 +323,6 @@ public class Renderer {
       scores.add(fileReader.nextInt());
     }
     return scores;
-  }
-  
-  private static ArrayList<Integer> readScores(){
-    return readScores(scoreReader);
   }
 
   /**

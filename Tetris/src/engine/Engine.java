@@ -3,16 +3,16 @@ package engine;
 import java.util.ArrayList;
 import java.util.Random;
 
+import blocks.Block;
+import blocks.LeftL;
+import blocks.LeftS;
+import blocks.RightL;
+import blocks.RightS;
+import blocks.Square;
+import blocks.StraightLine;
+import blocks.TBlock;
+import blocks.Tile;
 import mainGame.Board;
-import tetrominoes.Block;
-import tetrominoes.LeftL;
-import tetrominoes.LeftS;
-import tetrominoes.RightL;
-import tetrominoes.RightS;
-import tetrominoes.Square;
-import tetrominoes.StraightLine;
-import tetrominoes.TBlock;
-import tetrominoes.Tile;
 
 public class Engine {
   private static Board board;

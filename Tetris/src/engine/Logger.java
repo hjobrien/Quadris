@@ -6,8 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import tetrominoes.Block;
-import tetrominoes.Tile;
+import blocks.Block;
+import blocks.Tile;
 
 public class Logger {
 	

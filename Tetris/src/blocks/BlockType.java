@@ -1,4 +1,4 @@
-package tetrominoes;
+package blocks;
 
 public enum BlockType {
 	LEFT_L(0),				//0

@@ -2,11 +2,11 @@ package mainGame;
 
 import java.util.ArrayList;
 
+import blocks.Block;
+import blocks.Tile;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import tetrominoes.Block;
-import tetrominoes.Tile;
 
 public class Board {
   private Tile[][] boardState;
