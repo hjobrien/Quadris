@@ -4,7 +4,7 @@ public enum Move {
 	RIGHT(0),
 	LEFT(1),
 	DOWN(2),
-	FULL_DOWN(3),
+	DROP(3),
 	ROT_RIGHT(4),
 	ROT_LEFT(5),
 	UP(6);

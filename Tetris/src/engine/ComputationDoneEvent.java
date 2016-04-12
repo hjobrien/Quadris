@@ -12,6 +12,10 @@ public class ComputationDoneEvent extends Event {
 
   private Move[] optimalPath;
   
+  /**
+   * constructs an event when the AI has finished processing the block
+   * @param optimalPath the path the active block should take to arrive at its destination
+   */
   public ComputationDoneEvent(Move[] optimalPath){
     super(COMPUTATION_DONE);
     this.optimalPath = optimalPath;

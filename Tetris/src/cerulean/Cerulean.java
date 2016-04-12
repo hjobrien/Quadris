@@ -9,6 +9,12 @@ import mainGame.Move;
 import tetrominoes.Block;
 import tetrominoes.Tile;
 
+/**
+ * General AI class, handles game state analysis and move optimization
+ * 
+ * @author Hank
+ *
+ */
 public class Cerulean {
 
   // Board Weight constants
@@ -43,9 +49,16 @@ public class Cerulean {
     solutionPath = computeBestPath(nextBlock, boardState);
 
     // using grid from engine as event target, should change to something else TODO
-    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath)); 
+    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
   }
 
+  /**
+   * Generalized move optimization method
+   * 
+   * @param nextBlock the block just introduced to the board
+   * @param boardState the board state without the block entered, all tiles are not active
+   * @return an array of moves that positons the peice in to the optimal location
+   */
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
     double maxWeight = -1;
     Block nextBlockCopy = new Block(nextBlock);
@@ -54,7 +67,8 @@ public class Cerulean {
     for (int moveCount = 0; moveCount < 10; moveCount++) { // 10 possible worst-case left/right
                                                            // positions
       for (int rotCount = 0; rotCount < 4; rotCount++) { // 4 possible worst case rotations
-        double testWeight = computeWeight(nextBlockCopy, boardState, moveCount, rotCount);
+        Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount);
+        double testWeight = evaluateWeight(testState) - evaluateWeight(boardState);
         if (testWeight > maxWeight) {
           maxWeight = testWeight;
           bestPath = getPath(moveCount, rotCount);
@@ -65,9 +79,19 @@ public class Cerulean {
     return bestPath;
   }
 
+  /**
+   * converts integer representations of moves into array of individual moves
+   * 
+   * @param moveCount starting from the far left, how many times the block must be moved to the
+   *        right
+   * @param rotCount starting from the default configuration, the number of rotations to the right
+   *        are required
+   * @return an array of moves that first shifts the block to the left, then some amount to the
+   *         right, rotates, and issues a 'drop' command to terminate the sequence
+   */
   private static Move[] getPath(int moveCount, int rotCount) {
     ArrayList<Move> path = new ArrayList<Move>();
-    for (int i = 0; i < 6; i++) {   //puts the block into a constant, known position
+    for (int i = 0; i < 6; i++) { // puts the block into a constant, known position
       path.add(Move.LEFT);
     }
     for (int i = 0; i < moveCount; i++) {
@@ -76,11 +100,20 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
-    path.add(Move.FULL_DOWN);
+    path.add(Move.DROP);
     return path.toArray(new Move[] {});
   }
 
-  private static double computeWeight(Block nextBlock, Tile[][] boardState, int moveCount,
+  /**
+   * positions a block in a copy of the board based on translation and rotation parameters
+   * 
+   * @param nextBlock the active block
+   * @param boardState the state of non active tiles
+   * @param moveCount the number of left/right moves in the test arrangement
+   * @param rotCount the number of rotations in the test arrangement
+   * @return the board with the block moved to a certain position
+   */
+  private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount) {
     Tile[][] boardCopy = boardState.clone(); // makes a copy of the array, shouldn't have reference
                                              // issues
@@ -92,11 +125,12 @@ public class Cerulean {
     int blankCount = 0;
     int minSpace = 20; // intentionally high
     for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape was
-                                                                    // placed, scans all columns it
-                                                                    // occupies
+      // placed, scans all columns it
+      // occupies
       boolean hasPassedFilledBlock = false;
       blankCount = 0;
-      for (int j = 0; j < boardCopy.length; j++) {  //boardCopy.length = height, loops through each row
+      for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each
+                                                   // row
         if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
           blankCount++;
         } else {
@@ -110,9 +144,9 @@ public class Cerulean {
       }
     }
     Tile[][] shape = nextBlock.getShape();
-    for (int i = moveCount; i < shape[0].length; i++) { //goes over columns
+    for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
       for (int j = 0; j < shape.length; j++) { // repeats for the height of the
-                                                                 // block
+                                               // block
         boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
                                                                           // down by minSpace blocks
         boardCopy[i][j].setFilled(false);
@@ -120,10 +154,16 @@ public class Cerulean {
     }
     // board copy should now have the block dropped all the way down it can go but with no lines
     // removed
-    return evaluateWeight(boardCopy) - evaluateWeight(boardState);
+    return boardCopy;
 
   }
 
+  /**
+   * evaluates the relative value of the board
+   * 
+   * @param boardCopy the board to be analyzed
+   * @return the value of the board
+   */
   private static double evaluateWeight(Tile[][] boardCopy) {
     double weight = 0;
     for (int i = 0; i < boardCopy.length; i++) {
@@ -136,6 +176,12 @@ public class Cerulean {
     return weight;
   }
 
+  /**
+   * returns the number of completed lines in the board
+   * 
+   * @param boardCopy the board to be analyzed. It should not have been processed to remove lines
+   * @return the number of completed lines on the board (rows)
+   */
   private static int getNumLines(Tile[][] boardCopy) {
     int numLines = 0;
     for (int i = 0; i < boardCopy.length; i++) {
@@ -152,6 +198,13 @@ public class Cerulean {
     return numLines;
   }
 
+  /**
+   * analyzes a column of tiles for the number of voids it contains. A void is defined as any blank
+   * space with a filled, non active tile at some point above it
+   * 
+   * @param tiles the column of tiles to be analyzed
+   * @return the number of voids in the column
+   */
   private static int getNumVoids(Tile[] tiles) {
     boolean hasFoundBlock = false;
     int voidCount = 0;
@@ -166,6 +219,13 @@ public class Cerulean {
     return voidCount;
   }
 
+  /**
+   * gets the height of a column of tiles. The height is defined as the index of the highest filled,
+   * non active tile in the column
+   * 
+   * @param tiles   the column to be analyzed
+   * @return the height of the column
+   */
   private static int getHeight(Tile[] tiles) {
     for (int i = 0; i < tiles.length; i++) {
       if (tiles[i].isFilled()) {

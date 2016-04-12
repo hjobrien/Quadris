@@ -17,7 +17,11 @@ public class BlockAddedEvent extends Event{
   
 
 
-
+  /**
+   * makes a new event based on a block that is to be added to the board state
+   * @param block   the block to be added
+   * @param boardState  the board state it should be added to
+   */
   public BlockAddedEvent(Block block, Tile[][] boardState){
     super(BLOCK_ADDED);
     this.block = block;

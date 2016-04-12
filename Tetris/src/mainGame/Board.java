@@ -75,8 +75,11 @@ public class Board {
     return this.numOfFullRows;
   }
 
-  // adds a block near the top of the screen
   // might need to be altered for when the stack gets very high
+  /**
+   * adds block near the top of the screen
+   * @param b   the block to add
+   */
   public void updateBoardWithNewBlock(Block b) {
     int offset = (this.boardState[0].length - b.getShape()[0].length) / 2;
     Tile[][] blockShape = b.getShape();
@@ -91,7 +94,12 @@ public class Board {
     }
   }
 
-  // changes the fields of the tiles in Board based on the tile passed in
+  /**
+   * updates the board with the Tiles values for color, active, and filled
+   * @param i the x index to set
+   * @param j the y index to set
+   * @param t the tile to get the values from
+   */
   public void update(int i, int j, Tile t) {
     this.boardState[i][j].setActive(t.isActive());
     this.boardState[i][j].setFilled(t.isFilled());
@@ -117,6 +125,10 @@ public class Board {
 
   // TODO move related things
 
+  /**
+   * generalize way of getting user input into the engine
+   * @param m   the move that the user wants to execute
+   */
   public void pressed(Move m) {
     if (m == Move.RIGHT) {
       if (checkRight()) {
@@ -143,7 +155,7 @@ public class Board {
         }
         blockDown();
       }
-    } else if (m == Move.FULL_DOWN) {
+    } else if (m == Move.DROP) {
       while (checkDown()) {
         if (!Game.NINTENDO_SCORING) {
           boardScore += 3;
@@ -156,6 +168,10 @@ public class Board {
 
   }
 
+  /**
+   * checks to see if lowering the block by one space is a valid move
+   * @return    true if the move is valid, false otherwise
+   */
   public boolean checkDown() {
     if (debugMode) {
       System.out
@@ -188,6 +204,10 @@ public class Board {
 
   }
 
+  /**
+   * sets all tiles under the parameter to inactive to keep them from moving
+   * @param lowestEmptyRow the row at which the inactivity should begin
+   */
   private void setBlocksUnderToInactive(int lowestEmptyRow) {
     for (int i = lowestEmptyRow; i < boardState.length; i++) {
       for (Tile t : boardState[i]) {
@@ -199,6 +219,12 @@ public class Board {
 
   }
 
+  /**
+   * checks to see if any filled tile exists below the parameter
+   * @param lowestEmptyRow   the row below which should be checked
+   * @return true if any block exists below, false otherwise
+   */
+  //TODO: should the name be below?
   private boolean existRowsAbove(int lowestEmptyRow) {
     for (int i = lowestEmptyRow; i >= 0; i--) {
       for (int j = 0; j < boardState[0].length; j++) {
@@ -210,6 +236,10 @@ public class Board {
     return false;
   }
 
+  /**
+   * gets the lowest row that is totally empty
+   * @return the lowest row devoid of any filled tiles
+   */
   private int getLowestEmptyRow() {
     boolean foundEmptyRow = false;
     int row = boardState.length - 1;
@@ -231,8 +261,11 @@ public class Board {
     }
     return row;
   }
-
-  // checks if there is an inactive tile (block that already fell) below
+ 
+  /**
+   * checks if there is an inactive tile (block that already fell) below
+   * @return true if there is an inactive tile, false otherwise
+   */
   private boolean checkUnderneath() {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[i].length; j++) {
@@ -247,8 +280,11 @@ public class Board {
     }
     return false;
   }
-
-  // checks if the block is at the bottom of the screen
+ 
+  /**
+   * checks if the block is at the bottom of the screen
+   * @return true if the block is at the bottom, false otherwise
+   */
   private boolean checkBlockAtBottom() {
     int lastIndex = boardState.length - 1;
     for (int i = 0; i < boardState[0].length; i++) {
@@ -259,7 +295,9 @@ public class Board {
     return false;
   }
 
-  // moves all the blocks down 1 row
+  /**
+   * moves all the blocks down 1 row
+   */
   public void blockDown() {
     for (int i = boardState.length - 1; i >= 0; i--) {
       for (int j = boardState[i].length - 1; j >= 0; j--) {
@@ -274,7 +312,9 @@ public class Board {
     fallingBlock.moveDown();
   }
 
-  // only used in debugging
+  /**
+   * moves the active block up by one space, only used in debugging
+   */
   public void blockUp() {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[i].length; j++) {
@@ -287,6 +327,10 @@ public class Board {
     fallingBlock.moveUp();
   }
 
+  /**
+   * checks to see if moving the block to the right is a valid move
+   * @return true if it is valid, false otherwise
+   */
   private boolean checkRight() {
     for (Tile[] a : boardState) {
 
@@ -308,6 +352,9 @@ public class Board {
     return true;
   }
 
+  /**
+   * moves the active block to the right
+   */
   private void moveRight() {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = boardState[i].length - 2; j >= 0; j--) {
@@ -321,6 +368,10 @@ public class Board {
     fallingBlock.moveRight();
   }
 
+  /**
+   * checks to see if moving the block to the left is a valid move
+   * @return true if it is valid, false otherwise
+   */
   private boolean checkLeft() {
     for (Tile[] a : boardState) {
 
@@ -342,6 +393,9 @@ public class Board {
     return true;
   }
 
+  /**
+   * moves the active block to the left
+   */
   private void moveLeft() {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 1; j < boardState[i].length; j++) {
@@ -355,6 +409,11 @@ public class Board {
     fallingBlock.moveLeft();
   }
 
+  /**
+   * checks to see if a possible rotation is valid
+   * @param m the test rotation, should only be passes ROT_RIGHT, ROT_LEFT
+   * @return true if the rotation is valid, false otherwise
+   */
   private boolean checkRotate(Move m) {
     Block tempB = new Block(fallingBlock);
     if (m == Move.ROT_LEFT) {
@@ -395,7 +454,10 @@ public class Board {
     }
     return true;
   }
-
+  
+  /**
+   * updates the falling block by moving it down one row
+   */
   private void updateFallingBlock() {
     removeFallingBlock();
     Tile[][] fallingBlockShape = fallingBlock.getShape();
@@ -414,6 +476,9 @@ public class Board {
     }
   }
 
+  /**
+   * remove all active tiles on the board, should only be the active block
+   */
   private void removeFallingBlock() {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[0].length; j++) {
@@ -433,7 +498,9 @@ public class Board {
     return this.full;
   }
 
-  // goes over the whole grid and sets each tile to not falling
+  /**
+   * goes over the whole grid and sets each tile to not falling
+   */
   public void setNotFalling() {
     for (Tile[] list : boardState) {
       for (Tile t : list) {
@@ -442,6 +509,9 @@ public class Board {
     }
   }
 
+  /**
+   * removes all tiles from the board
+   */
   public void clearBoard() {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[i].length; j++) {
@@ -457,7 +527,11 @@ public class Board {
   public GridPane getGrid() {
     return grid;
   }
-
+  
+  /**
+   * gets the indexes of all the filled rows on the board
+   * @return an ArrayList of the filled indexes
+   */
   public ArrayList<Integer> getFullRows() {
     ArrayList<Integer> fullRows = new ArrayList<Integer>();
     for (int i = 0; i < boardState.length; i++) {
@@ -477,7 +551,10 @@ public class Board {
     return fullRows;
   }
 
-
+  /**
+   * removes all the tiles on the lines indicated in the parameter
+   * @param linesToClear     the lines that need to be cleared
+   */
   public void clearLines(ArrayList<Integer> linesToClear) {
     // rewards a "quadris"
     if (linesToClear.size() == 4) {
@@ -536,7 +613,10 @@ public class Board {
     }
   }
 
-
+  /**
+   * sets the mode of the object
+   * @param debugMode whether the object should print out its debug information
+   */
   public static void setMode(boolean debugMode/* , boolean logMode */) {
     Board.debugMode = debugMode;
     // this.logMode = logMode;

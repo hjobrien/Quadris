@@ -53,7 +53,11 @@ public class Renderer {
   private static ArrayList<Integer> highScores = null; // need to put this here because i can't make a
                                                        // local variable passed to a method in the listener
 
-
+  /**
+   * initialize the run values of the object
+   * @param doDebug     whether the object should print out its debug information
+   * @param doLog       whether the object should log its behavior
+   */
   public static void setValues(boolean doDebug, boolean doLog){
     Renderer.doDebug = doDebug;
     Renderer.doLog = doLog;
@@ -271,7 +275,7 @@ public class Renderer {
   }
 
   /**
-   * ends pause view by hiding the pane
+   * ends pause view by hiding parts of the pane
    */
   public static void unpause() {
     pauseView.setVisible(false);

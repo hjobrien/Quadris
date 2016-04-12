@@ -21,6 +21,9 @@ public class Logger {
 	
 	//only called once when the class is first loaded. apparently they are to be used sparingly
 	//can't throw exception here
+	/**
+	 * initialize the file objects, only called once when the object is first loaded into memory.
+	 */
 	static{
 		// should make a file first and ensure it exists
 		logFile = new File(LOG_FILE);

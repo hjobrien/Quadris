@@ -55,6 +55,9 @@ public class Game extends Application {
     launch(args);
   }
 
+  /**
+   * configures the run settings of the game based on the user selected run configuration
+   */
   private static void configureSettings() {
     // setup program settings
     switch (GAME_MODE) {
@@ -150,7 +153,7 @@ public class Game extends Application {
             Engine.getBoard().pressed(Move.DOWN);
             break;
           case SPACE:
-            Engine.getBoard().pressed(Move.FULL_DOWN);
+            Engine.getBoard().pressed(Move.DROP);
             if (dropDownTerminatesBlock)
               Engine.update();
             break;

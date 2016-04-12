@@ -21,11 +21,11 @@ public class Engine {
   private static boolean isPaused = false;
 
   private static boolean logMode;
-//  private static boolean debugMode;
+  // private static boolean debugMode;
 
   /**
-   * is the general engine method
-   * coordinates dropping blocks, adding blocks, logging game state, and line clearing
+   * is the general engine method coordinates dropping blocks, adding blocks, logging game state,
+   * and line clearing
    */
   public static void update() {
     if (!isPaused) { // little hacky, could be improved
@@ -54,15 +54,21 @@ public class Engine {
 
   /**
    * 
-   * @return    a 2D array of the board, each index references a possible square and if it is filled or not
+   * @return a 2D array of the board, each index references a possible square and if it is filled or
+   *         not
    */
   public Tile[][] getBoardState() {
     return board.getBoardState();
   }
 
-  // Adds a random block to the board
+  /**
+   * adds a new random block to the board. Before one is added, a BlockAddedEvent is fired the new
+   * block is taken from the nextBlockBoard with is shown to the user, introduced to the board, and
+   * a new random one added to the nextBlockBoard
+   */
   public static void addBlock() {
-    board.getGrid().fireEvent(new BlockAddedEvent(nextBlock, board.getBoardState())); //needed to access Node.fireEvent, the GridPane was an accessible Node
+    //needed to access Node.fireEvent, the GridPane was an accessible Node
+    board.getGrid().fireEvent(new BlockAddedEvent(nextBlock, board.getBoardState())); 
     board.setFallingBlock(nextBlock);
     board.updateBoardWithNewBlock(nextBlock);
     nextBlock = generateRandomBlock();
@@ -76,7 +82,7 @@ public class Engine {
 
   /**
    * 
-   * @return    a new random instance of Block
+   * @return a new random instance of Block
    */
   private static Block generateRandomBlock() {
     Random r = new Random();
@@ -102,7 +108,8 @@ public class Engine {
 
   /**
    * gets the Board object the engine is monitoring
-   * @return    the Board object the engine is working with
+   * 
+   * @return the Board object the engine is working with
    */
   public static Board getBoard() {
     return board;
@@ -110,7 +117,8 @@ public class Engine {
 
   /**
    * toggles pause
-   * @return    the new value of the isPaused variable
+   * 
+   * @return the new value of the isPaused variable
    */
   public static boolean togglePause() {
     isPaused = !isPaused;
@@ -119,19 +127,21 @@ public class Engine {
 
   /**
    * serves as a kinds of initial pseudo-constructor to set the boards the engine has to work with
-   * @param b1  the main game board
-   * @param b2  a 4x4 smaller board where the next piece is shown
+   * 
+   * @param b1 the main game board
+   * @param b2 a 4x4 smaller board where the next piece is shown
    */
   public static void setValues(Board b1, Board b2) {
     board = b1;
     nextPieceBoard = b2;
 
   }
-  
+
   /**
    * also serves to initialize values to the engine
-   * @param debugMode   whether the engine should operate in debugMode
-   * @param logMode     whether the engine should log its actions
+   * 
+   * @param debugMode whether the engine should operate in debugMode
+   * @param logMode whether the engine should log its actions
    */
   public static void setMode(boolean debugMode, boolean logMode) {
     // Engine.debugMode = debugMode;
