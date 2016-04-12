@@ -17,7 +17,7 @@ public class Game extends Application {
 
 
   //change this
-  public static final GameMode GAME_MODE = GameMode.AI_MODE;
+  public static final GameMode GAME_MODE = GameMode.DISTRO_MODE;
 
   
   //don't change these
