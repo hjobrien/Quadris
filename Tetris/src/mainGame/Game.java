@@ -17,7 +17,7 @@ public class Game extends Application {
 
 
   //change this
-  public static final GameMode GAME_MODE = GameMode.DISTRO_MODE;
+  public static final GameMode GAME_MODE = GameMode.AI_MODE;
 
   
   //don't change these
@@ -77,7 +77,7 @@ public class Game extends Application {
         useAI = false;
         break;
       case AI_MODE:
-        doDebug = false;
+        doDebug = true;
         doLog = true;
         useAI = true;
         break;
@@ -98,8 +98,11 @@ public class Game extends Application {
     if (useAI) { // do we care about these events in user mode?
       stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
     }
-
-    stage.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
+    else{
+      stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
+    }
+    //added regardless of run configuration
+    stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
 
     stage.setScene(boardScene);
 
@@ -110,14 +113,14 @@ public class Game extends Application {
     stage.show();
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
-
+  
+  
   /**
-   * deals with keyboard input from user
-   * 
+   * handles basic key input that needs to be constant across all run configurations
    * @author Hank
    *
    */
-  private class KeyEventHandler implements EventHandler<KeyEvent> {
+  private class BasicInputHandler implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent key) {
@@ -135,7 +138,25 @@ public class Game extends Application {
       } else if (key.getCode() == KeyCode.R) {
         resetGame();
 
-      } else if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full) {
+      }
+      if (!paused) {
+        Renderer.draw(Engine.getBoard());
+      }
+    }
+    
+  }
+
+  /**
+   * deals with advanced keyboard input from user related to control of blocks
+   * 
+   * @author Hank
+   *
+   */
+  private class UserInputHandler implements EventHandler<KeyEvent> {
+
+    @Override
+    public void handle(KeyEvent key) {
+      if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full) {
         switch (key.getCode()) {
           case RIGHT:
             Engine.getBoard().pressed(Move.RIGHT);

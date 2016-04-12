@@ -115,8 +115,11 @@ public class Cerulean {
    */
   private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount) {
-    Tile[][] boardCopy = boardState.clone(); // makes a copy of the array, shouldn't have reference
-                                             // issues
+    //avoids reference issues
+    Tile[][] boardCopy = new Tile[boardState.length][];
+    for(int i = 0; i < boardState.length; i++){
+      boardCopy[i] = boardState[i].clone();
+    }
     for (int i = 0; i < nextBlock.getShape().length; i++) {
       for (int j = 0; j < nextBlock.getShape()[i].length; j++) {
         boardCopy[i + moveCount][j] = nextBlock.getShape()[i][j]; // shifts block to the far left
@@ -143,13 +146,16 @@ public class Cerulean {
         minSpace = blankCount;
       }
     }
-    Tile[][] shape = nextBlock.getShape();
+    Tile[][] shape = new Tile[nextBlock.getShape().length][];    //avoids pass by reference
+    for(int i = 0; i < nextBlock.getShape().length; i++){
+      shape[i] = nextBlock.getShape()[i].clone();
+    }
     for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
       for (int j = 0; j < shape.length; j++) { // repeats for the height of the
                                                // block
         boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
                                                                           // down by minSpace blocks
-        boardCopy[i][j].setFilled(false);
+        boardCopy[j][i].setFilled(false);
       }
     }
     // board copy should now have the block dropped all the way down it can go but with no lines

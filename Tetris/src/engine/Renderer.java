@@ -71,7 +71,7 @@ public class Renderer {
   public static Scene makeGame() throws IOException {
     initializeScorePrinter();
     scoreList = new TextArea();
-    scoreList.setText("\n\tHigh Scores:\n\n" + getScoresForDisplay(highScores));
+    scoreList.setText(getScoresForDisplay(highScores));
     StackPane main = new StackPane();
 
     // if we only make 1 board and it's in engine, we can always just receive the boardState
@@ -203,7 +203,7 @@ public class Renderer {
     scorePane.setStyle("-fx-background-color: rgba(100, 0, 100, 0.5);");
     scorePane.setVisible(false);
 
-    scoreList = new TextArea("\n\tHigh Scores:\n\n" + getScoresForDisplay(highScores));
+    scoreList = new TextArea(getScoresForDisplay(highScores));
     scoreList.getStylesheets().add("stylesheets/TextAreaStyle.css");
     scoreList.setEditable(false); // keeps pesky users from typing in it
     scoreList.setStyle("-fx-text-fill: white;");
@@ -239,7 +239,7 @@ public class Renderer {
    * @return a string containing a formatted version of the parameter
    */
   private static String getScoresForDisplay(ArrayList<Integer> highScores) {
-    String scores = "";
+    String scores = "\n\tHigh Scores:\n\n";
     String a = "";
     for (int i = 0; i < highScores.size(); i++) {
       a = i + 1 + ".";
@@ -271,7 +271,6 @@ public class Renderer {
   // maybe do more here, for right now it's its own method
   public static void pause() {
     pauseView.setVisible(true);
-
   }
 
   /**
@@ -324,6 +323,10 @@ public class Renderer {
       scores.add(fileReader.nextInt());
     }
     return scores;
+  }
+  
+  private static ArrayList<Integer> readScores(){
+    return readScores(scoreReader);
   }
 
   /**

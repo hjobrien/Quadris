@@ -43,9 +43,9 @@ public class Block {
    */
   //copy constructor?
   public Block(Block b) {
-    this.configurations = b.configurations;
+    this.configurations = b.configurations.clone();
     this.rotationIndex = b.rotationIndex;
-    this.locationInGrid = b.locationInGrid;
+    this.locationInGrid = b.locationInGrid.clone();
   }
   
   /**
