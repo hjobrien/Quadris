@@ -48,16 +48,18 @@ public class Cerulean {
 
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
     double maxWeight = -1;
+    Block nextBlockCopy = new Block(nextBlock);
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
     for (int moveCount = 0; moveCount < 10; moveCount++) { // 10 possible worst-case left/right
                                                            // positions
       for (int rotCount = 0; rotCount < 4; rotCount++) { // 4 possible worst case rotations
-        double testWeight = computeWeight(nextBlock, boardState, moveCount, rotCount);
+        double testWeight = computeWeight(nextBlockCopy, boardState, moveCount, rotCount);
         if (testWeight > maxWeight) {
           maxWeight = testWeight;
           bestPath = getPath(moveCount, rotCount);
         }
+        nextBlockCopy.rotateRight();
       }
     }
     return bestPath;
@@ -65,7 +67,7 @@ public class Cerulean {
 
   private static Move[] getPath(int moveCount, int rotCount) {
     ArrayList<Move> path = new ArrayList<Move>();
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 7; i++) {   //puts the block into a constant, known position
       path.add(Move.LEFT);
     }
     for (int i = 0; i < moveCount; i++) {

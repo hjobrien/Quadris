@@ -2,7 +2,8 @@ package engine;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import tetrominoes.BlockType;
+import tetrominoes.Block;
+import tetrominoes.Tile;
 
 public class BlockAddedEvent extends Event{
 
@@ -11,20 +12,28 @@ public class BlockAddedEvent extends Event{
   
   public static final EventType<BlockAddedEvent> BLOCK_ADDED = new EventType<>(Event.ANY, "Block Added");
    
-  private BlockType type;
+  private Block block;
+  private Tile[][] boardState;
   
 
-  
-  public BlockType getBlockType() {
-    return this.type;
-  }
 
 
-
-  public BlockAddedEvent(BlockType type){
+  public BlockAddedEvent(Block block, Tile[][] boardState){
     super(BLOCK_ADDED);
-    this.type = type;
+    this.block = block;
+    this.boardState = boardState;
   }
+
+
+
+  public Tile[][] getBoardState() {
+    return this.boardState;
+  }
+
   
+  public Block getBlock() {
+    return this.block;
+  }
+
 
 }

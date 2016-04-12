@@ -27,7 +27,7 @@ public class Game extends Application {
   public static final boolean LOG_MODE = true;
   // public static final boolean LOG_MODE = false;
 
-  public static final boolean AI_MODE = true;
+  public static final boolean AI_MODE = false;
   // public static final boolean AI_MODE = false;
 
 
