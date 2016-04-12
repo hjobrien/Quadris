@@ -16,13 +16,14 @@ import javafx.stage.Stage;
 public class Game extends Application {
 
 
-
+  //change this
   public static final GameMode GAME_MODE = GameMode.AI_MODE;
 
+  
+  //don't change these
   private static boolean doDebug;
   private static boolean doLog;
   private static boolean useAI;
-
 
 
 
@@ -46,11 +47,17 @@ public class Game extends Application {
   boolean paused = false;
 
   private static boolean gameIsActive = true;
-  
-  
-  public static void main(String[] args){
-    //setup program settings
-    switch(GAME_MODE){
+
+
+  public static void main(String[] args) {
+    configureSettings();
+
+    launch(args);
+  }
+
+  private static void configureSettings() {
+    // setup program settings
+    switch (GAME_MODE) {
       case DISTRO_MODE:
         doDebug = false;
         doLog = false;
@@ -77,20 +84,19 @@ public class Game extends Application {
         useAI = false;
         break;
     }
-    launch(args);
   }
-  
+
   @Override
   public void start(Stage stage) throws Exception {
     Renderer.setValues(doDebug, doLog);
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
-    
-    if (useAI) {  //do we care about these events in user mode?
+
+    if (useAI) { // do we care about these events in user mode?
       stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
     }
 
-    stage.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());   
+    stage.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
 
     stage.setScene(boardScene);
 
@@ -99,11 +105,12 @@ public class Game extends Application {
 
 
     stage.show();
-    Engine.addBlock();  //needs to be towards the end of method so initial event fires correctly
+    Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
   /**
    * deals with keyboard input from user
+   * 
    * @author Hank
    *
    */
@@ -191,7 +198,7 @@ public class Game extends Application {
 
   /**
    *
-   * @return    the score as a sum of the time score and the lines cleared score
+   * @return the score as a sum of the time score and the lines cleared score
    */
   private int getScore() {
     return (timeScore + Engine.getBoard().getBoardScore());
@@ -207,7 +214,8 @@ public class Game extends Application {
 
   /**
    * sets up the required settings for the timer used to control the pace of the game
-   * @return    a fully configured AnimationTimer instance
+   * 
+   * @return a fully configured AnimationTimer instance
    */
   private AnimationTimer configureTimer() {
     return new AnimationTimer() {
@@ -244,11 +252,12 @@ public class Game extends Application {
 
 
       }
-      
+
       /**
        * Aims to change the number of real-world seconds between each game tick without acceleration
-       * @param turnTime    the current time it takes for one tick
-       * @return    a new number of milliseconds for the next tick
+       * 
+       * @param turnTime the current time it takes for one tick
+       * @return a new number of milliseconds for the next tick
        */
       private double updateTime(double turnTime) {
         if (NINTENDO_SCORING) {

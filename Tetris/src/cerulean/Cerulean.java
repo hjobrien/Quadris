@@ -67,7 +67,7 @@ public class Cerulean {
 
   private static Move[] getPath(int moveCount, int rotCount) {
     ArrayList<Move> path = new ArrayList<Move>();
-    for (int i = 0; i < 7; i++) {   //puts the block into a constant, known position
+    for (int i = 0; i < 6; i++) {   //puts the block into a constant, known position
       path.add(Move.LEFT);
     }
     for (int i = 0; i < moveCount; i++) {
@@ -91,16 +91,16 @@ public class Cerulean {
     }
     int blankCount = 0;
     int minSpace = 20; // intentionally high
-    for (int i = moveCount; i < nextBlock.getShape().length; i++) { // starts where the shape was
+    for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape was
                                                                     // placed, scans all columns it
                                                                     // occupies
       boolean hasPassedFilledBlock = false;
       blankCount = 0;
-      for (int j = 0; j < boardCopy[i].length; j++) {
-        if (hasPassedFilledBlock && !boardCopy[i][j].isFilled()) {
+      for (int j = 0; j < boardCopy.length; j++) {  //boardCopy.length = height, loops through each row
+        if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
           blankCount++;
         } else {
-          if (boardCopy[i][j].isFilled()) {
+          if (boardCopy[j][i].isFilled()) {
             hasPassedFilledBlock = true;
           }
         }
@@ -109,12 +109,13 @@ public class Cerulean {
         minSpace = blankCount;
       }
     }
-    for (int i = moveCount; i < nextBlock.getShape().length; i++) {
-      for (int j = 0; j < nextBlock.getShape()[i].length; j++) { // repeats for the height of the
+    Tile[][] shape = nextBlock.getShape();
+    for (int i = moveCount; i < shape[0].length; i++) { //goes over columns
+      for (int j = 0; j < shape.length; j++) { // repeats for the height of the
                                                                  // block
-        boardCopy[i][j + minSpace].setActive(boardCopy[i][j].isActive()); // should drop the block
+        boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
                                                                           // down by minSpace blocks
-        boardCopy[i][j].setActive(false);
+        boardCopy[i][j].setFilled(false);
       }
     }
     // board copy should now have the block dropped all the way down it can go but with no lines
