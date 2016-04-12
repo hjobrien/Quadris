@@ -1,14 +1,24 @@
 package cerulean;
 
+import java.util.ArrayList;
+
 import engine.ComputationDoneEvent;
 import engine.Engine;
 import javafx.event.Event;
 import mainGame.Move;
 import tetrominoes.Block;
-import tetrominoes.BlockType;
 import tetrominoes.Tile;
 
 public class Cerulean {
+
+  // Board Weight constants
+  // negative means its a bad thing being weighted (overall board height)
+  // positive means its a good thing (full lines);
+  private static final double HEIGHT_WEIGHT = -0.1;
+  private static final double VOID_WEIGHT = -0.5;
+  private static final double LINE_WEIGHT = 1;
+
+
 
   private static Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled to prevent
                                                                 // errors later on
@@ -30,15 +40,10 @@ public class Cerulean {
    * @param boardState the current board state
    */
   public static void submitBlock(Block nextBlock, Tile[][] boardState) {
-    // do things
     solutionPath = computeBestPath(nextBlock, boardState);
 
-
-    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent()); // using grid from
-                                                                              // engine as event
-                                                                              // target, should
-                                                                              // change to something
-                                                                              // else TODO
+    // using grid from engine as event target, should change to something else TODO
+    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath)); 
   }
 
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
@@ -59,11 +64,20 @@ public class Cerulean {
   }
 
   private static Move[] getPath(int moveCount, int rotCount) {
-    // TODO Auto-generated method stub
-    return null;
+    ArrayList<Move> path = new ArrayList<Move>();
+    for (int i = 0; i < 7; i++) {
+      path.add(Move.LEFT);
+    }
+    for (int i = 0; i < moveCount; i++) {
+      path.add(Move.RIGHT);
+    }
+    for (int i = 0; i < rotCount; i++) {
+      path.add(Move.ROT_RIGHT);
+    }
+    path.add(Move.FULL_DOWN);
+    return path.toArray(new Move[] {});
   }
 
-  // TODO: may have pass-by-reference issues
   private static double computeWeight(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount) {
     Tile[][] boardCopy = boardState.clone(); // makes a copy of the array, shouldn't have reference
@@ -74,48 +88,87 @@ public class Cerulean {
       }
     }
     int blankCount = 0;
-    int minSpace = 20; //intentionally high
+    int minSpace = 20; // intentionally high
     for (int i = moveCount; i < nextBlock.getShape().length; i++) { // starts where the shape was
                                                                     // placed, scans all columns it
                                                                     // occupies
       boolean hasPassedFilledBlock = false;
       blankCount = 0;
       for (int j = 0; j < boardCopy[i].length; j++) {
-          if(hasPassedFilledBlock && !boardCopy[i][j].isFilled()){
-            blankCount++;
+        if (hasPassedFilledBlock && !boardCopy[i][j].isFilled()) {
+          blankCount++;
+        } else {
+          if (boardCopy[i][j].isFilled()) {
+            hasPassedFilledBlock = true;
           }
-          else{
-            if(boardCopy[i][j].isFilled()){
-              hasPassedFilledBlock = true;
-            }
-          }
+        }
       }
-      if(blankCount < minSpace){
+      if (blankCount < minSpace) {
         minSpace = blankCount;
       }
     }
-    for(int i = moveCount; i < nextBlock.getShape().length; i++){
-      for(int j = 0; j < nextBlock.getShape()[i].length; j++){  //repeats for the height of the block
-        boardCopy[i][j + minSpace].setActive(boardCopy[i][j].isActive());   //should drop the block down by minSpace blocks
+    for (int i = moveCount; i < nextBlock.getShape().length; i++) {
+      for (int j = 0; j < nextBlock.getShape()[i].length; j++) { // repeats for the height of the
+                                                                 // block
+        boardCopy[i][j + minSpace].setActive(boardCopy[i][j].isActive()); // should drop the block
+                                                                          // down by minSpace blocks
         boardCopy[i][j].setActive(false);
       }
     }
-    //board copy should now have the block dropped all the way down it can go but with no lines removed
+    // board copy should now have the block dropped all the way down it can go but with no lines
+    // removed
     return evaluateWeight(boardCopy) - evaluateWeight(boardState);
-    
-    // edit board state with hypothetical placement
-    // get block shape
-    // add to a 10x4 board
-    // shift to left
-    // Concatenate the boards
-    // pass to weight analyzer
-    // return weight of new board - old board
-    // moves block 7 times to the left, then moveCount times to the right
 
   }
 
-  private static int evaluateWeight(Tile[][] boardCopy) {
-    // TODO Auto-generated method stub
+  private static double evaluateWeight(Tile[][] boardCopy) {
+    double weight = 0;
+    for (int i = 0; i < boardCopy.length; i++) {
+      weight += (HEIGHT_WEIGHT * getHeight(boardCopy[i]));
+      weight += (VOID_WEIGHT * getNumVoids(boardCopy[i])); // make this scale quadratically?
+    }
+    for (int i = 0; i < boardCopy[0].length; i++) {
+      weight += (LINE_WEIGHT * getNumLines(boardCopy));
+    }
+    return weight;
+  }
+
+  private static int getNumLines(Tile[][] boardCopy) {
+    int numLines = 0;
+    for (int i = 0; i < boardCopy.length; i++) {
+      boolean isFull = true;
+      for (int j = 0; j < boardCopy[i].length; j++) {
+        if (!boardCopy[i][j].isFilled()) {
+          isFull = false;
+        }
+      }
+      if (isFull) {
+        numLines++;
+      }
+    }
+    return numLines;
+  }
+
+  private static int getNumVoids(Tile[] tiles) {
+    boolean hasFoundBlock = false;
+    int voidCount = 0;
+    for (int i = 0; i < tiles.length; i++) {
+      if (hasFoundBlock && !tiles[i].isFilled()) {
+        voidCount++;
+      }
+      if (tiles[i].isFilled()) {
+        hasFoundBlock = true;
+      }
+    }
+    return voidCount;
+  }
+
+  private static int getHeight(Tile[] tiles) {
+    for (int i = 0; i < tiles.length; i++) {
+      if (tiles[i].isFilled()) {
+        return i;
+      }
+    }
     return 0;
   }
 }
