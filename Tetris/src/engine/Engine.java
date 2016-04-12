@@ -64,7 +64,7 @@ public class Engine {
   // Adds a random block to the board
   public static void addBlock() {
     board.getGrid().fireEvent(new BlockAddedEvent(nextBlock.getType())); //needed to access Node.fireEvent, the GridPane was an accessible Node
-    Cerulean.submitBlock(nextBlock.getType(), board.getBoardState());
+    Cerulean.submitBlock(nextBlock, board.getBoardState());
     board.setFallingBlock(nextBlock);
     board.updateBoardWithNewBlock(nextBlock);
     nextBlock = generateRandomBlock();
