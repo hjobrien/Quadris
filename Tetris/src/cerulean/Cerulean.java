@@ -48,8 +48,9 @@ public class Cerulean {
   public static void submitBlock(Block nextBlock, Tile[][] boardState) {
     //TODO:
     // ideal behavior: blocks drop normally but an array is generated each time a block is added to the game
+    long t1 = System.currentTimeMillis();
     solutionPath = computeBestPath(nextBlock, boardState);
-    System.out.println("submitted");
+    System.out.println("Weight analysis took " + (System.currentTimeMillis() - t1) + " Milli(s)");
     // using grid from engine as event target, should change to something else
     //TODO: make board extend GridPane? it'd be a node then
     Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
@@ -131,8 +132,7 @@ public class Cerulean {
     int blankCount = 0;
     int minSpace = 20; // intentionally high
     for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape was
-      // placed, scans all columns it
-      // occupies
+      // placed, scans all columns it occupies
       boolean hasPassedFilledBlock = false;
       blankCount = 0;
       for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each

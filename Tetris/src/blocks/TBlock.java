@@ -9,10 +9,7 @@ public class TBlock extends Block {
 	
 	//[change this index for rotations][row][column]
 	private static Tile[][][] configurations = new Tile[][][]{
-		new Tile [][]{
-			{new Tile(color),new Tile(color),new Tile(color)},
-		    {new Tile(), new Tile(color), new Tile()},
-		},
+
 		new Tile [][]{
 			{new Tile(color),new Tile()},
 		    {new Tile(color), new Tile(color)},
@@ -26,7 +23,11 @@ public class TBlock extends Block {
 			{new Tile(),new Tile(color)},
 		    {new Tile(color), new Tile(color)},
 		    {new Tile(), new Tile(color)},
-		}
+		},
+	    new Tile [][]{
+          {new Tile(color),new Tile(color),new Tile(color)},
+          {new Tile(), new Tile(color), new Tile()},
+        },
 	};
 	
 	public TBlock() {

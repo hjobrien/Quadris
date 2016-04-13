@@ -49,7 +49,7 @@ public class Tile {
 	}
 	
 	public String toString(){
-	  return "Filled: " + isFilled + " Active: " + isActive;
+	  return "f: " + isFilled + " a: " + isActive;
 	}
 
 }

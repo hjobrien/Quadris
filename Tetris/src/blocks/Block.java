@@ -27,7 +27,13 @@ public class Block {
    * @param type    the type of the block represented by this instance
    */
   public Block(Tile[][][] configurations, BlockType type) {
-    this.configurations = configurations;
+    this.configurations = new Tile[configurations.length][configurations[0].length][configurations[0][0].length];
+    //avoids pass by reference
+    for(int i = 0; i < configurations.length; i++){ 
+      for(int j = 0; j < configurations[i].length; j++){
+        this.configurations[i][j] = configurations[i][j].clone();
+      }
+    }
     this.type = type;
     // row, column of bottom right corner
     int startingRowIndex = configurations[rotationIndex].length - 1 + 3;
@@ -43,7 +49,13 @@ public class Block {
    */
   //copy constructor?
   public Block(Block b) {
-    this.configurations = b.configurations.clone();
+    this.configurations = new Tile[b.configurations.length][b.configurations[0].length][b.configurations[0][0].length];
+    //avoids pass by reference
+    for(int i = 0; i < b.configurations.length; i++){ 
+      for(int j = 0; j < b.configurations[i].length; j++){
+        this.configurations[i][j] = b.configurations[i][j].clone();
+      }
+    }
     this.rotationIndex = b.rotationIndex;
     this.locationInGrid = b.locationInGrid.clone();
   }

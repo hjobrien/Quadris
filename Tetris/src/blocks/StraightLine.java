@@ -11,15 +11,15 @@ public class StraightLine extends Block {
 	private static Tile[][][] configurations = new Tile[][][]{
 		
 		new Tile [][]{
-			{new Tile(color), new Tile(color), new Tile(color), new Tile(color)}
+			{new Tile(color)},
+			{new Tile(color)},
+			{new Tile(color)},
+			{new Tile(color)},
 		},
 		
 		new Tile [][]{
-			{new Tile(color)},
-			{new Tile(color)},
-			{new Tile(color)},
-			{new Tile(color)},
-		}
+          {new Tile(color), new Tile(color), new Tile(color), new Tile(color)}
+        }
 	};		
 	
 	public StraightLine() {
