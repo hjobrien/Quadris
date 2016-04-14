@@ -23,15 +23,26 @@ public class Block {
   /**
    * makes a new block instance with an array of configurations and the type of the block
    * 
-   * @param configurations  the array containing the shape of the block under all rotations
-   * @param type    the type of the block represented by this instance
+   * @param configurations the array containing the shape of the block under all rotations
+   * @param type the type of the block represented by this instance
    */
   public Block(Tile[][][] configurations, BlockType type) {
-    this.configurations = new Tile[configurations.length][configurations[0].length][configurations[0][0].length];
-    //avoids pass by reference
-    for(int i = 0; i < configurations.length; i++){ 
-      for(int j = 0; j < configurations[i].length; j++){
-        this.configurations[i][j] = configurations[i][j].clone();
+    int maxDim = Math.max(configurations[0].length, configurations[0][0].length);
+    this.configurations = new Tile[configurations.length][maxDim][maxDim];
+    // avoids pass by reference
+    for (int i = 0; i < configurations.length; i++) {
+      for (int j = 0; j < configurations[i].length; j++) {
+        if (configurations[i][j].length < maxDim) {
+          for (int k = 0; k < configurations[i][j].length; k++) {
+            this.configurations[i][j][k] = configurations[i][j][k];
+          }
+          for (int k = configurations[i][j].length; k < maxDim; k++) {
+            this.configurations[i][j][k] = new Tile();
+          }
+        }
+        else{
+          this.configurations[i][j] = configurations[i][j].clone();
+        }
       }
     }
     this.type = type;
@@ -45,24 +56,33 @@ public class Block {
 
   /**
    * constructs a new instance of this object based on an existing block object
-   * @param b    the copied Block
+   * 
+   * @param b the copied Block
    */
-  //copy constructor?
+  // copy constructor?
   public Block(Block b) {
-    this.configurations = new Tile[b.configurations.length][b.configurations[0].length][b.configurations[0][0].length];
-    //avoids pass by reference
-    for(int i = 0; i < b.configurations.length; i++){ 
-      for(int j = 0; j < b.configurations[i].length; j++){
-        this.configurations[i][j] = b.configurations[i][j].clone();
+    this.configurations =
+        new Tile[b.configurations.length][b.configurations[0].length][b.configurations[0][0].length];
+    // avoids pass by reference
+    for (int i = 0; i < b.configurations.length; i++) {
+      for (int j = 0; j < b.configurations[i].length; j++) {
+        for (int k = 0; k < b.configurations[i][j].length; k++) {
+          if (configurations[i][j][k] != null) {
+            this.configurations[i][j][k] = configurations[i][j][k];
+          } else {
+            configurations[i][j][k] = new Tile();
+          }
+        }
       }
     }
     this.rotationIndex = b.rotationIndex;
     this.locationInGrid = b.locationInGrid.clone();
   }
-  
+
   /**
    * gets the shape of the block for its current rotation index
-   * @return    the shape of the block given its rotation index
+   * 
+   * @return the shape of the block given its rotation index
    */
   public Tile[][] getShape() {
     return configurations[rotationIndex];

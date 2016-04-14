@@ -122,8 +122,9 @@ public class Cerulean {
     //avoids reference issues
     Tile[][] boardCopy = new Tile[boardState.length][];
     for(int i = 0; i < boardState.length; i++){
-      boardCopy[i] = boardState[i].clone();
+      boardCopy[i] = boardState[i].clone(); //board state has nulls
     }
+    
     for (int i = 0; i < nextBlock.getShape().length; i++) {
       for (int j = 0; j < nextBlock.getShape()[i].length; j++) {
         boardCopy[i + moveCount][j] = nextBlock.getShape()[i][j]; // shifts block to the far left
