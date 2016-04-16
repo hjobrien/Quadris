@@ -1,6 +1,7 @@
 package blocks;
 
 import engine.Renderer;
+import javafx.scene.paint.Color;
 
 public class Block {
   private Tile[][][] configurations = new Tile[][][] {};
@@ -14,6 +15,8 @@ public class Block {
   // public boolean debug = true;
 
   private boolean falling = true;
+  
+  private Color color;
 
   private BlockType type;
 
@@ -26,7 +29,8 @@ public class Block {
    * @param configurations the array containing the shape of the block under all rotations
    * @param type the type of the block represented by this instance
    */
-  public Block(Tile[][][] configurations, BlockType type) {
+  public Block(Tile[][][] configurations, BlockType type, Color color) {
+    this.color = color;
     int maxDim = Math.max(configurations[0].length, configurations[0][0].length);
     this.configurations = new Tile[configurations.length][maxDim][maxDim];
     // avoids pass by reference
@@ -45,6 +49,15 @@ public class Block {
         }
       }
     }
+    for(int i = 0; i < this.configurations.length; i++){
+      for(int j = 0; j < this.configurations[i].length; j++){
+        for(int k = 0; k < this.configurations[i][j].length; k++){
+          if(this.configurations[i][j][k] == null){
+            this.configurations[i][j][k] = new Tile();
+          }
+        }
+      }
+    }
     this.type = type;
     // row, column of bottom right corner
     int startingRowIndex = configurations[rotationIndex].length - 1 + 3;
@@ -59,24 +72,40 @@ public class Block {
    * 
    * @param b the copied Block
    */
-  // copy constructor?
-  public Block(Block b) {
-    this.configurations =
-        new Tile[b.configurations.length][b.configurations[0].length][b.configurations[0][0].length];
-    // avoids pass by reference
-    for (int i = 0; i < b.configurations.length; i++) {
-      for (int j = 0; j < b.configurations[i].length; j++) {
-        for (int k = 0; k < b.configurations[i][j].length; k++) {
-          if (configurations[i][j][k] != null) {
-            this.configurations[i][j][k] = configurations[i][j][k];
-          } else {
-            configurations[i][j][k] = new Tile();
-          }
-        }
-      }
+  // copy constructor?  
+  public Block(BlockType type){
+    Block b;
+    switch(type){
+      case LEFT_L:
+        b = new LeftL();
+        break;
+      case LEFT_S:
+        b = new LeftS();
+        break;
+      case RIGHT_L:
+        b = new RightL();
+        break;
+      case RIGHT_S:
+        b = new RightS();
+        break;
+      case SQUARE:
+        b = new Square();
+        break;
+      case LINE:
+        b = new StraightLine();
+        break;
+      case T_BLOCK:
+        b = new TBlock();
+        break;
+      default:
+        b = new StraightLine();
     }
+    this.color = b.color;
+    this.configurations = b.configurations;
+    this.type = b.type;
+    this.locationInGrid = b.locationInGrid;
+    this.falling = b.isFalling();
     this.rotationIndex = b.rotationIndex;
-    this.locationInGrid = b.locationInGrid.clone();
   }
 
   /**

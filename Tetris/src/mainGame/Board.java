@@ -415,7 +415,7 @@ public class Board {
    * @return true if the rotation is valid, false otherwise
    */
   private boolean checkRotate(Move m) {
-    Block tempB = new Block(fallingBlock);
+    Block tempB = new Block(fallingBlock.getType());
     if (m == Move.ROT_LEFT) {
       tempB.rotateLeft();
     } else if (m == Move.ROT_RIGHT) {

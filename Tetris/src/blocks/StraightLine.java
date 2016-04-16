@@ -5,25 +5,25 @@ import javafx.scene.paint.Color;
 public class StraightLine extends Block {
 	
 	private static BlockType type = BlockType.LINE;
-	private static Color color = Color.PURPLE;
+	public static final Color COLOR = Color.PURPLE;
 	
 	//[change this index for rotations][row][column]
-	private static Tile[][][] configurations = new Tile[][][]{
+	public static final Tile[][][] CONFIGURATIONS = new Tile[][][]{
 		
 		new Tile [][]{
-			{new Tile(color)},
-			{new Tile(color)},
-			{new Tile(color)},
-			{new Tile(color)},
+			{new Tile(COLOR)},
+			{new Tile(COLOR)},
+			{new Tile(COLOR)},
+			{new Tile(COLOR)},
 		},
 		
 		new Tile [][]{
-          {new Tile(color), new Tile(color), new Tile(color), new Tile(color)}
+          {new Tile(COLOR), new Tile(COLOR), new Tile(COLOR), new Tile(COLOR)}
         }
 	};		
 	
 	public StraightLine() {
-		super(configurations, type);
+		super(CONFIGURATIONS, type, COLOR);
 		if (super.debug){
 			System.out.println("made straight line");
 		}

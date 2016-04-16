@@ -65,7 +65,7 @@ public class Cerulean {
    */
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
     double maxWeight = -1;
-    Block nextBlockCopy = new Block(nextBlock);
+    Block nextBlockCopy = new Block(nextBlock.getType());
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
     for (int moveCount = 0; moveCount < 10; moveCount++) { // 10 possible worst-case left/right
@@ -122,7 +122,7 @@ public class Cerulean {
     //avoids reference issues
     Tile[][] boardCopy = new Tile[boardState.length][];
     for(int i = 0; i < boardState.length; i++){
-      boardCopy[i] = boardState[i].clone(); //board state has nulls
+      boardCopy[i] = boardState[i].clone();
     }
     
     for (int i = 0; i < nextBlock.getShape().length; i++) {
@@ -157,6 +157,9 @@ public class Cerulean {
     for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
       for (int j = 0; j < shape.length; j++) { // repeats for the height of the
                                                // block
+        if(j + minSpace == 23){
+          minSpace--;
+        }
         boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
                                                                           // down by minSpace blocks
       }
