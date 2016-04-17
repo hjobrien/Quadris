@@ -85,7 +85,7 @@ public class Engine {
    * @return a new random instance of Block
    */
   private static Block generateRandomBlock() {
-//    return new StraightLine();
+//    return new LeftL();
     Random r = new Random();
     int i = r.nextInt(7);
     switch (i) {

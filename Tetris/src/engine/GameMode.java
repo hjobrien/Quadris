@@ -9,5 +9,6 @@ public enum GameMode {
   DISTRO_MODE,
   DEBUG_MODE,
   LOGGER_MODE,
-  AI_MODE;
+  AUTOPLAY,
+  AI_TRAINING;
 }

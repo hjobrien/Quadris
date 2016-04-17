@@ -25,6 +25,12 @@ public class Tile {
 		this.isFilled = true;
 		this.color = c;
 	}
+	
+	public Tile(boolean isActive, boolean isFilled, Color c){
+	  this.isActive = isActive;
+	  this.isFilled = isFilled;
+	  this.color = c;
+	}
 
 	public boolean isActive() {
 		return isActive;
@@ -49,7 +55,8 @@ public class Tile {
 	}
 	
 	public String toString(){
-	  return "f: " + isFilled + " a: " + isActive;
+//	  return "f: " + isFilled + " a: " + isActive + "c: " + (color == null ? "null" : "good");
+	  return (color == null ? "null" : "good");
 	}
 
 }

@@ -46,13 +46,14 @@ public class Cerulean {
    * @param boardState the current board state
    */
   public static void submitBlock(Block nextBlock, Tile[][] boardState) {
-    //TODO:
-    // ideal behavior: blocks drop normally but an array is generated each time a block is added to the game
+    // TODO:
+    // ideal behavior: blocks drop normally but an array is generated each time a block is added to
+    // the game
     long t1 = System.currentTimeMillis();
     solutionPath = computeBestPath(nextBlock, boardState);
     System.out.println("Weight analysis took " + (System.currentTimeMillis() - t1) + " Milli(s)");
     // using grid from engine as event target, should change to something else
-    //TODO: make board extend GridPane? it'd be a node then
+    // TODO: make board extend GridPane? it'd be a node then
     Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
   }
 
@@ -119,12 +120,18 @@ public class Cerulean {
    */
   private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount) {
-    //avoids reference issues
-    Tile[][] boardCopy = new Tile[boardState.length][];
-    for(int i = 0; i < boardState.length; i++){
-      boardCopy[i] = boardState[i].clone();
+    // avoids reference issues
+    Tile[][] boardCopy = new Tile[boardState.length][boardState[0].length];
+//    for (int i = 0; i < boardState.length; i++) {
+//      boardCopy[i] = boardState[i].clone();
+//    }
+    for (int i = 0; i < boardState.length; i++) {
+      for (int j = 0; j < boardState[0].length; j++) {
+        boardCopy[i][j] = new Tile(boardState[i][j].isActive(), boardState[i][j].isFilled(),
+            boardState[i][j].getColor());
+      }
     }
-    
+
     for (int i = 0; i < nextBlock.getShape().length; i++) {
       for (int j = 0; j < nextBlock.getShape()[i].length; j++) {
         boardCopy[i + moveCount][j] = nextBlock.getShape()[i][j]; // shifts block to the far left
@@ -137,7 +144,7 @@ public class Cerulean {
       boolean hasPassedFilledBlock = false;
       for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each
                                                    // row
-        if(boardCopy[j][i].isActive()){
+        if (boardCopy[j][i].isActive()) {
           blankCount = 0;
         }
         if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
@@ -152,14 +159,14 @@ public class Cerulean {
         minSpace = blankCount;
       }
     }
-    Tile[][] shape = new Tile[nextBlock.getShape().length][];    //avoids pass by reference
-    for(int i = 0; i < nextBlock.getShape().length; i++){
+    Tile[][] shape = new Tile[nextBlock.getShape().length][]; // avoids pass by reference
+    for (int i = 0; i < nextBlock.getShape().length; i++) {
       shape[i] = nextBlock.getShape()[i].clone();
     }
     for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
       for (int j = 0; j < shape.length; j++) { // repeats for the height of the
                                                // block
-        if(j + minSpace == 23){
+        if (j + minSpace == 23) {
           minSpace--;
         }
         boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
@@ -237,7 +244,7 @@ public class Cerulean {
    * gets the height of a column of tiles. The height is defined as the index of the highest filled,
    * non active tile in the column
    * 
-   * @param tiles   the column to be analyzed
+   * @param tiles the column to be analyzed
    * @return the height of the column
    */
   private static int getHeight(Tile[] tiles) {

@@ -173,6 +173,7 @@ public class Board {
    * @return    true if the move is valid, false otherwise
    */
   public boolean checkDown() {
+    
     if (debugMode) {
       System.out
           .println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
@@ -267,18 +268,21 @@ public class Board {
    * @return true if there is an inactive tile, false otherwise
    */
   private boolean checkUnderneath() {
+    boolean isUnderneath = false;
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[i].length; j++) {
         Tile thisT = boardState[i][j];
         if (thisT.isActive()) {
           Tile nextT = boardState[i + 1][j];
           if (nextT.isFilled() && !nextT.isActive()) {
-            return true;
+            System.out.println("triggered for " + i + " " + j);
+            isUnderneath = true;
+            //return true;
           }
         }
       }
     }
-    return false;
+    return isUnderneath;
   }
  
   /**

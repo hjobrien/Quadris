@@ -17,13 +17,13 @@ public class Game extends Application {
 
 
   //change this
-  public static final GameMode GAME_MODE = GameMode.AI_MODE;
+  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
 
   
   //don't change these
   private static boolean doDebug;
   private static boolean doLog;
-  private static boolean useAI;
+  private static boolean autoplay;
 
 
 
@@ -64,27 +64,28 @@ public class Game extends Application {
       case DISTRO_MODE:
         doDebug = false;
         doLog = false;
-        useAI = false;
+        autoplay = false;
         break;
       case DEBUG_MODE:
         doDebug = true;
         doLog = true;
-        useAI = false;
+        autoplay = false;
         break;
       case LOGGER_MODE:
         doDebug = false;
         doLog = true;
-        useAI = false;
+        autoplay = false;
         break;
-      case AI_MODE:
+      case AUTOPLAY:
         doDebug = true;
         doLog = true;
-        useAI = true;
+        autoplay = true;
         break;
       default:
+        System.err.println("Error: unsupported mode");
         doDebug = false;
         doLog = false;
-        useAI = false;
+        autoplay = false;
         break;
     }
   }
@@ -95,10 +96,10 @@ public class Game extends Application {
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
 
-    if (useAI) { // do we care about these events in user mode?
+    if (autoplay) { // do we care about these events in user mode?
       stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
     }
-//    else{
+//    else{     //uncomment when AI works
       stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
 //    }
     //added regardless of run configuration
@@ -197,7 +198,7 @@ public class Game extends Application {
 
 
   /**
-   * resets the game when called, typically afer a loss
+   * resets the game when called, typically after a loss
    */
   private void resetGame() {
     gameIsActive = true;
@@ -230,7 +231,7 @@ public class Game extends Application {
 
   /**
    * 
-   * @return if the game is active e.g. not paused
+   * @return if the game is active (not paused)
    */
   public boolean isActive() {
     return gameIsActive;
@@ -241,6 +242,7 @@ public class Game extends Application {
    * 
    * @return a fully configured AnimationTimer instance
    */
+  //TODO: remove time acceleration
   private AnimationTimer configureTimer() {
     return new AnimationTimer() {
       private long pastTime;
