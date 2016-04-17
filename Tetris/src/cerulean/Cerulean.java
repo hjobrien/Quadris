@@ -131,13 +131,15 @@ public class Cerulean {
       }
     }
     int blankCount = 0;
-    int minSpace = 20; // intentionally high
+    int minSpace = 40; // intentionally high
     for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape was
       // placed, scans all columns it occupies
       boolean hasPassedFilledBlock = false;
-      blankCount = 0;
       for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each
                                                    // row
+        if(boardCopy[j][i].isActive()){
+          blankCount = 0;
+        }
         if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
           blankCount++;
         } else {
