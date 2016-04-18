@@ -6,9 +6,9 @@ package engine;
  *
  */
 public enum GameMode {
-  DISTRO_MODE,
-  DEBUG_MODE,
-  LOGGER_MODE,
+  DISTRO,
+  DEBUG,
+  LOGGER,
   AUTOPLAY,
   AI_TRAINING;
 }

@@ -17,7 +17,7 @@ public class Game extends Application {
 
 
   //change this
-  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
+  public static final GameMode GAME_MODE = GameMode.DISTRO;
 
   
   //don't change these
@@ -61,17 +61,17 @@ public class Game extends Application {
   private static void configureSettings() {
     // setup program settings
     switch (GAME_MODE) {
-      case DISTRO_MODE:
+      case DISTRO:
         doDebug = false;
         doLog = false;
         autoplay = false;
         break;
-      case DEBUG_MODE:
+      case DEBUG:
         doDebug = true;
         doLog = true;
         autoplay = false;
         break;
-      case LOGGER_MODE:
+      case LOGGER:
         doDebug = false;
         doLog = true;
         autoplay = false;
@@ -286,6 +286,7 @@ public class Game extends Application {
        * @return a new number of milliseconds for the next tick
        */
       private double updateTime(double turnTime) {
+        double lastTime = turnTime;
         if (NINTENDO_SCORING) {
           // probably not the best algorithm
           return MAX_MILLIS_PER_TURN - (0.09 * getScore());
@@ -294,8 +295,11 @@ public class Game extends Application {
             return MAX_MILLIS_PER_TURN - (0.09 * getScore());
             // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
           }
+          else{
+            return MIN_MILLIS_PER_TURN;
+          }
         }
-        return MIN_MILLIS_PER_TURN;
+        
       }
     };
   }

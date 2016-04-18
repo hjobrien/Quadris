@@ -22,6 +22,7 @@ public class Engine {
 
   private static boolean logMode;
   // private static boolean debugMode;
+  
 
   /**
    * is the general engine method coordinates dropping blocks, adding blocks, logging game state,

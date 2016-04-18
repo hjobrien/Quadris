@@ -275,7 +275,6 @@ public class Board {
         if (thisT.isActive()) {
           Tile nextT = boardState[i + 1][j];
           if (nextT.isFilled() && !nextT.isActive()) {
-            System.out.println("triggered for " + i + " " + j);
             isUnderneath = true;
             //return true;
           }
