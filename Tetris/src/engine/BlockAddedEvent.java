@@ -7,7 +7,7 @@ import javafx.event.EventType;
 
 public class BlockAddedEvent extends Event{
 
-  private static final long serialVersionUID = -4147233310013968273L;   //idk why this is necessary
+  private static final long serialVersionUID = 1;
   
   
   public static final EventType<BlockAddedEvent> BLOCK_ADDED = new EventType<>(Event.ANY, "Block Added");

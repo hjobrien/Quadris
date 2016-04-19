@@ -49,6 +49,7 @@ public class Renderer {
   private static TextArea scoreList = null;
   private static StackPane pauseView;
   private static StringProperty valueProperty;
+  private static boolean autoplay = false;
   
   private static ArrayList<Integer> highScores = null; // need to put this here because i can't make a
                                                        // local variable passed to a method in the listener
@@ -58,9 +59,10 @@ public class Renderer {
    * @param doDebug     whether the object should print out its debug information
    * @param doLog       whether the object should log its behavior
    */
-  public static void setValues(boolean doDebug, boolean doLog){
+  public static void setValues(boolean doDebug, boolean doLog, boolean auto){
     Renderer.doDebug = doDebug;
     Renderer.doLog = doLog;
+    Renderer.autoplay = auto;
   }
   
   /**
@@ -82,7 +84,7 @@ public class Renderer {
     Board.setMode(doDebug);
     Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid);
     Board nextPieceBoard = new Board(4, 4, nextBlock);
-    Engine.setValues(gameBoard, nextPieceBoard);
+    Engine.setValues(gameBoard, nextPieceBoard, autoplay);
     GridPane mainGame = new GridPane();
     mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
     mainGame.getColumnConstraints().add(new ColumnConstraints(20));

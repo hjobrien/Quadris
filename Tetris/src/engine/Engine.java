@@ -19,6 +19,7 @@ public class Engine {
   private static Board nextPieceBoard;
   private static Block nextBlock = generateRandomBlock();
   private static boolean isPaused = false;
+  private static boolean autoplay = false;
 
   private static boolean logMode;
   // private static boolean debugMode;
@@ -69,7 +70,9 @@ public class Engine {
    */
   public static void addBlock() {
     //needed to access Node.fireEvent, the GridPane was an accessible Node
-    board.getGrid().fireEvent(new BlockAddedEvent(nextBlock, board.getBoardState())); 
+    if (autoplay){
+      board.getGrid().fireEvent(new BlockAddedEvent(nextBlock, board.getBoardState())); 
+    }
     board.setFallingBlock(nextBlock);
     board.updateBoardWithNewBlock(nextBlock);
     nextBlock = generateRandomBlock();
@@ -133,9 +136,10 @@ public class Engine {
    * @param b1 the main game board
    * @param b2 a 4x4 smaller board where the next piece is shown
    */
-  public static void setValues(Board b1, Board b2) {
+  public static void setValues(Board b1, Board b2, boolean auto) {
     board = b1;
     nextPieceBoard = b2;
+    autoplay = auto;
 
   }
 

@@ -341,6 +341,7 @@ public class Board {
       if (a[a.length - 1].isActive()) {
         return false;
       }
+      
 
       // checks for an inactive but filled tile on the right of every active tile
       for (int i = a.length - 2; i >= 0; i--) {
@@ -418,7 +419,7 @@ public class Board {
    * @return true if the rotation is valid, false otherwise
    */
   private boolean checkRotate(Move m) {
-    Block tempB = new Block(fallingBlock.getType());
+    Block tempB = new Block(fallingBlock.getType(), fallingBlock.getGridLocation());
     if (m == Move.ROT_LEFT) {
       tempB.rotateLeft();
     } else if (m == Move.ROT_RIGHT) {
@@ -469,7 +470,7 @@ public class Board {
     for (int i = fallingBlockShape.length - 1; i >= 0; i--) {
       for (int j = fallingBlockShape[i].length - 1; j >= 0; j--) {
         if (fallingBlockShape[i][j].isFilled()) {
-          // makes sure we arent running off the board
+          // makes sure we aren't running off the board
           int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
           int column = fallingBlockLocation[1] - (fallingBlockShape[0].length - 1 - j);
 

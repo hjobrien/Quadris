@@ -6,7 +6,7 @@ import mainGame.Move;
 
 public class ComputationDoneEvent extends Event {
 
-  private static final long serialVersionUID = 7386067995359616435L;
+  private static final long serialVersionUID = 1;
   
   public static final EventType<ComputationDoneEvent> COMPUTATION_DONE = new EventType<>(Event.ANY, "Computation Finished");
 
@@ -18,9 +18,9 @@ public class ComputationDoneEvent extends Event {
    */
   public ComputationDoneEvent(Move[] optimalPath){
     super(COMPUTATION_DONE);
-    for(Move m : optimalPath){
-      System.out.print(m + ", ");
-    }
+//    for(Move m : optimalPath){
+//      System.out.print(m + ", ");
+//    }
     System.out.println();
     this.optimalPath = optimalPath;
   }

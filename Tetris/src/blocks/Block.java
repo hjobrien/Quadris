@@ -31,21 +31,31 @@ public class Block {
    */
   public Block(Tile[][][] configurations, BlockType type, Color color) {
     this.color = color;
-    int maxDim = Math.max(configurations[0].length, configurations[0][0].length);
-    this.configurations = new Tile[configurations.length][maxDim][maxDim];
+//    int maxDim = Math.max(configurations[0].length, configurations[0][0].length);
+    this.configurations = new Tile[configurations.length][][];
+    for(int i = 0; i < configurations.length; i++){
+      Tile[][] t = new Tile[configurations[i].length][];
+      for(int j = 0; j < configurations[i].length; j++){
+        t[j] = new Tile[configurations[i][j].length];
+      }
+      this.configurations[i] = t;
+    }
     // avoids pass by reference
     for (int i = 0; i < configurations.length; i++) {
       for (int j = 0; j < configurations[i].length; j++) {
-        if (configurations[i][j].length < maxDim) {
-          for (int k = 0; k < configurations[i][j].length; k++) {
-            this.configurations[i][j][k] = configurations[i][j][k];
-          }
-          for (int k = configurations[i][j].length; k < maxDim; k++) {
-            this.configurations[i][j][k] = new Tile();
-          }
-        }
-        else{
-          this.configurations[i][j] = configurations[i][j].clone();
+//        if (configurations[i][j].length < maxDim) {
+//          for (int k = 0; k < configurations[i][j].length; k++) {
+//            this.configurations[i][j][k] = configurations[i][j][k];
+//          }
+//          for (int k = configurations[i][j].length; k < maxDim; k++) {
+//            this.configurations[i][j][k] = new Tile();
+//          }
+//        }
+//        else{
+//          this.configurations[i][j] = configurations[i][j].clone();
+//        }
+        for(int k = 0; k < configurations[i][j].length; k++){
+          this.configurations[i][j][k] = configurations[i][j][k];
         }
       }
     }
@@ -73,7 +83,7 @@ public class Block {
    * @param b the copied Block
    */
   // copy constructor?  
-  public Block(BlockType type){
+  public Block(BlockType type, int[] location){
     Block b;
     switch(type){
       case LEFT_L:
@@ -103,8 +113,7 @@ public class Block {
     this.color = b.color;
     this.configurations = b.configurations;
     this.type = b.type;
-    this.locationInGrid = b.locationInGrid;
-    this.falling = b.isFalling();
+    this.locationInGrid = location.clone();
     this.rotationIndex = b.rotationIndex;
   }
 

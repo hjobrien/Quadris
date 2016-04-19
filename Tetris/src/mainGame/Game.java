@@ -17,7 +17,7 @@ public class Game extends Application {
 
 
   //change this
-  public static final GameMode GAME_MODE = GameMode.DISTRO;
+  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
 
   
   //don't change these
@@ -77,7 +77,7 @@ public class Game extends Application {
         autoplay = false;
         break;
       case AUTOPLAY:
-        doDebug = true;
+        doDebug = false;
         doLog = true;
         autoplay = true;
         break;
@@ -92,7 +92,7 @@ public class Game extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
-    Renderer.setValues(doDebug, doLog);
+    Renderer.setValues(doDebug, doLog, autoplay);
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
 
@@ -112,6 +112,7 @@ public class Game extends Application {
 
 
     stage.show();
+//    Thread.slex ep(1000);
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
   
@@ -286,7 +287,6 @@ public class Game extends Application {
        * @return a new number of milliseconds for the next tick
        */
       private double updateTime(double turnTime) {
-        double lastTime = turnTime;
         if (NINTENDO_SCORING) {
           // probably not the best algorithm
           return MAX_MILLIS_PER_TURN - (0.09 * getScore());
