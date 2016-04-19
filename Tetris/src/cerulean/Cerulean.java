@@ -21,11 +21,11 @@ public class Cerulean {
   // Board Weight constants
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
-  private static final double HEIGHT_WEIGHT = -10;
+  private static final double HEIGHT_WEIGHT = -30;
   private static final double VOID_WEIGHT = -40;
   private static final double LINE_WEIGHT = 100;
 
-
+//TODO: add a positive weight fr how full each row is?
 
   private static Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled to prevent
                                                                 // errors later on
@@ -50,7 +50,7 @@ public class Cerulean {
     // TODO:
     // ideal behavior: blocks drop normally but an array is generated each time a block is added to
     // the game
-    long t1 = System.currentTimeMillis();
+    // long t1 = System.currentTimeMillis();
     solutionPath = computeBestPath(nextBlock, boardState);
     // System.out.println("x Weight analysis took " + (System.currentTimeMillis() - t1) + "
     // Milli(s)");
@@ -68,7 +68,7 @@ public class Cerulean {
    */
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
     double maxWeight = Double.NEGATIVE_INFINITY;
-    Block nextBlockCopy = new Block(nextBlock.getType(), nextBlock.getGridLocation());
+    Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0});
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
     for (int moveCount = 0; moveCount < 10; moveCount++) { // 10 possible worst-case left/right
@@ -76,12 +76,11 @@ public class Cerulean {
       for (int rotCount = 0; rotCount < 4; rotCount++) { // 4 possible worst case rotations
         Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount);
         double[] testWeights = evaluateWeight(testState);
-        double[] currentWeights = evaluateWeight(boardState);
-        double weightDiff =
-            DoubleStream.of(testWeights).sum() - DoubleStream.of(currentWeights).sum();
-        if (weightDiff > maxWeight) {
-           System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
-           maxWeight = weightDiff;
+        double testWeight = DoubleStream.of(testWeights).sum();
+        if (testWeight > maxWeight) {
+//          printBoard(testState);
+          System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
+          maxWeight = testWeight;
           bestPath = getPath(moveCount, rotCount);
         }
         nextBlockCopy.rotateRight();
@@ -89,6 +88,17 @@ public class Cerulean {
     }
     return bestPath;
   }
+
+  private static void printBoard(Tile[][] testState) {
+    for(int i = 0; i < testState.length; i++){
+      for(int j = 0; j < testState[i].length; j++){
+        System.out.print((testState[i][j].isFilled()? "x " : "o "));
+      }
+      System.out.println();
+     }
+    System.out.println();
+
+   }
 
   /**
    * converts integer representations of moves into array of individual moves
@@ -167,13 +177,14 @@ public class Cerulean {
       shape[i] = nextBlock.getShape()[i].clone();
     }
     for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
-      for (int j = 0; j < shape.length; j++) { // repeats for the height of the
+      for (int j = shape.length-1; j >= 0  ; j--) { // repeats for the height of the
                                                // block
         if (j + minSpace == 23) {
           minSpace--;
         }
         boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
                                                                           // down by minSpace blocks
+        boardCopy[i][j] = new Tile();
       }
     }
     // board copy should now have the block dropped all the way down it can go but with no lines
@@ -188,56 +199,28 @@ public class Cerulean {
    * @param boardCopy the board to be analyzed
    * @return the value of the board
    */
-  private static double[] evaluateWeight(Tile[][] boardCopy) {
+  public static double[] evaluateWeight(Tile[][] boardCopy) {
     double[] weight = new double[3];
     double voids = 0;
-    int maxHeight = -1;
+    double height = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       Tile[] colCopy = new Tile[boardCopy.length];
       for (int j = 0; j < boardCopy.length; j++) {
         colCopy[j] = boardCopy[j][i];
       }
-      if (getHeight(colCopy) > maxHeight) {
-        maxHeight = getHeight(colCopy);
-      }
+      height += (HEIGHT_WEIGHT * getHeight(colCopy));
       voids += (VOID_WEIGHT * getNumVoids(colCopy));
     }
-
-    double height = (HEIGHT_WEIGHT * maxHeight);
 
     double lines = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       lines += (LINE_WEIGHT * getNumLines(boardCopy));
     }
-//    System.out.println("voids: " + voids + " heights: " + height + " lines: " + lines);
+    // System.out.println("voids: " + voids + " heights: " + height + " lines: " + lines);
     weight[0] = voids;
     weight[1] = height;
     weight[2] = lines;
     return weight;
-  }
-
-  public static String testWeight(Tile[][] boardCopy) {
-    double voids = 0;
-    int maxHeight = -1;
-    for (int i = 0; i < boardCopy[0].length; i++) {
-      Tile[] colCopy = new Tile[boardCopy.length];
-      for (int j = 0; j < boardCopy.length; j++) {
-        colCopy[j] = boardCopy[j][i];
-      }
-      if (getHeight(colCopy) > maxHeight) {
-        maxHeight = getHeight(colCopy);
-      }
-      voids += (VOID_WEIGHT * getNumVoids(colCopy));
-    }
-
-    double height = (HEIGHT_WEIGHT * maxHeight);
-
-    double lines = 0;
-    for (int i = 0; i < boardCopy[0].length; i++) {
-      lines += (LINE_WEIGHT * getNumLines(boardCopy));
-    }
-
-    return "voids: " + voids + " heights: " + height + " lines: " + lines;
   }
 
   /**

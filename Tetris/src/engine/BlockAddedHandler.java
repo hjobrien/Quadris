@@ -29,13 +29,11 @@ public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
             r.keyRelease(KeyEvent.VK_LEFT);
             break;
           case ROT_RIGHT:
+            System.out.println("flagxx  right");
             r.keyPress(KeyEvent.VK_X);
             r.keyRelease(KeyEvent.VK_X);
             break;
-          case ROT_LEFT:
-            r.keyPress(KeyEvent.VK_Z);
-            r.keyRelease(KeyEvent.VK_Z);
-            break;
+            //no need for ROT_LEFT, its never used in autoplay mode
           case DROP:
             r.keyPress(KeyEvent.VK_SPACE);
             r.keyRelease(KeyEvent.VK_SPACE);
