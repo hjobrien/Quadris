@@ -16,11 +16,11 @@ import javafx.stage.Stage;
 public class Game extends Application {
 
 
-  //change this
-  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
+  // change this
+  public static final GameMode GAME_MODE = GameMode.DISTRO;
 
-  
-  //don't change these
+
+  // don't change these
   private static boolean doDebug;
   private static boolean doLog;
   private static boolean autoplay;
@@ -99,10 +99,10 @@ public class Game extends Application {
     if (autoplay) { // do we care about these events in user mode?
       stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
     }
-//    else{     //uncomment when AI works
-      stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
-//    }
-    //added regardless of run configuration
+    // else{ //uncomment when AI works
+    stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
+    // }
+    // added regardless of run configuration
     stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
 
     stage.setScene(boardScene);
@@ -112,13 +112,13 @@ public class Game extends Application {
 
 
     stage.show();
-//    Thread.slex ep(1000);
-    Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
-  
-  
+
+
   /**
    * handles basic key input that needs to be constant across all run configurations
+   * 
    * @author Hank
    *
    */
@@ -145,7 +145,7 @@ public class Game extends Application {
         Renderer.draw(Engine.getBoard());
       }
     }
-    
+
   }
 
   /**
@@ -243,7 +243,7 @@ public class Game extends Application {
    * 
    * @return a fully configured AnimationTimer instance
    */
-  //TODO: remove time acceleration
+  // TODO: remove time acceleration
   private AnimationTimer configureTimer() {
     return new AnimationTimer() {
       private long pastTime;
@@ -294,12 +294,11 @@ public class Game extends Application {
           if (turnTime > MIN_MILLIS_PER_TURN) {
             return MAX_MILLIS_PER_TURN - (0.09 * getScore());
             // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
-          }
-          else{
+          } else {
             return MIN_MILLIS_PER_TURN;
           }
         }
-        
+
       }
     };
   }
