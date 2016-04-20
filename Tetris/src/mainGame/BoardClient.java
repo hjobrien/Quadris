@@ -12,7 +12,6 @@ public class BoardClient {
   
   public static void main(String[] args){
     Tile[][] testBoard = getBoard();
-    System.out.println();
     System.out.println(getWeights(testBoard));
     
   }
