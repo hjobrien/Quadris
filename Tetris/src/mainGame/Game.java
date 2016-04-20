@@ -1,5 +1,8 @@
 package mainGame;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+
 import engine.BlockAddedEvent;
 import engine.BlockAddedHandler;
 import engine.Engine;
@@ -17,9 +20,9 @@ public class Game extends Application {
 
 
   // change this
-  public static final GameMode GAME_MODE = GameMode.DISTRO;
+  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
 
-
+ 
   // don't change these
   private static boolean doDebug;
   private static boolean doLog;
@@ -112,6 +115,15 @@ public class Game extends Application {
 
 
     stage.show();
+    try{
+      Robot r = new Robot();
+      r.keyPress(java.awt.event.KeyEvent.VK_META);
+      r.keyPress(java.awt.event.KeyEvent.VK_TAB);
+      r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
+      r.keyRelease(java.awt.event.KeyEvent.VK_META);
+      
+    }catch(AWTException e){
+    }
      Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 

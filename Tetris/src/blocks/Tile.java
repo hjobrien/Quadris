@@ -55,7 +55,7 @@ public class Tile {
 	}
 	
 	public String toString(){
-	  return "f: " + isFilled + " a: " + isActive + " c: " + (color == null ? "null" : "good");
+	  return (isFilled ? "x " : "o ");
 	}
 
 }

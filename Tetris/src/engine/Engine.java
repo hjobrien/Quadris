@@ -89,26 +89,26 @@ public class Engine {
    * @return a new random instance of Block
    */
   private static Block generateRandomBlock() {
-//    return  new LeftL();
-    Random r = new Random();
-    int i = r.nextInt(7);
-    switch (i) {
-      case 0:
-        return new LeftL();
-      case 1:
-        return new RightL();
-      case 2:
-        return new LeftS();
-      case 3:
-        return new RightS();
-      case 4:
-        return new StraightLine();
-      case 5:
-        return new TBlock();
-      case 6:
-        return new Square();
-    }
-    throw new RuntimeException("bad random num");
+    return  new LeftL();
+//    Random r = new Random();
+//    int i = r.nextInt(7);
+//    switch (i) {
+//      case 0:
+//        return new LeftL();
+//      case 1:
+//        return new RightL();
+//      case 2:
+//        return new LeftS();
+//      case 3:
+//        return new RightS();
+//      case 4:
+//        return new StraightLine();
+//      case 5:
+//        return new TBlock();
+//      case 6:
+//        return new Square();
+//    }
+//    throw new RuntimeException("bad random num");
   }
 
   /**

@@ -197,5 +197,9 @@ public class Block {
   public BlockType getType() {
     return type;
   }
+  
+  public int getNumRotations(){
+    return this.configurations.length;
+  }
 
 }

@@ -8,6 +8,7 @@ import blocks.Tile;
 import engine.ComputationDoneEvent;
 import engine.Engine;
 import javafx.event.Event;
+import mainGame.Board;
 import mainGame.Move;
 
 /**
@@ -21,11 +22,11 @@ public class Cerulean {
   // Board Weight constants
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
-  private static final double HEIGHT_WEIGHT = -30;
+  private static final double HEIGHT_WEIGHT = -100;
   private static final double VOID_WEIGHT = -40;
   private static final double LINE_WEIGHT = 100;
 
-//TODO: add a positive weight fr how full each row is?
+  // TODO: add a positive weight for how full each row is?
 
   private static Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled to prevent
                                                                 // errors later on
@@ -73,12 +74,12 @@ public class Cerulean {
     // TODO: reduce number of loops reps
     for (int moveCount = 0; moveCount < 10; moveCount++) { // 10 possible worst-case left/right
                                                            // positions
-      for (int rotCount = 0; rotCount < 4; rotCount++) { // 4 possible worst case rotations
+      for (int rotCount = 0; rotCount < nextBlockCopy.getNumRotations(); rotCount++) { 
         Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount);
         double[] testWeights = evaluateWeight(testState);
         double testWeight = DoubleStream.of(testWeights).sum();
         if (testWeight > maxWeight) {
-//          printBoard(testState);
+//           printBoard(testState);
           System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
           maxWeight = testWeight;
           bestPath = getPath(moveCount, rotCount);
@@ -90,15 +91,16 @@ public class Cerulean {
   }
 
   private static void printBoard(Tile[][] testState) {
-    for(int i = 0; i < testState.length; i++){
-      for(int j = 0; j < testState[i].length; j++){
-        System.out.print((testState[i][j].isFilled()? "x " : "o "));
+    for (int i = 0; i < testState.length; i++) {
+      for (int j = 0; j < testState[i].length; j++) {
+        System.out.print((testState[i][j].isFilled() ? "x " : "o ")); // Ternary operator,
+                                                                      // basically an if statement
       }
       System.out.println();
-     }
+    }
     System.out.println();
 
-   }
+  }
 
   /**
    * converts integer representations of moves into array of individual moves
@@ -137,59 +139,76 @@ public class Cerulean {
   private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount) {
     // avoids reference issues
-    Tile[][] boardCopy = new Tile[boardState.length][boardState[0].length];
+    Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[0].length; j++) {
-        boardCopy[i][j] = new Tile(boardState[i][j].isActive(), boardState[i][j].isFilled(),
+        tileCopy[i][j] = new Tile(boardState[i][j].isActive(), boardState[i][j].isFilled(),
             boardState[i][j].getColor());
       }
     }
+    
+    Board boardCopy = new Board(tileCopy, nextBlock);
+    
+    for (int i = 0; i < 10; i++){
+      boardCopy.pressed(Move.LEFT);
+    }
+    
+    for (int i = 0; i < moveCount; i++){
+      boardCopy.pressed(Move.RIGHT);
+    }
+    
+    for (int i = 0; i < rotCount; i++){
+      boardCopy.pressed(Move.ROT_RIGHT);
+    }
+    
+    boardCopy.pressed(Move.DROP);
 
-    for (int i = 0; i < nextBlock.getShape().length; i++) {
-      for (int j = 0; j < nextBlock.getShape()[i].length; j++) {
-        boardCopy[i + moveCount][j] = nextBlock.getShape()[i][j]; // shifts block to the far left
-      }
-    }
-    int blankCount = 0;
-    int minSpace = 40; // intentionally high
-    for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape was
-      // placed, scans all columns it occupies
-      boolean hasPassedFilledBlock = false;
-      for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each
-                                                   // row
-        if (boardCopy[j][i].isActive()) {
-          blankCount = 0;
-        }
-        if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
-          blankCount++;
-        } else {
-          if (boardCopy[j][i].isFilled()) {
-            hasPassedFilledBlock = true;
-          }
-        }
-      }
-      if (blankCount < minSpace) {
-        minSpace = blankCount;
-      }
-    }
-    Tile[][] shape = new Tile[nextBlock.getShape().length][]; // avoids pass by reference
-    for (int i = 0; i < nextBlock.getShape().length; i++) {
-      shape[i] = nextBlock.getShape()[i].clone();
-    }
-    for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
-      for (int j = shape.length-1; j >= 0  ; j--) { // repeats for the height of the
-                                               // block
-        if (j + minSpace == 23) {
-          minSpace--;
-        }
-        boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
-                                                                          // down by minSpace blocks
-        boardCopy[i][j] = new Tile();
-      }
-    }
+//    for (int i = 0; i < nextBlock.getShape().length; i++) {
+//      for (int j = 0; j < nextBlock.getShape()[i].length; j++) {
+//        boardCopy[i + moveCount][j] = nextBlock.getShape()[i][j]; // shifts block to the far left
+//      }
+//    }
+//    int blankCount = 0;
+//    int minSpace = 40; // intentionally high
+//    for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape was
+//      // placed, scans all columns it occupies
+//      boolean hasPassedFilledBlock = false;
+//      for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each row
+//        if (boardCopy[j][i].isActive()) {
+//          blankCount = 0;
+//        }
+//        if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
+//          blankCount++;
+//        } else {
+//          if (boardCopy[j][i].isFilled()) {
+//            hasPassedFilledBlock = true;
+//          }
+//        }
+//      }
+//      if (blankCount < minSpace) {
+//        minSpace = blankCount;
+//      }
+//    }
+//    Tile[][] shape = new Tile[nextBlock.getShape().length][]; // avoids pass by reference
+//    for (int i = 0; i < nextBlock.getShape().length; i++) {
+//      shape[i] = nextBlock.getShape()[i].clone();
+//    }
+//    for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
+//      for (int j = shape.length - 1; j >= 0; j--) { // repeats for the height of the
+//        // block
+//        if (j + minSpace == 23) {
+//          minSpace--;
+//        }
+//        
+//        //iffy
+//        boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
+//                                                                          // down by minSpace blocks
+////        boardCopy[i][j] = new Tile();
+//      }
+//    }
     // board copy should now have the block dropped all the way down it can go but with no lines
     // removed
-    return boardCopy;
+    return boardCopy.getBoardState();
 
   }
 

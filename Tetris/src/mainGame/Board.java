@@ -58,6 +58,29 @@ public class Board {
     }
     this.boardRects = tempBoardRects;
   }
+  
+  public Board(Tile[][] t, Block nextBlock){
+    this.boardState = t;
+    this.grid = new GridPane();
+    
+//    int height = t.length;
+//    int width = t[0].length;
+//    Rectangle[][] tempBoardRects = new Rectangle[height][width];
+//
+//    for (int i = 0; i < height; i++) {
+//      for (int j = 0; j < width; j++) {
+//        Rectangle r = new Rectangle(29, 29);
+//        r.setFill(Color.WHITE);
+//        tempBoardRects[i][j] = r;
+//        grid.add(r, j, i);
+//      }
+//    }
+    
+    setFallingBlock(nextBlock);
+    updateBoardWithNewBlock(nextBlock);
+
+//    this.boardRects = tempBoardRects;
+  }
 
   public Rectangle[][] getBoardRects() {
     return this.boardRects;
@@ -434,6 +457,8 @@ public class Board {
           // makes sure we arent running off the board
           int row = tempBLocation[0] - (tempBShape.length - 1 - i);
           int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
+          
+          //SOME PROBLEM WITH THE ROWS AND COLUMS TODO
           if (row >= 0 && column >= 0) {
             Tile t = tileAt(row, column);
 
