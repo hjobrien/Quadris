@@ -458,8 +458,8 @@ public class Board {
           int row = tempBLocation[0] - (tempBShape.length - 1 - i);
           int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
           
-          //SOME PROBLEM WITH THE ROWS AND COLUMS TODO
-          if (row >= 0 && column >= 0) {
+          //SOME PROBLEM WITH THE ROWS AND COLUMNS TODO
+          if (row >= 0 && column >=  0) {
             Tile t = tileAt(row, column);
 
             // checks to make sure flip is legal, ignoring itself in the process

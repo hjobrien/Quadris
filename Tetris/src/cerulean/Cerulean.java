@@ -78,12 +78,14 @@ public class Cerulean {
         Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount);
         double[] testWeights = evaluateWeight(testState);
         double testWeight = DoubleStream.of(testWeights).sum();
+//        System.out.print(moveCount + " " + rotCount);
         if (testWeight > maxWeight) {
 //           printBoard(testState);
           System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
           maxWeight = testWeight;
           bestPath = getPath(moveCount, rotCount);
         }
+        nextBlockCopy.setGridLocation(new int[]{0,0});
         nextBlockCopy.rotateRight();
       }
     }

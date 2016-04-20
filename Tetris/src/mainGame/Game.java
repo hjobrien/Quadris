@@ -22,7 +22,7 @@ public class Game extends Application {
   // change this
   public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
 
- 
+
   // don't change these
   private static boolean doDebug;
   private static boolean doLog;
@@ -115,16 +115,19 @@ public class Game extends Application {
 
 
     stage.show();
-    try{
-      Robot r = new Robot();
-      r.keyPress(java.awt.event.KeyEvent.VK_META);
-      r.keyPress(java.awt.event.KeyEvent.VK_TAB);
-      r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-      r.keyRelease(java.awt.event.KeyEvent.VK_META);
-      
-    }catch(AWTException e){
-    }
-     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+//    if (autoplay) {
+//      try {
+//        Robot r = new Robot();
+//        r.keyPress(java.awt.event.KeyEvent.VK_META);
+//        r.keyPress(java.awt.event.KeyEvent.VK_TAB);
+//        r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
+//        r.keyRelease(java.awt.event.KeyEvent.VK_META);
+//
+//      } catch (AWTException e) {
+//        e.printStackTrace();
+//      }
+//    }
+    Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
 
@@ -159,6 +162,7 @@ public class Game extends Application {
     }
 
   }
+
 
   /**
    * deals with advanced keyboard input from user related to control of blocks
