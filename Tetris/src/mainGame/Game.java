@@ -115,18 +115,18 @@ public class Game extends Application {
 
 
     stage.show();
-//    if (autoplay) {
-//      try {
-//        Robot r = new Robot();
-//        r.keyPress(java.awt.event.KeyEvent.VK_META);
-//        r.keyPress(java.awt.event.KeyEvent.VK_TAB);
-//        r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-//        r.keyRelease(java.awt.event.KeyEvent.VK_META);
-//
-//      } catch (AWTException e) {
-//        e.printStackTrace();
-//      }
-//    }
+    if (autoplay) {
+      try {
+        Robot r = new Robot();
+        r.keyPress(java.awt.event.KeyEvent.VK_META);
+        r.keyPress(java.awt.event.KeyEvent.VK_TAB);
+        r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
+        r.keyRelease(java.awt.event.KeyEvent.VK_META);
+
+      } catch (AWTException e) {
+        e.printStackTrace();
+      }
+    }
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 

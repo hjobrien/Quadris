@@ -86,6 +86,7 @@ public class Cerulean {
           bestPath = getPath(moveCount, rotCount);
         }
         nextBlockCopy.setGridLocation(new int[]{0,0});
+        
         nextBlockCopy.rotateRight();
       }
     }
@@ -116,15 +117,16 @@ public class Cerulean {
    */
   private static Move[] getPath(int moveCount, int rotCount) {
     ArrayList<Move> path = new ArrayList<Move>();
+    for (int i = 0; i < rotCount; i++) {
+      path.add(Move.ROT_RIGHT); 
+    }
     for (int i = 0; i < 6; i++) { // puts the block into a constant, known position
       path.add(Move.LEFT);
     }
     for (int i = 0; i < moveCount; i++) {
       path.add(Move.RIGHT);
     }
-    for (int i = 0; i < rotCount; i++) {
-      path.add(Move.ROT_RIGHT);
-    }
+    
     path.add(Move.DROP);
     return path.toArray(new Move[] {});
   }

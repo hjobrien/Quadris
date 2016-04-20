@@ -18,22 +18,22 @@ public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
     try {
       Robot r = new Robot();
       r.setAutoDelay(10);
-      for (Move m : solution) {
+      for (Move m :  solution) {
         switch (m) {
           case RIGHT:
             r.keyPress(KeyEvent.VK_RIGHT);
             r.keyRelease(KeyEvent.VK_RIGHT);
-            break;
+             break;
           case LEFT:
             r.keyPress(KeyEvent.VK_LEFT);
             r.keyRelease(KeyEvent.VK_LEFT);
             break;
           case ROT_RIGHT:
-            System.out.println("flagxx  right");
+            System.out.println("flag right");
             r.keyPress(KeyEvent.VK_X);
             r.keyRelease(KeyEvent.VK_X);
             break;
-            //no need for ROT_LEFT, its never used in autoplay mode
+          // no need for ROT_LEFT, its never used in autoplay mode
           case DROP:
             r.keyPress(KeyEvent.VK_SPACE);
             r.keyRelease(KeyEvent.VK_SPACE);
