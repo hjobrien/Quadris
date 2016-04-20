@@ -15,12 +15,13 @@ public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
     Cerulean.submitBlock(event.getBlock(), event.getBoardState());
     // Cerulean.setBlockToPlace(event.getBlockType());
     Move[] solution = Cerulean.getSolution();
-    try {
+     try {
       Robot r = new Robot();
-      r.setAutoDelay(10);
+//      r.setAutoDelay(1);
       for (Move m :  solution) {
         switch (m) {
           case RIGHT:
+            System.out.println("flag move right");
             r.keyPress(KeyEvent.VK_RIGHT);
             r.keyRelease(KeyEvent.VK_RIGHT);
              break;
@@ -29,7 +30,7 @@ public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
             r.keyRelease(KeyEvent.VK_LEFT);
             break;
           case ROT_RIGHT:
-            System.out.println("flag right");
+//            System.out.println("flag right");
             r.keyPress(KeyEvent.VK_X);
             r.keyRelease(KeyEvent.VK_X);
             break;

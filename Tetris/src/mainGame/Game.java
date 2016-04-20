@@ -115,18 +115,18 @@ public class Game extends Application {
 
 
     stage.show();
-    if (autoplay) {
-      try {
-        Robot r = new Robot();
-        r.keyPress(java.awt.event.KeyEvent.VK_META);
-        r.keyPress(java.awt.event.KeyEvent.VK_TAB);
-        r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-        r.keyRelease(java.awt.event.KeyEvent.VK_META);
-
-      } catch (AWTException e) {
-        e.printStackTrace();
-      }
-    }
+//    if (autoplay) {
+//      try {
+//        Robot r = new Robot();
+//        r.keyPress(java.awt.event.KeyEvent.VK_META);
+//        r.keyPress(java.awt.event.KeyEvent.VK_TAB);
+//        r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
+//        r.keyRelease(java.awt.event.KeyEvent.VK_META);
+//
+//      } catch (AWTException e) {
+//        e.printStackTrace();
+//      }
+//    }
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
@@ -272,6 +272,7 @@ public class Game extends Application {
 
       @Override
       public void handle(long time) {
+        
         long now = System.currentTimeMillis();
         if (!paused && now - pastTime >= timePerTurn) {
 
@@ -291,7 +292,12 @@ public class Game extends Application {
             timeScore++;
           }
         }
+        if(autoplay){
+          timePerTurn = MIN_MILLIS_PER_TURN;
+        }
+        else{
         timePerTurn = updateTime(timePerTurn);
+        }
 
 
       }

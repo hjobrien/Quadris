@@ -460,6 +460,7 @@ public class Board {
           
           //SOME PROBLEM WITH THE ROWS AND COLUMNS TODO
           if (row >= 0 && column >=  0) {
+            System.out.println(i + " " +j + " " + row + " " + column);
             Tile t = tileAt(row, column);
 
             // checks to make sure flip is legal, ignoring itself in the process

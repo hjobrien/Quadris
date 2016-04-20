@@ -37,8 +37,8 @@ public class TBlock extends Block {
 		}
 	}
 	
-	public Tile[][] getTShape(){
-		return getShape();
-	}
+//	public Tile[][] getTShape(){
+//		return getShape();
+//	}
 
 }
