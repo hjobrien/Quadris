@@ -460,7 +460,6 @@ public class Board {
           
           //SOME PROBLEM WITH THE ROWS AND COLUMNS TODO
           if (row >= 0 && column >=  0) {
-            System.out.println(i + " " +j + " " + row + " " + column);
             Tile t = tileAt(row, column);
 
             // checks to make sure flip is legal, ignoring itself in the process
@@ -497,10 +496,11 @@ public class Board {
       for (int j = fallingBlockShape[i].length - 1; j >= 0; j--) {
         if (fallingBlockShape[i][j].isFilled()) {
           // makes sure we aren't running off the board
-          int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
           int column = fallingBlockLocation[1] - (fallingBlockShape[0].length - 1 - j);
-
-          update(row, column, fallingBlockShape[i][j]);
+          int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
+          if(column >= 0 && row >= 0){
+            update(row, column, fallingBlockShape[i][j]);
+           }
         }
       }
     }

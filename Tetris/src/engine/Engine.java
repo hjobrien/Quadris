@@ -20,6 +20,7 @@ public class Engine {
   private static Block nextBlock = generateRandomBlock();
   private static boolean isPaused = false;
   private static boolean autoplay = false;
+  private static int blockCount = 0;
 
   private static boolean logMode;
   // private static boolean debugMode;
@@ -82,6 +83,7 @@ public class Engine {
     nextPieceBoard.updateBoardWithNewBlock(nextBlock);
     nextPieceBoard.setNotFalling();
     Renderer.draw(nextPieceBoard);
+    blockCount++;
   }
 
   /**
@@ -89,7 +91,7 @@ public class Engine {
    * @return a new random instance of Block
    */
   private static Block generateRandomBlock() {
-//    return   new  StraightLine();
+//    return new StraightLine();
     Random r = new Random();
     int i = r.nextInt(7);
     switch (i) {
@@ -102,8 +104,8 @@ public class Engine {
       case 3:
         return new RightS();
       case 4:
-        return new LeftL();//change to straight line
-//        return new StraightLine();
+//        return new LeftL();//change to straight line
+        return new StraightLine();
       case 5:
         return new TBlock();
       case 6:
@@ -154,5 +156,10 @@ public class Engine {
     // Engine.debugMode = debugMode;
     Engine.logMode = logMode;
   }
+
+  public static int getBlockCount() {
+    return blockCount;
+  }
+
 
 }

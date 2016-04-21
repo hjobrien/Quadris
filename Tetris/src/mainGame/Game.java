@@ -126,7 +126,7 @@ public class Game extends Application {
 //      } catch (AWTException e) {
 //        e.printStackTrace();
 //      }
-//    }
+//     }x
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
@@ -146,6 +146,7 @@ public class Game extends Application {
         Renderer.close();
         System.exit(0);
       } else if (key.getCode() == KeyCode.P) {
+        System.out.println(Engine.getBlockCount( ));
         paused = Engine.togglePause();
         if (paused) {
           Renderer.pause();

@@ -23,10 +23,14 @@ public class Cerulean {
   // Board Weight constants
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
-  // good weights: -100, -50, 70 : ~14000
+  // good weights: -100, -50, 70 : ~8000x
   private static final double HEIGHT_WEIGHT = -100;
   private static final double VOID_WEIGHT = -50;
   private static final double LINE_WEIGHT = 70;
+
+  // private static final double HEIGHT_WEIGHT = -100;
+  // private static final double VOID_WEIGHT = -70;
+  // private static final double LINE_WEIGHT = 500;
 
   // TODO: add a positive weight for how full each row is?
 
@@ -72,13 +76,14 @@ public class Cerulean {
   private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
 
     double maxWeight = Double.NEGATIVE_INFINITY;
-//    Block nextBlockCopy = new Block(nextBlock.getType(),
-//        new int[] {nextBlock.getGridLocation()[0], nextBlock.getGridLocation()[1]});
-//    int startingRowIndex = nextBlockCopy.getShape().length - 1 + 3;
-//    int startingColumnIndex = (Renderer.HORIZONTAL_TILES - nextBlockCopy.getShape()[0].length) / 2
-//        + nextBlockCopy.getShape()[0].length - 1;
-//    nextBlockCopy.setGridLocation(startingRowIndex, startingColumnIndex);
-     Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0});
+    // Block nextBlockCopy = new Block(nextBlock.getType(),
+    // new int[] {nextBlock.getGridLocation()[0], nextBlock.getGridLocation()[1]});
+    // int startingRowIndex = nextBlockCopy.getShape().length - 1 + 3;
+    // int startingColumnIndex = (Renderer.HORIZONTAL_TILES - nextBlockCopy.getShape()[0].length) /
+    // 2
+    // + nextBlockCopy.getShape()[0].length - 1;
+    // nextBlockCopy.setGridLocation(startingRowIndex, startingColumnIndex);
+    Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0});
 
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
@@ -94,13 +99,13 @@ public class Cerulean {
         // System.out.print(moveCount + " " + rotCount);
         if (testWeight > maxWeight) {
           // printBoard(testState);
-          System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
+          // System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
           maxWeight = testWeight;
           bestPath = getPath(moveCount, rotCount);
         }
 
-//        nextBlockCopy.setGridLocation(new int[] {startingRowIndex, startingColumnIndex});
-         nextBlockCopy.setGridLocation(new int[] {0, 0});
+        // nextBlockCopy.setGridLocation(new int[] {startingRowIndex, startingColumnIndex});
+        nextBlockCopy.setGridLocation(new int[] {0, 0});
         nextBlockCopy.rotateRight();
       }
 
@@ -134,7 +139,7 @@ public class Cerulean {
     ArrayList<Move> path = new ArrayList<Move>();
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
-     }
+    }
     for (int i = 0; i < 6; i++) { // puts the block into a constant, known position
       path.add(Move.LEFT);
     }
@@ -183,53 +188,6 @@ public class Cerulean {
 
     boardCopy.pressed(Move.DROP);
 
-    // for (int i = 0; i < nextBlock.getShape().length; i++) {
-    // for (int j = 0; j < nextBlock.getShape()[i].length; j++) {
-    // boardCopy[i + moveCount][j] = nextBlock.getShape()[i][j]; // shifts block to the far left
-    // }
-    // }
-    // int blankCount = 0;
-    // int minSpace = 40; // intentionally high
-    // for (int i = moveCount; i < nextBlock.getShape()[0].length; i++) { // starts where the shape
-    // was
-    // // placed, scans all columns it occupies
-    // boolean hasPassedFilledBlock = false;
-    // for (int j = 0; j < boardCopy.length; j++) { // boardCopy.length = height, loops through each
-    // row
-    // if (boardCopy[j][i].isActive()) {
-    // blankCount = 0;
-    // }
-    // if (hasPassedFilledBlock && !boardCopy[j][i].isFilled()) {
-    // blankCount++;
-    // } else {
-    // if (boardCopy[j][i].isFilled()) {
-    // hasPassedFilledBlock = true;
-    // }
-    // }
-    // }
-    // if (blankCount < minSpace) {
-    // minSpace = blankCount;
-    // }
-    // }
-    // Tile[][] shape = new Tile[nextBlock.getShape().length][]; // avoids pass by reference
-    // for (int i = 0; i < nextBlock.getShape().length; i++) {
-    // shape[i] = nextBlock.getShape()[i].clone();
-    // }
-    // for (int i = moveCount; i < shape[0].length; i++) { // goes over columns
-    // for (int j = shape.length - 1; j >= 0; j--) { // repeats for the height of the
-    // // block
-    // if (j + minSpace == 23) {
-    // minSpace--;
-    // }
-    //
-    // //iffy
-    // boardCopy[j + minSpace][i].setFilled(boardCopy[j][i].isFilled()); // should drop the block
-    // // down by minSpace blocks
-    //// boardCopy[i][j] = new Tile();
-    // }
-    // }
-    // board copy should now have the block dropped all the way down it can go but with no lines
-    // removed
     return boardCopy.getBoardState();
 
   }
@@ -254,6 +212,8 @@ public class Cerulean {
         maxHeight = getHeight(colCopy);
       }
       // height += (HEIGHT_WEIGHT * getHeight(colCopy));
+      // double voidCount = Math.pow(getNumVoids(colCopy), 2);
+      // voids += (VOID_WEIGHT * (voidCount == 0 ? 0 : ( 1.0 / voidCount)));
       voids += (VOID_WEIGHT * getNumVoids(colCopy));
     }
     height = HEIGHT_WEIGHT * maxHeight;
@@ -287,8 +247,7 @@ public class Cerulean {
         numLines++;
       }
     }
-    if (numLines > 0)
-      System.out.println(numLines);
+    // if (nu mLinexrintln(numLines);
     return numLines;
   }
 
@@ -299,9 +258,9 @@ public class Cerulean {
    * @param tiles the column of tiles to be analyzed
    * @return the number of voids in the column
    */
-  private static int getNumVoids(Tile[] tiles) {
+  private static double getNumVoids(Tile[] tiles) {
     boolean hasFoundBlock = false;
-    int voidCount = 0;
+    double voidCount = 0;
     for (int i = 0; i < tiles.length; i++) {
       if (hasFoundBlock && !tiles[i].isFilled()) {
         voidCount++;

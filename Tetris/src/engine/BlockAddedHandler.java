@@ -17,11 +17,10 @@ public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
     Move[] solution = Cerulean.getSolution();
      try {
       Robot r = new Robot();
-//      r.setAutoDelay(1);
+//      r.setAutoDelay (30);
       for (Move m :  solution) {
         switch (m) {
           case RIGHT:
-            System.out.println("flag move right");
             r.keyPress(KeyEvent.VK_RIGHT);
             r.keyRelease(KeyEvent.VK_RIGHT);
              break;
