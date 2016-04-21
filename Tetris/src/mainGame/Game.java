@@ -15,7 +15,7 @@ public class Game extends Application {
 
 
   // change this
-  public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
+  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
 
 
   // don't change these

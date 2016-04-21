@@ -133,7 +133,7 @@ public class Engine {
   }
 
   private static Block getNextBlock(int blockNum){
-    Block b = translateToBlock(BLOCKS[gameNum][blockNum]);
+    Block b = translateToBlock(BLOCKS[0][blockNum]);    //change the 0 to gameNum for automated testing TODO
     System.out.println(gameNum + " " + blockNum + " " + b.getType());
     return b;
   }

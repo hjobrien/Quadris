@@ -24,13 +24,27 @@ public class Cerulean {
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
   // good weights: -100, -50, 70 : ~8000x
-//  private static final double HEIGHT_WEIGHT = -100;
-//  private static final double VOID_WEIGHT = -50;
-//  private static final double LINE_WEIGHT = 70;
+//   private static final double HEIGHT_WEIGHT = -100;
+//   private static final double VOID_WEIGHT = -50;
+//   private static final double LINE_WEIGHT = 70;
 
    private static final double HEIGHT_WEIGHT = -100;
    private static final double VOID_WEIGHT = -70;
    private static final double LINE_WEIGHT = 500;
+
+//  private static final double HEIGHT_WEIGHT = -150;
+//  private static final double VOID_WEIGHT = -100;
+//  private static final double LINE_WEIGHT = 200;
+
+
+  // change for how important multiple of an occurrence is
+  // negative numbers mean as the quantity gets higher, it gets less important
+  // numbers between 0 and |1| mean as the quantity get higher, it increases in importance more
+  // slowly
+  // numbers > |1| mean as the quantity gets higher, it increases in importance more quickly
+  private static final double HEIGHT_POW = 1;
+  private static final double VOID_POW = 1;
+  private static final double LINE_POW = 1;
 
   // TODO: add a positive weight for how full each row is?
 
@@ -53,7 +67,7 @@ public class Cerulean {
    * @param nextBlockType the kind of block to be analyzed
    * @param boardState the current board state
    */
-  public static Move[]  submitBlock(Block nextBlock, Tile[][] boardState) {
+  public static Move[] submitBlock(Block nextBlock, Tile[][] boardState) {
     // TODO:
     // ideal behavior: blocks drop normally but an array is generated each time a block is added to
     // the game
@@ -63,7 +77,7 @@ public class Cerulean {
     // Milli(s)");
     // using grid from engine as event target, should change to something else
     // TODO: make board extend GridPane? it'd be a node then
-//    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
+    // Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
   }
 
   /**
@@ -214,12 +228,17 @@ public class Cerulean {
       // height += (HEIGHT_WEIGHT * getHeight(colCopy));
       // double voidCount = Math.pow(getNumVoids(colCopy), 2);
       // voids += (VOID_WEIGHT * (voidCount == 0 ? 0 : ( 1.0 / voidCount)));
-      voids += (VOID_WEIGHT * getNumVoids(colCopy));
+      double voidCount = getNumVoids(colCopy);
+      voids += (VOID_WEIGHT * Math.pow((voidCount == 0 ? 1 : voidCount), VOID_POW)); // keeps the
+                                                                                     // value form
+                                                                                     // being 0 in
+                                                                                     // Ternary
     }
-    height = HEIGHT_WEIGHT * maxHeight;
+    height = HEIGHT_WEIGHT * Math.pow(maxHeight, HEIGHT_POW);
     double lines = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
-      lines += (LINE_WEIGHT * getNumLines(boardCopy));
+      double lineCount = getNumLines(boardCopy);
+      lines += (LINE_WEIGHT * Math.pow((lineCount == 0 ? 1 : lineCount), LINE_POW));
     }
     // System.out.println("voids: " + voids + " heights: " + height + " lines: " + lines);
     weight[0] = voids;
