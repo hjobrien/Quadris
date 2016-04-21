@@ -1,10 +1,5 @@
 package mainGame;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-
-import engine.BlockAddedEvent;
-import engine.BlockAddedHandler;
 import engine.Engine;
 import engine.GameMode;
 import engine.Renderer;
@@ -20,13 +15,14 @@ public class Game extends Application {
 
 
   // change this
-  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
+  public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
 
 
   // don't change these
   private static boolean doDebug;
   private static boolean doLog;
   private static boolean autoplay;
+  private static boolean randomizeBlocks;
 
 
 
@@ -52,6 +48,7 @@ public class Game extends Application {
   private static boolean gameIsActive = true;
 
 
+
   public static void main(String[] args) {
     configureSettings();
 
@@ -68,40 +65,52 @@ public class Game extends Application {
         doDebug = false;
         doLog = false;
         autoplay = false;
+        randomizeBlocks = true;
         break;
       case DEBUG:
         doDebug = true;
         doLog = true;
         autoplay = false;
+        randomizeBlocks = true;
         break;
       case LOGGER:
         doDebug = false;
         doLog = true;
         autoplay = false;
+        randomizeBlocks = true;
         break;
       case AUTOPLAY:
         doDebug = false;
-        doLog = true;
+        doLog = false;
         autoplay = true;
+        randomizeBlocks = true;
+        break;
+      case AI_TRAINING:
+        doDebug = false;
+        doLog = false;
+        autoplay = true;
+        randomizeBlocks = false;
         break;
       default:
         System.err.println("Error: unsupported mode");
         doDebug = false;
         doLog = false;
         autoplay = false;
+        randomizeBlocks = true;
         break;
     }
   }
 
   @Override
   public void start(Stage stage) throws Exception {
-    Renderer.setValues(doDebug, doLog, autoplay);
+    Renderer.setMode(doDebug, doLog, autoplay);
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
+    Engine.setRandomizeBlocks(randomizeBlocks);
 
-    if (autoplay) { // do we care about these events in user mode?
-      stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
-    }
+    // if (autoplay) { // do we care about these events in user mode?
+    // stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
+    // }
     // else{ //uncomment when AI works
     stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
     // }
@@ -115,18 +124,18 @@ public class Game extends Application {
 
 
     stage.show();
-//    if (autoplay) {
-//      try {
-//        Robot r = new Robot();
-//        r.keyPress(java.awt.event.KeyEvent.VK_META);
-//        r.keyPress(java.awt.event.KeyEvent.VK_TAB);
-//        r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-//        r.keyRelease(java.awt.event.KeyEvent.VK_META);
-//
-//      } catch (AWTException e) {
-//        e.printStackTrace();
-//      }
-//     }x
+    // if (autoplay) {
+    // try {
+    // Robot r = new Robot();
+    // r.keyPress(java.awt.event.KeyEvent.VK_META);
+    // r.keyPress(java.awt.event.KeyEvent.VK_TAB);
+    // r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
+    // r.keyRelease(java.awt.event.KeyEvent.VK_META);
+    //
+    // } catch (AWTException e) {
+    // e.printStackTrace();
+    // }
+    // }
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
@@ -146,7 +155,6 @@ public class Game extends Application {
         Renderer.close();
         System.exit(0);
       } else if (key.getCode() == KeyCode.P) {
-        System.out.println(Engine.getBlockCount( ));
         paused = Engine.togglePause();
         if (paused) {
           Renderer.pause();
@@ -222,6 +230,8 @@ public class Game extends Application {
     gameIsActive = true;
     int score = getScore();
     System.out.println("Game " + this.gameCounter + " score: " + score + "\n");
+    System.out.println("blocks: " + Engine.getBlockCount());
+    Engine.reset();
     Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
                                       // because of 'final or effectively final' issue
     Renderer.writeScores();
@@ -273,7 +283,7 @@ public class Game extends Application {
 
       @Override
       public void handle(long time) {
-        
+
         long now = System.currentTimeMillis();
         if (!paused && now - pastTime >= timePerTurn) {
 
@@ -293,11 +303,10 @@ public class Game extends Application {
             timeScore++;
           }
         }
-        if(autoplay){
+        if (autoplay) {
           timePerTurn = MIN_MILLIS_PER_TURN;
-        }
-        else{
-        timePerTurn = updateTime(timePerTurn);
+        } else {
+          timePerTurn = updateTime(timePerTurn);
         }
 
 

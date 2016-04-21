@@ -59,7 +59,7 @@ public class Renderer {
    * @param doDebug     whether the object should print out its debug information
    * @param doLog       whether the object should log its behavior
    */
-  public static void setValues(boolean doDebug, boolean doLog, boolean auto){
+  public static void setMode(boolean doDebug, boolean doLog, boolean auto){
     Renderer.doDebug = doDebug;
     Renderer.doLog = doLog;
     Renderer.autoplay = auto;
@@ -80,11 +80,11 @@ public class Renderer {
     // from engine when we need it and we wont have to be translating boardStates
     GridPane grid = new GridPane();
     GridPane nextBlock = new GridPane();
-    Engine.setMode(doDebug, doLog);
+    Engine.setMode(doDebug, doLog, autoplay);
     Board.setMode(doDebug);
     Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid);
     Board nextPieceBoard = new Board(4, 4, nextBlock);
-    Engine.setValues(gameBoard, nextPieceBoard, autoplay);
+    Engine.setBoards(gameBoard, nextPieceBoard);
     GridPane mainGame = new GridPane();
     mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
     mainGame.getColumnConstraints().add(new ColumnConstraints(20));

@@ -24,13 +24,13 @@ public class Cerulean {
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
   // good weights: -100, -50, 70 : ~8000x
-  private static final double HEIGHT_WEIGHT = -100;
-  private static final double VOID_WEIGHT = -50;
-  private static final double LINE_WEIGHT = 70;
+//  private static final double HEIGHT_WEIGHT = -100;
+//  private static final double VOID_WEIGHT = -50;
+//  private static final double LINE_WEIGHT = 70;
 
-  // private static final double HEIGHT_WEIGHT = -100;
-  // private static final double VOID_WEIGHT = -70;
-  // private static final double LINE_WEIGHT = 500;
+   private static final double HEIGHT_WEIGHT = -100;
+   private static final double VOID_WEIGHT = -70;
+   private static final double LINE_WEIGHT = 500;
 
   // TODO: add a positive weight for how full each row is?
 
@@ -53,17 +53,17 @@ public class Cerulean {
    * @param nextBlockType the kind of block to be analyzed
    * @param boardState the current board state
    */
-  public static void submitBlock(Block nextBlock, Tile[][] boardState) {
+  public static Move[]  submitBlock(Block nextBlock, Tile[][] boardState) {
     // TODO:
     // ideal behavior: blocks drop normally but an array is generated each time a block is added to
     // the game
     // long t1 = System.currentTimeMillis();
-    solutionPath = computeBestPath(nextBlock, boardState);
+    return computeBestPath(nextBlock, boardState);
     // System.out.println("x Weight analysis took " + (System.currentTimeMillis() - t1) + "
     // Milli(s)");
     // using grid from engine as event target, should change to something else
     // TODO: make board extend GridPane? it'd be a node then
-    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
+//    Event.fireEvent(Engine.getBoard().getGrid(), new ComputationDoneEvent(solutionPath));
   }
 
   /**
