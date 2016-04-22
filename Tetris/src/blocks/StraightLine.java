@@ -10,15 +10,17 @@ public class StraightLine extends Block {
 	//[change this index for rotations][row][column]
 	public static final Tile[][][] CONFIGURATIONS = new Tile[][][]{
 		
-		new Tile [][]{
-			{new Tile(COLOR)},
-			{new Tile(COLOR)},
-			{new Tile(COLOR)},
-			{new Tile(COLOR)},
-		},
+		
 		
 		new Tile [][]{
           {new Tile(COLOR), new Tile(COLOR), new Tile(COLOR), new Tile(COLOR)}
+        },
+		
+		new Tile [][]{
+          {new Tile(COLOR)},
+          {new Tile(COLOR)},
+          {new Tile(COLOR)},
+          {new Tile(COLOR)},
         }
 	};		
 	

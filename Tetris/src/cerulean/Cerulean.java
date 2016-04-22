@@ -24,13 +24,13 @@ public class Cerulean {
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
   // good weights: -100, -50, 70 : ~8000x
-//   private static final double HEIGHT_WEIGHT = -100;
-//   private static final double VOID_WEIGHT = -50;
-//   private static final double LINE_WEIGHT = 70;
-
    private static final double HEIGHT_WEIGHT = -100;
-   private static final double VOID_WEIGHT = -70;
-   private static final double LINE_WEIGHT = 500;
+   private static final double VOID_WEIGHT = -50;
+   private static final double LINE_WEIGHT = 70;
+
+//   private static final double HEIGHT_WEIGHT = -100;
+//   private static final double VOID_WEIGHT = -70;
+//   private static final double LINE_WEIGHT = 500;
 
 //  private static final double HEIGHT_WEIGHT = -150;
 //  private static final double VOID_WEIGHT = -100;
