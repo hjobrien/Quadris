@@ -91,7 +91,11 @@ public class Engine {
       solution = Cerulean.submitBlock(nextBlock, board.getBoardState());
     }
     board.setFallingBlock(nextBlock);
+    System.out.println(nextBlock.getType());
     board.updateBoardWithNewBlock(nextBlock);
+    //toggle for step by step block analysis
+//    Engine.togglePause();
+//    Renderer.pause();
     if (autoplay) {
       for (Move m : solution) {
         Engine.getBoard().pressed(m);
@@ -123,7 +127,7 @@ public class Engine {
   private static Block getNextBlock(int blockNum) {
     Block b = translateToBlock(blocks[2][blockNum]); // change the 0 to gameNum for automated
                                                      // testing TODO
-    System.out.println(gameNum + " " + blockNum + " " + b.getType());
+//    System.out.println(gameNum + " " + blockNum + " " + b.getType());
     return b;
   }
 
@@ -195,6 +199,8 @@ public class Engine {
     Engine.randomizeBlocks = randomizeBlocks;
     if (!randomizeBlocks) {
       blocks = readInBlocks();
+      nextBlock = getNextBlock(Engine.blockCount);
+      blockCount++;
     }
   }
 
@@ -236,6 +242,13 @@ public class Engine {
 
   public static void reset() {
     Engine.blockCount = 0;
+    if(randomizeBlocks){
+      Engine.nextBlock = genRandomBlock();
+    }
+    else{
+      Engine.nextBlock = getNextBlock(blockCount);
+      blockCount++;
+    }
     // Engine.gameNum++; //keep for automated testing
   }
 

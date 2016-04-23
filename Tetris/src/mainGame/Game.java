@@ -236,16 +236,17 @@ public class Game extends Application {
                                       // because of 'final or effectively final' issue
     Renderer.writeScores();
     Engine.getBoard().clearBoard();
-    Engine.addBlock();
     this.timeScore = 0;
     gameCounter++;
     timePerTurn = MAX_MILLIS_PER_TURN;
     timer.start();
-    try {
-      Renderer.initializeScorePrinter();
-    } catch (Exception e1) {
-      throw new RuntimeException("Error on file re-generation");
-    }
+    Engine.addBlock();
+
+//    try {
+//      Renderer.initializeScorePrinter();
+//    } catch (Exception e1) {
+//      throw new RuntimeException("Error on file re-generation");
+//    }
   }
 
 
