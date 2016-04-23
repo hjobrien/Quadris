@@ -1,5 +1,7 @@
 package mainGame;
 
+import java.util.ArrayList;
+
 import engine.Engine;
 import engine.GameMode;
 import engine.Renderer;
@@ -23,11 +25,14 @@ public class Game extends Application {
   private static boolean doLog;
   private static boolean autoplay;
   private static boolean randomizeBlocks;
+  private static boolean playMultiple;
 
 
 
   public static final int MAX_MILLIS_PER_TURN = 1000;
   public static final int MIN_MILLIS_PER_TURN = 100;
+  
+  public static final int MAX_GAMES = 50;
 
   // if nintendo scoring = false, hank/liam scoring is used
   public static final boolean NINTENDO_SCORING = false;
@@ -37,6 +42,8 @@ public class Game extends Application {
   private int gameCounter = 1;
   private int timeScore = 0;
   private double timePerTurn = MAX_MILLIS_PER_TURN;
+  
+  private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
   private boolean dropDownTerminatesBlock = true;
@@ -66,26 +73,31 @@ public class Game extends Application {
         doLog = false;
         autoplay = false;
         randomizeBlocks = true;
+        playMultiple = false;
         break;
       case DEBUG:
         doDebug = true;
         doLog = true;
         autoplay = false;
         randomizeBlocks = true;
+        playMultiple = false;
         break;
       case LOGGER:
         doDebug = false;
         doLog = true;
         autoplay = false;
         randomizeBlocks = true;
+        playMultiple = false;
         break;
       case AUTOPLAY:
         doDebug = false;
         doLog = false;
         autoplay = true;
         randomizeBlocks = true;
+        playMultiple = false;
         break;
       case AI_TRAINING:
+        playMultiple = true;
         doDebug = false;
         doLog = false;
         autoplay = true;
@@ -97,6 +109,7 @@ public class Game extends Application {
         doLog = false;
         autoplay = false;
         randomizeBlocks = true;
+        playMultiple = false;
         break;
     }
   }
@@ -124,18 +137,6 @@ public class Game extends Application {
 
 
     stage.show();
-    // if (autoplay) {
-    // try {
-    // Robot r = new Robot();
-    // r.keyPress(java.awt.event.KeyEvent.VK_META);
-    // r.keyPress(java.awt.event.KeyEvent.VK_TAB);
-    // r.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-    // r.keyRelease(java.awt.event.KeyEvent.VK_META);
-    //
-    // } catch (AWTException e) {
-    // e.printStackTrace();
-    // }
-    // }
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
@@ -151,6 +152,7 @@ public class Game extends Application {
     @Override
     public void handle(KeyEvent key) {
       if (key.getCode() == KeyCode.ESCAPE) {
+        printAvgScore();
         Renderer.writeScores();
         Renderer.close();
         System.exit(0);
@@ -168,6 +170,14 @@ public class Game extends Application {
       if (!paused) {
         Renderer.draw(Engine.getBoard());
       }
+    }
+
+    private void printAvgScore() {
+      double total = 0;
+      for(Integer i : scoreHistory){
+        total += i;
+      }
+      System.out.println("Average Score: " + total/(scoreHistory.size()));
     }
 
   }
@@ -228,13 +238,8 @@ public class Game extends Application {
    */
   private void resetGame() {
     gameIsActive = true;
-    int score = getScore();
-    System.out.println("Game " + this.gameCounter + " score: " + score + "\n");
-    System.out.println("blocks: " + Engine.getBlockCount());
-    Engine.reset();
-    Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
-                                      // because of 'final or effectively final' issue
     Renderer.writeScores();
+    Engine.reset();
     Engine.getBoard().clearBoard();
     this.timeScore = 0;
     gameCounter++;
@@ -293,8 +298,17 @@ public class Game extends Application {
 
           Engine.update();
           if (Engine.getBoard().isFull()) {
+            int score = getScore();
+            System.out.println("Game " + (Engine.getGameNum() + 1) + " score: " + score + "\n");
+            System.out.println("blocks: " + Engine.getBlockCount());
+            Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
+                                              // because of 'final or effectively final' issue
             timer.stop();
             gameIsActive = false;
+            scoreHistory.add(getScore());
+            if(playMultiple && Engine.getGameNum() < MAX_GAMES-1){
+              resetGame();
+            }
           }
           Renderer.draw(Engine.getBoard());
           pastTime = now;

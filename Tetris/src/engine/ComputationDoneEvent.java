@@ -18,9 +18,6 @@ public class ComputationDoneEvent extends Event {
    */
   public ComputationDoneEvent(Move[] optimalPath){
     super(COMPUTATION_DONE);
-//    for(Move m : optimalPath){
-//      System.out.print(m + ", ");
-//    }
     System.out.println();
     this.optimalPath = optimalPath;
   }

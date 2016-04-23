@@ -1,12 +1,6 @@
 package engine;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
-
-import cerulean.Cerulean;
 import javafx.event.EventHandler;
-import mainGame.Move;
 
 public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
 
