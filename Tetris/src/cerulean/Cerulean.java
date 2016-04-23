@@ -24,17 +24,17 @@ public class Cerulean {
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
   // good weights: -100, -50, 70 : ~8000x
-   private static final double HEIGHT_WEIGHT = -100;
-   private static final double VOID_WEIGHT = -50;
-   private static final double LINE_WEIGHT = 70;
-
 //   private static final double HEIGHT_WEIGHT = -100;
-//   private static final double VOID_WEIGHT = -70;
-//   private static final double LINE_WEIGHT = 500;
+//   private static final double VOID_WEIGHT = -50;
+//   private static final double LINE_WEIGHT = 70;
 
-//  private static final double HEIGHT_WEIGHT = -150;
+   private static final double HEIGHT_WEIGHT = -70;
+   private static final double VOID_WEIGHT = -70;
+   private static final double LINE_WEIGHT = 500;
+
+//  private static final double HEIGHT_WEIGHT = -70;
 //  private static final double VOID_WEIGHT = -100;
-//  private static final double LINE_WEIGHT = 200;
+//  private static final double LINE_WEIGHT = 700;
 
 
   // change for how important multiple of an occurrence is
@@ -229,16 +229,16 @@ public class Cerulean {
       // double voidCount = Math.pow(getNumVoids(colCopy), 2);
       // voids += (VOID_WEIGHT * (voidCount == 0 ? 0 : ( 1.0 / voidCount)));
       double voidCount = getNumVoids(colCopy);
-      voids += (VOID_WEIGHT * Math.pow((voidCount == 0 ? 1 : voidCount), VOID_POW)); // keeps the
+      voids += (VOID_WEIGHT * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps the
                                                                                      // value form
                                                                                      // being 0 in
                                                                                      // Ternary
     }
-    height = HEIGHT_WEIGHT * Math.pow(maxHeight, HEIGHT_POW);
+    height = HEIGHT_WEIGHT * Math.pow((maxHeight == 0 ? 0.000000000000001 : maxHeight), HEIGHT_POW);
     double lines = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       double lineCount = getNumLines(boardCopy);
-      lines += (LINE_WEIGHT * Math.pow((lineCount == 0 ? 1 : lineCount), LINE_POW));
+      lines += (LINE_WEIGHT * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
     }
     // System.out.println("voids: " + voids + " heights: " + height + " lines: " + lines);
     weight[0] = voids;
@@ -257,16 +257,20 @@ public class Cerulean {
     int numLines = 0;
     for (int i = 0; i < boardCopy.length; i++) {
       boolean isFull = true;
+      boolean isEmpty = true;
       for (int j = 0; j < boardCopy[0].length; j++) {
+        if(boardCopy[i][j].isFilled()){
+          isEmpty = false;
+        }
         if (!boardCopy[i][j].isFilled()) {
           isFull = false;
         }
       }
-      if (isFull) {
+      if (isFull && !isEmpty) {
         numLines++;
       }
     }
-    // if (nu mLinexrintln(numLines);
+    // if (numLinexrintln(numLines);
     return numLines;
   }
 
