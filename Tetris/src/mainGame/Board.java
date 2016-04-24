@@ -183,6 +183,7 @@ public class Board {
         if (!Game.NINTENDO_SCORING) {
           boardScore += 3;
         }
+//        System.out.println(fallingBlock.getGridLocation()[1]);
         blockDown();
       }
     } else if (m == Move.UP) {

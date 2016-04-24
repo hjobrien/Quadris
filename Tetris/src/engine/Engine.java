@@ -251,6 +251,10 @@ public class Engine {
     }
      Engine.gameNum++; //keep for automated testing
   }
+  
+  public static void resetGameNum(){
+    Engine.gameNum = 0;
+  }
 
   public static int getGameNum() {
     return Engine.gameNum;

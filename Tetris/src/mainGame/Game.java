@@ -19,6 +19,7 @@ public class Game extends Application {
 
   // change this
   public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
+  public static final int MAX_GAMES = 3;
 
 
   // don't change these
@@ -33,7 +34,6 @@ public class Game extends Application {
   public static final int MAX_MILLIS_PER_TURN = 1000;
   public static final int MIN_MILLIS_PER_TURN = 100;
 
-  public static final int MAX_GAMES = 3;
 
   // if nintendo scoring = false, hank/liam scoring is used
   public static final boolean NINTENDO_SCORING = false;
@@ -163,6 +163,9 @@ public class Game extends Application {
     @Override
     public void handle(KeyEvent key) {
       if (key.getCode() == KeyCode.ESCAPE) {
+        for(double score : speciesAvgScore){
+          System.out.println("Average: " + score);
+        }
         Renderer.writeScores();
         Renderer.close();
         System.exit(0);
@@ -294,24 +297,28 @@ public class Game extends Application {
           Engine.update();
           if (Engine.getBoard().isFull()) {
             int score = getScore();
-            System.out.println("Game " + (Engine.getGameNum() + 1) + " score: " + score + "\n");
+            System.out.println("Game " + (Engine.getGameNum() + 1) + " score: " + score);
+            System.out.println(Cerulean.getWeights());
             System.out.println("blocks: " + Engine.getBlockCount());
             Renderer.updateHighScores(score);
             timer.stop();
             gameIsActive = false;
             scoreHistory.add(getScore());
-            if(currentSpecies < SPECIES.length){
+            if(currentSpecies < SPECIES.length-1){
               if(playMultiple && Engine.getGameNum() == MAX_GAMES - 1){
                 speciesAvgScore[currentSpecies] = Game.this.getAvgScore();
-                Cerulean.updateWeights(SPECIES[currentSpecies]);
                 currentSpecies++;
+                Cerulean.updateWeights(SPECIES[currentSpecies]);
+                scoreHistory.clear();
                 resetGame();
+                Engine.resetGameNum();
               }
               else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
                 resetGame();
               }
             }
             else{
+              speciesAvgScore[speciesAvgScore.length-1] = Game.this.getAvgScore();
               //breed species
             }
           }

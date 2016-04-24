@@ -330,6 +330,14 @@ public class Cerulean {
     weights = newWeights;
   }
 
+  public static String getWeights() {
+    String s = "";
+    for(double d : weights){
+      s += (d + " ");
+    }
+    return s;
+  }
+
 }
 
 
