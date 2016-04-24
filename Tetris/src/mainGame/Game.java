@@ -2,6 +2,7 @@ package mainGame;
 
 import java.util.ArrayList;
 
+import cerulean.Cerulean;
 import engine.Engine;
 import engine.GameMode;
 import engine.Renderer;
@@ -25,32 +26,39 @@ public class Game extends Application {
   private static boolean doLog;
   private static boolean autoplay;
   private static boolean randomizeBlocks;
-  private static boolean playMultiple;
+  private static boolean playMultiple; // play multiple games in a row
 
 
 
   public static final int MAX_MILLIS_PER_TURN = 1000;
   public static final int MIN_MILLIS_PER_TURN = 100;
-  
-  public static final int MAX_GAMES = 50;
+
+  public static final int MAX_GAMES = 3;
 
   // if nintendo scoring = false, hank/liam scoring is used
   public static final boolean NINTENDO_SCORING = false;
 
 
-  private AnimationTimer timer;
-  private int gameCounter = 1;
+  private static AnimationTimer timer;
   private int timeScore = 0;
   private double timePerTurn = MAX_MILLIS_PER_TURN;
-  
+
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
-  private boolean dropDownTerminatesBlock = true;
+  private boolean dropDownTerminatesBlock = false;
+
+  public static double[][] SPECIES = new double[][]{
+    {-70, -70, 500},
+    {-100, -50, 100}
+  };
+  
+  private static int currentSpecies = 0;
+  
+  private static double[] speciesAvgScore = new double[SPECIES.length];
 
 
-
-  boolean paused = false;
+  private static boolean paused = false;
 
   private static boolean gameIsActive = true;
 
@@ -120,14 +128,10 @@ public class Game extends Application {
     Scene boardScene = Renderer.makeGame();
     Renderer.draw(Engine.getBoard());
     Engine.setRandomizeBlocks(randomizeBlocks);
-
-    // if (autoplay) { // do we care about these events in user mode?
-    // stage.addEventFilter(BlockAddedEvent.BLOCK_ADDED, new BlockAddedHandler());
-    // }
-    // else{ //uncomment when AI works
-    stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
-    // }
-    // added regardless of run configuration
+    if (!autoplay) {
+      stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
+    }
+    
     stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
 
     stage.setScene(boardScene);
@@ -140,6 +144,13 @@ public class Game extends Application {
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
+  private double getAvgScore() {
+    double total = 0;
+    for (Integer i : scoreHistory) {
+      total += i;
+    }
+    return total / (scoreHistory.size());
+  }
 
   /**
    * handles basic key input that needs to be constant across all run configurations
@@ -152,7 +163,6 @@ public class Game extends Application {
     @Override
     public void handle(KeyEvent key) {
       if (key.getCode() == KeyCode.ESCAPE) {
-        printAvgScore();
         Renderer.writeScores();
         Renderer.close();
         System.exit(0);
@@ -170,14 +180,6 @@ public class Game extends Application {
       if (!paused) {
         Renderer.draw(Engine.getBoard());
       }
-    }
-
-    private void printAvgScore() {
-      double total = 0;
-      for(Integer i : scoreHistory){
-        total += i;
-      }
-      System.out.println("Average Score: " + total/(scoreHistory.size()));
     }
 
   }
@@ -242,16 +244,10 @@ public class Game extends Application {
     Engine.reset();
     Engine.getBoard().clearBoard();
     this.timeScore = 0;
-    gameCounter++;
     timePerTurn = MAX_MILLIS_PER_TURN;
     timer.start();
     Engine.addBlock();
 
-//    try {
-//      Renderer.initializeScorePrinter();
-//    } catch (Exception e1) {
-//      throw new RuntimeException("Error on file re-generation");
-//    }
   }
 
 
@@ -276,7 +272,6 @@ public class Game extends Application {
    * 
    * @return a fully configured AnimationTimer instance
    */
-  // TODO: remove time acceleration
   private AnimationTimer configureTimer() {
     return new AnimationTimer() {
       private long pastTime;
@@ -301,13 +296,23 @@ public class Game extends Application {
             int score = getScore();
             System.out.println("Game " + (Engine.getGameNum() + 1) + " score: " + score + "\n");
             System.out.println("blocks: " + Engine.getBlockCount());
-            Renderer.updateHighScores(score); // updates ArrayList by reference, can't do it well
-                                              // because of 'final or effectively final' issue
+            Renderer.updateHighScores(score);
             timer.stop();
             gameIsActive = false;
             scoreHistory.add(getScore());
-            if(playMultiple && Engine.getGameNum() < MAX_GAMES-1){
-              resetGame();
+            if(currentSpecies < SPECIES.length){
+              if(playMultiple && Engine.getGameNum() == MAX_GAMES - 1){
+                speciesAvgScore[currentSpecies] = Game.this.getAvgScore();
+                Cerulean.updateWeights(SPECIES[currentSpecies]);
+                currentSpecies++;
+                resetGame();
+              }
+              else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
+                resetGame();
+              }
+            }
+            else{
+              //breed species
             }
           }
           Renderer.draw(Engine.getBoard());
@@ -348,5 +353,9 @@ public class Game extends Application {
 
       }
     };
+  }
+  
+  public static void togglePause(){
+    paused = !paused;
   }
 }

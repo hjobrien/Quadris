@@ -458,7 +458,6 @@ public class Board {
           int row = tempBLocation[0] - (tempBShape.length - 1 - i);
           int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
           
-          //SOME PROBLEM WITH THE ROWS AND COLUMNS TODO
           if (row >= 0 && column >=  0) {
             Tile t = tileAt(row, column);
 
@@ -641,6 +640,17 @@ public class Board {
       fallingBlock.stoppedFalling();
       rowsNotFalling = true;
     }
+  }
+  
+  public String toString(){
+    String s = "";
+    for(int i = 0; i < boardState.length; i++){
+      for(int j = 0; j < boardState[i].length; j++){
+        s += boardState[i][j].isFilled() ? "x" : "o";
+      }
+      s += "\n";
+    }
+    return s;
   }
 
   /**

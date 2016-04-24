@@ -17,6 +17,7 @@ import blocks.TBlock;
 import blocks.Tile;
 import cerulean.Cerulean;
 import mainGame.Board;
+import mainGame.Game;
 import mainGame.Move;
 
 public class Engine {
@@ -95,6 +96,7 @@ public class Engine {
     //toggle for step by step block analysis
 //    Engine.togglePause();
 //    Renderer.pause();
+//    Game.togglePause();
     if (autoplay) {
       for (Move m : solution) {
         Engine.getBoard().pressed(m);
@@ -131,7 +133,7 @@ public class Engine {
   }
 
   private static Block translateToBlock(int i) {
-    // return new StraightLine();
+//     return new RightS();
     switch (i) {
       case 0:
         return new LeftL();
@@ -142,7 +144,6 @@ public class Engine {
       case 3:
         return new RightS();
       case 4:
-        // return new LeftL();//change to straight line
         return new StraightLine();
       case 5:
         return new TBlock();

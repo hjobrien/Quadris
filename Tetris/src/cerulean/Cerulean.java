@@ -5,10 +5,6 @@ import java.util.stream.DoubleStream;
 
 import blocks.Block;
 import blocks.Tile;
-import engine.ComputationDoneEvent;
-import engine.Engine;
-import engine.Renderer;
-import javafx.event.Event;
 import mainGame.Board;
 import mainGame.Move;
 
@@ -18,23 +14,28 @@ import mainGame.Move;
  * @author Hank
  *
  */
+//5 2 3 6 2 5 3 4 6 5 6 6 4 5 0 0 5 6 1 4 4 2 0 5 0 4 3 5 6 1 4 1 0 1 5 0 4 3 4 2 4 5 5 2 2 0 4 0 6 6 3 5 6 2 3 6 5 1 0 0 6 6 4 4 5 3 3 3 2 2 6 6 1 6 1 1 0 4 6 4 5 6 2 1 1 0 1 1 6 5 1 5 2 5 1 6 6 6 3 1 4 3 6 5 5 5 0 5 1 5 3 4 0 3 5 2 1 3 5 4 4 3 2 3 4 1 3 3 4 6 4 4 6 4 3 0 2 3 3 5 5 6 6 0 5 3 6 1 2 0 3 6 4 1 4 5 0 4 4 4 2 0 0 1 5 5 4 3 4 6 2 4 2 4 4 2 5 0 5 1 5 1 6 4 5 0 5 3 5 6 4 4 5 5 5 6 1 5 0 6 2 1 5 4 3 4 3 4 2 5 3 4 3 0 3 5 3 4 2 3 2 1 6 4 2 4 1 6 4 0 6 6 1 3 4 1 1 3 2 2 0 4 4 3 0 3 0 1 0 5 0 3 5 2 4 6 1 2 1 3 6 5 5 4 0 4 3 6 5 5 5 4 0 0 1 1 5 1 6 4 0 2 0 3 4 5 0 6 0 1 2 5 3 2 6 6 4 5 3 4 0 3 0 5 2 4 2 0 2 3 3 3 0 6 1 3 3 0 5 5 6 0 4 2 0 0 5 2 4 0 4 2 4 6 5 1 0 6 0 1 5 3 5 4 2 4 5 0 4 2 5 6 1 6 3 5 2 5 2 0 2 1 4 0 6 0 0 6 5 6 5 0 4 1 1 4 2 4 0 4 4 6 0 4 4 3 1 0 3 1 0 1 5 5 2 4 4 2 0 2 4 4 5 6 3 3 5 3 1 1 4 1 3 0 1 6 3 1 2 1 4 2 0 0 6 4 0 2 2 6 1 4 3 3 2 0 2 5 6 2 2 5 5 4 0 0 0 6 2 1 4 1 3 0 6 3 4 5 5 5 6 5 4 0 4 2 4 3 0 0 2 1 4 1 6 6 5 3 2 4 4 3 4 1 6 1 2 0 6 2 6 2 4 2 5 1 2 2 1 6 1 4 0 0 5 2 0 6 3 5 1 4 4 5 1 4 2 5 0 0 1 0 1 0 4 6 4 1 3 6 4 3 0 2 6 2 2 2 6 3 1 0 1 3 5 5 1 2 0 2 0 3 4 3 3 1 6 5 0 5 2 3 4 2 0 3 6 5 2 0 5 6 0 4 3 1 3 1 6 1 6 1 1 5 5 2 2 2 0 3 5 3 1 6 1 1 5 3 5 0 
+//2 1 6 2 3 2 5 2 3 0 1 6 6 0 6 4 0 4 1 4 0 2 3 0 1 0 0 6 4 3 3 0 5 6 6 0 6 0 2 0 2 0 1 4 3 3 5 5 4 6 0 3 0 5 2 6 3 6 0 1 3 3 5 3 2 3 3 0 0 1 3 5 0 3 2 3 4 0 6 4 4 2 0 1 1 2 0 5 0 2 2 5 4 1 6 5 0 2 6 6 3 0 6 6 3 5 1 4 2 4 5 2 4 1 4 5 1 4 3 2 0 1 0 4 4 2 0 4 1 5 0 0 2 4 2 5 5 4 6 4 3 4 2 5 3 5 2 0 6 0 4 3 1 2 1 2 5 0 5 1 4 4 6 4 4 5 6 2 0 4 5 3 6 3 4 6 1 6 3 5 4 3 0 0 2 2 5 3 0 2 0 4 4 5 0 0 3 5 1 0 6 1 5 3 3 2 2 3 1 4 4 4 0 4 2 6 5 2 1 4 4 4 4 5 3 5 5 3 3 6 2 3 3 0 6 1 6 2 3 2 3 4 4 3 4 6 1 0 4 5 1 0 6 0 2 5 2 3 0 3 4 6 0 6 3 2 5 1 2 0 2 3 2 6 4 0 3 5 6 4 0 2 0 4 0 0 5 0 3 6 3 1 6 6 1 3 1 4 4 0 4 0 6 2 2 6 5 3 3 1 1 1 5 0 4 2 2 0 1 2 3 3 5 3 6 4 6 0 4 6 0 6 6 6 4 2 0 4 4 4 1 3 5 2 0 3 5 4 3 6 2 5 5 4 0 6 4 1 1 4 1 6 0 0 2 0 4 2 5 1 4 0 5 4 1 3 3 6 5 3 1 1 3 6 3 5 1 5 1 1 5 6 0 3 2 5 2 1 3 3 6 4 1 1 3 4 0 1 2 2 2 5 5 6 3 5 5 6 0 3 6 6 0 0 5 1 4 6 0 3 5 4 1 1 2 4 3 3 3 2 5 5 5 2 0 1 2 3 6 6 2 0 1 6 5 6 4 3 0 2 3 6 0 1 1 1 3 2 2 4 3 1 6 3 4 6 0 1 5 0 4 5 3 3 4 4 0 6 6 6 6 6 1 0 2 1 6 0 3 6 2 5 1 2 4 3 6 5 6 2 2 0 3 1 4 5 0 2 5 5 1 1 3 0 5 1 6 2 3 3 4 5 1 4 4 0 6 3 2 3 2 0 1 1 1 5 6 6 5 2 2 6 2 5 4 6 5 0 3 1 2 2 6 4 1 4 6 4 0 0 3 1 4 1 1 2 0 0 1 3 6 5 4 0 0 2 1 0 2 6 5 0 3 4 0 3 3 5 5 5 
+
 public class Cerulean {
 
   // Board Weight constants
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
   // good weights: -100, -50, 70 : ~8000x
-//   private static final double HEIGHT_WEIGHT = -100;
-//   private static final double VOID_WEIGHT = -50;
-//   private static final double LINE_WEIGHT = 70;
+  // private static final double HEIGHT_WEIGHT = -100;
+  // private static final double VOID_WEIGHT = -50;
+  // private static final double LINE_WEIGHT = 70;
 
-   private static final double HEIGHT_WEIGHT = -70;
-   private static final double VOID_WEIGHT = -70;
-   private static final double LINE_WEIGHT = 500;
+  private static final double HEIGHT_WEIGHT = -70;
+  private static final double VOID_WEIGHT = -70;
+  private static final double LINE_WEIGHT = 500;
+  
+  private static double[] weights = new double[]{HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT};
 
-//  private static final double HEIGHT_WEIGHT = -70;
-//  private static final double VOID_WEIGHT = -100;
-//  private static final double LINE_WEIGHT = 700;
+  // private static final double HEIGHT_WEIGHT = -70;
+  // private static final double VOID_WEIGHT = -100;
+  // private static final double LINE_WEIGHT = 700;
 
 
   // change for how important multiple of an occurrence is
@@ -102,24 +103,27 @@ public class Cerulean {
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
     for (int moveCount = 0; moveCount < 10; moveCount++) {
-      for (int rotCount = 0; rotCount < nextBlockCopy.getNumRotations(); rotCount++) { // 10
-                                                                                       // possible
-                                                                                       // worst-case
-                                                                                       // left/right
-        // positions
-        Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount);
-        double[] testWeights = evaluateWeight(testState);
-        double testWeight = DoubleStream.of(testWeights).sum();
-        // System.out.print(moveCount + " " + rotCount);
-        if (testWeight > maxWeight) {
-          // printBoard(testState);
-          // System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
-          maxWeight = testWeight;
-          bestPath = getPath(moveCount, rotCount);
+      // 10 possible worst case left/right options
+      for (int rotCount = 0; rotCount < nextBlockCopy.getNumRotations(); rotCount++) {
+        for (int slideCount = 0; slideCount < 3; slideCount++) {  //from slide one to left, no slide, and one to right;
+//           positions
+//          System.out.println(moveCount + " " + rotCount + " " + slideCount);
+          Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount, 1);
+          double[] testWeights = evaluateWeight(testState);
+          double testWeight = DoubleStream.of(testWeights).sum();
+          // System.out.print(moveCount + " " + rotCount);
+          if (testWeight > maxWeight) {
+            // printBoard(testState);
+            // System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
+            maxWeight = testWeight;
+            bestPath = getPath(moveCount, rotCount, 1);
+          }
+          nextBlockCopy.setGridLocation(new int[] {0, 0});
+
         }
 
+
         // nextBlockCopy.setGridLocation(new int[] {startingRowIndex, startingColumnIndex});
-        nextBlockCopy.setGridLocation(new int[] {0, 0});
         nextBlockCopy.rotateRight();
       }
 
@@ -127,17 +131,17 @@ public class Cerulean {
     return bestPath;
   }
 
-  private static void printBoard(Tile[][] testState) {
-    for (int i = 0; i < testState.length; i++) {
-      for (int j = 0; j < testState[i].length; j++) {
-        System.out.print((testState[i][j].isFilled() ? "x " : "o ")); // Ternary operator,
-                                                                      // basically an if statement
-      }
-      System.out.println();
-    }
-    System.out.println();
-
-  }
+  // private static void printBoard(Tile[][] testState) {
+  // for (int i = 0; i < testState.length; i++) {
+  // for (int j = 0; j < testState[i].length; j++) {
+  // System.out.print((testState[i][j].isFilled() ? "x " : "o ")); // Ternary operator,
+  // // basically an if statement
+  // }
+  // System.out.println();
+  // }
+  // System.out.println();
+  //
+  // }
 
   /**
    * converts integer representations of moves into array of individual moves
@@ -149,7 +153,7 @@ public class Cerulean {
    * @return an array of moves that first shifts the block to the left, then some amount to the
    *         right, rotates, and issues a 'drop' command to terminate the sequence x
    */
-  private static Move[] getPath(int moveCount, int rotCount) {
+  private static Move[] getPath(int moveCount, int rotCount, int slideCount) {
     ArrayList<Move> path = new ArrayList<Move>();
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
@@ -160,9 +164,11 @@ public class Cerulean {
     for (int i = 0; i < moveCount; i++) {
       path.add(Move.RIGHT);
     }
-
-
     path.add(Move.DROP);
+    path.add(Move.LEFT);
+    for(int i = 0; i < slideCount; i++){
+      path.add(Move.RIGHT);
+    }
     return path.toArray(new Move[] {});
   }
 
@@ -176,7 +182,7 @@ public class Cerulean {
    * @return the board with the block moved to a certain position
    */
   private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
-      int rotCount) {
+      int rotCount, int slideCount) {
     // avoids reference issues
     Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
     for (int i = 0; i < boardState.length; i++) {
@@ -201,6 +207,11 @@ public class Cerulean {
     }
 
     boardCopy.pressed(Move.DROP);
+    //slide parts after block is at bottom, doesn't work if drop terminates block
+    boardCopy.pressed(Move.LEFT);
+    for(int i = 0; i < slideCount; i++){
+      boardCopy.pressed(Move.RIGHT);
+    }
 
     return boardCopy.getBoardState();
 
@@ -229,16 +240,19 @@ public class Cerulean {
       // double voidCount = Math.pow(getNumVoids(colCopy), 2);
       // voids += (VOID_WEIGHT * (voidCount == 0 ? 0 : ( 1.0 / voidCount)));
       double voidCount = getNumVoids(colCopy);
-      voids += (VOID_WEIGHT * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps the
-                                                                                     // value form
-                                                                                     // being 0 in
-                                                                                     // Ternary
+      voids +=
+          (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
+                                                                                                 // the
+      // value form
+      // being 0 in
+      // Ternary
     }
-    height = HEIGHT_WEIGHT * Math.pow((maxHeight == 0 ? 0.000000000000001 : maxHeight), HEIGHT_POW);
+    height = weights[0] * Math.pow((maxHeight == 0 ? 0.000000000000001 : maxHeight), HEIGHT_POW);
     double lines = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       double lineCount = getNumLines(boardCopy);
-      lines += (LINE_WEIGHT * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
+      lines +=
+          (weights[2] * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
     }
     // System.out.println("voids: " + voids + " heights: " + height + " lines: " + lines);
     weight[0] = voids;
@@ -259,7 +273,7 @@ public class Cerulean {
       boolean isFull = true;
       boolean isEmpty = true;
       for (int j = 0; j < boardCopy[0].length; j++) {
-        if(boardCopy[i][j].isFilled()){
+        if (boardCopy[i][j].isFilled()) {
           isEmpty = false;
         }
         if (!boardCopy[i][j].isFilled()) {
@@ -311,6 +325,11 @@ public class Cerulean {
     }
     return height;
   }
+
+  public static void updateWeights(double[] newWeights) {
+    weights = newWeights;
+  }
+
 }
 
 
