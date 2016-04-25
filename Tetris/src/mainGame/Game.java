@@ -19,7 +19,7 @@ public class Game extends Application {
 
   // change this
   public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
-  public static final int MAX_GAMES = 3;
+  public static final int MAX_GAMES = 20;
 
 
   // don't change these
@@ -40,21 +40,18 @@ public class Game extends Application {
 
 
   private static AnimationTimer timer;
-  private int timeScore = 0;
-  private double timePerTurn = MAX_MILLIS_PER_TURN;
+  private static int timeScore = 0;
+  private static double timePerTurn = MAX_MILLIS_PER_TURN;
 
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
   private boolean dropDownTerminatesBlock = false;
 
-  public static double[][] SPECIES = new double[][]{
-    {-70, -70, 500},
-    {-100, -50, 100}
-  };
-  
+  public static double[][] SPECIES = new double[][] {{-70, -70, 500}, {-100, -50, 100}, {-200, -70, 300}, {-100, -50, 70}};
+
   private static int currentSpecies = 0;
-  
+
   private static double[] speciesAvgScore = new double[SPECIES.length];
 
 
@@ -131,7 +128,7 @@ public class Game extends Application {
     if (!autoplay) {
       stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
     }
-    
+
     stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
 
     stage.setScene(boardScene);
@@ -144,7 +141,7 @@ public class Game extends Application {
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
-  private double getAvgScore() {
+  private static double getAvgScore() {
     double total = 0;
     for (Integer i : scoreHistory) {
       total += i;
@@ -163,7 +160,7 @@ public class Game extends Application {
     @Override
     public void handle(KeyEvent key) {
       if (key.getCode() == KeyCode.ESCAPE) {
-        for(double score : speciesAvgScore){
+        for (double score : speciesAvgScore) {
           System.out.println("Average: " + score);
         }
         Renderer.writeScores();
@@ -241,12 +238,13 @@ public class Game extends Application {
   /**
    * resets the game when called, typically after a loss
    */
-  private void resetGame() {
+  public static void resetGame() {
+    speciesAvgScore[currentSpecies] = getAvgScore();
     gameIsActive = true;
     Renderer.writeScores();
     Engine.reset();
     Engine.getBoard().clearBoard();
-    this.timeScore = 0;
+    Game.timeScore = 0;
     timePerTurn = MAX_MILLIS_PER_TURN;
     timer.start();
     Engine.addBlock();
@@ -304,22 +302,25 @@ public class Game extends Application {
             timer.stop();
             gameIsActive = false;
             scoreHistory.add(getScore());
-            if(currentSpecies < SPECIES.length-1){
-              if(playMultiple && Engine.getGameNum() == MAX_GAMES - 1){
+            if (currentSpecies < SPECIES.length) {
+              if (playMultiple && Engine.getGameNum() == MAX_GAMES - 1) {
                 speciesAvgScore[currentSpecies] = Game.this.getAvgScore();
                 currentSpecies++;
-                Cerulean.updateWeights(SPECIES[currentSpecies]);
-                scoreHistory.clear();
-                resetGame();
-                Engine.resetGameNum();
-              }
-              else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
+                if (currentSpecies < SPECIES.length) {
+                  Cerulean.updateWeights(SPECIES[currentSpecies]);
+                  scoreHistory.clear();
+                  resetGame();
+                  Engine.resetGameNum();
+                }
+                
+              } else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
                 resetGame();
               }
             }
-            else{
-              speciesAvgScore[speciesAvgScore.length-1] = Game.this.getAvgScore();
-              //breed species
+            if(currentSpecies == SPECIES.length){
+              System.out.println("Breeding...");
+              speciesAvgScore[speciesAvgScore.length - 1] = Game.this.getAvgScore();
+              // breed species
             }
           }
           Renderer.draw(Engine.getBoard());
@@ -361,8 +362,8 @@ public class Game extends Application {
       }
     };
   }
-  
-  public static void togglePause(){
+
+  public static void togglePause() {
     paused = !paused;
   }
 }

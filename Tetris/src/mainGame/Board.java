@@ -32,6 +32,7 @@ public class Board {
   // when they are initialized
   /**
    * makes a new board with a GridPane, a height and a width
+   * 
    * @param height
    * @param width
    * @param grid
@@ -58,28 +59,28 @@ public class Board {
     }
     this.boardRects = tempBoardRects;
   }
-  
-  public Board(Tile[][] t, Block nextBlock){
+
+  public Board(Tile[][] t, Block nextBlock) {
     this.boardState = t;
     this.grid = new GridPane();
-    
-//    int height = t.length;
-//    int width = t[0].length;
-//    Rectangle[][] tempBoardRects = new Rectangle[height][width];
-//
-//    for (int i = 0; i < height; i++) {
-//      for (int j = 0; j < width; j++) {
-//        Rectangle r = new Rectangle(29, 29);
-//        r.setFill(Color.WHITE);
-//        tempBoardRects[i][j] = r;
-//        grid.add(r, j, i);
-//      }
-//    }
-    
+
+    // int height = t.length;
+    // int width = t[0].length;
+    // Rectangle[][] tempBoardRects = new Rectangle[height][width];
+    //
+    // for (int i = 0; i < height; i++) {
+    // for (int j = 0; j < width; j++) {
+    // Rectangle r = new Rectangle(29, 29);
+    // r.setFill(Color.WHITE);
+    // tempBoardRects[i][j] = r;
+    // grid.add(r, j, i);
+    // }
+    // }
+
     setFallingBlock(nextBlock);
     updateBoardWithNewBlock(nextBlock);
 
-//    this.boardRects = tempBoardRects;
+    // this.boardRects = tempBoardRects;
   }
 
   public Rectangle[][] getBoardRects() {
@@ -101,7 +102,8 @@ public class Board {
   // might need to be altered for when the stack gets very high
   /**
    * adds block near the top of the screen
-   * @param b   the block to add
+   * 
+   * @param b the block to add
    */
   public void updateBoardWithNewBlock(Block b) {
     int offset = (this.boardState[0].length - b.getShape()[0].length) / 2;
@@ -119,6 +121,7 @@ public class Board {
 
   /**
    * updates the board with the Tiles values for color, active, and filled
+   * 
    * @param i the x index to set
    * @param j the y index to set
    * @param t the tile to get the values from
@@ -150,7 +153,8 @@ public class Board {
 
   /**
    * generalize way of getting user input into the engine
-   * @param m   the move that the user wants to execute
+   * 
+   * @param m the move that the user wants to execute
    */
   public void pressed(Move m) {
     if (m == Move.RIGHT) {
@@ -183,7 +187,10 @@ public class Board {
         if (!Game.NINTENDO_SCORING) {
           boardScore += 3;
         }
-//        System.out.println(fallingBlock.getGridLocation()[1]);
+        // System.out.println(fallingBlock.getGridLocation()[1]);
+        if (fallingBlock.getGridLocation()[1] == -10) {
+          System.out.println();
+        }
         blockDown();
       }
     } else if (m == Move.UP) {
@@ -194,13 +201,21 @@ public class Board {
 
   /**
    * checks to see if lowering the block by one space is a valid move
-   * @return    true if the move is valid, false otherwise
+   * 
+   * @return true if the move is valid, false otherwise
    */
   public boolean checkDown() {
-    
+
     if (debugMode) {
       System.out
           .println(fallingBlock.getGridLocation()[0] + " " + fallingBlock.getGridLocation()[1]);
+    }
+    // this if is a hacky fix to stop the game from freezing under certain unknown conditions when
+    // it should be resetting instead
+    if (fallingBlock.getGridLocation()[1] < -4) {
+      Game.resetGame();
+      System.err.println("Freeze condition: resetting now...");
+      return false;
     }
 
     if (checkBlockAtBottom() || checkUnderneath()) {
@@ -231,6 +246,7 @@ public class Board {
 
   /**
    * sets all tiles under the parameter to inactive to keep them from moving
+   * 
    * @param lowestEmptyRow the row at which the inactivity should begin
    */
   private void setBlocksUnderToInactive(int lowestEmptyRow) {
@@ -246,10 +262,11 @@ public class Board {
 
   /**
    * checks to see if any filled tile exists below the parameter
-   * @param lowestEmptyRow   the row below which should be checked
+   * 
+   * @param lowestEmptyRow the row below which should be checked
    * @return true if any block exists below, false otherwise
    */
-  //TODO: should the name be below?
+  // TODO: should the name be below?
   private boolean existRowsAbove(int lowestEmptyRow) {
     for (int i = lowestEmptyRow; i >= 0; i--) {
       for (int j = 0; j < boardState[0].length; j++) {
@@ -263,6 +280,7 @@ public class Board {
 
   /**
    * gets the lowest row that is totally empty
+   * 
    * @return the lowest row devoid of any filled tiles
    */
   private int getLowestEmptyRow() {
@@ -286,9 +304,10 @@ public class Board {
     }
     return row;
   }
- 
+
   /**
    * checks if there is an inactive tile (block that already fell) below
+   * 
    * @return true if there is an inactive tile, false otherwise
    */
   private boolean checkUnderneath() {
@@ -300,16 +319,17 @@ public class Board {
           Tile nextT = boardState[i + 1][j];
           if (nextT.isFilled() && !nextT.isActive()) {
             isUnderneath = true;
-            //return true;
+            // return true;
           }
         }
       }
     }
     return isUnderneath;
   }
- 
+
   /**
    * checks if the block is at the bottom of the screen
+   * 
    * @return true if the block is at the bottom, false otherwise
    */
   private boolean checkBlockAtBottom() {
@@ -356,6 +376,7 @@ public class Board {
 
   /**
    * checks to see if moving the block to the right is a valid move
+   * 
    * @return true if it is valid, false otherwise
    */
   private boolean checkRight() {
@@ -365,7 +386,7 @@ public class Board {
       if (a[a.length - 1].isActive()) {
         return false;
       }
-      
+
 
       // checks for an inactive but filled tile on the right of every active tile
       for (int i = a.length - 2; i >= 0; i--) {
@@ -398,6 +419,7 @@ public class Board {
 
   /**
    * checks to see if moving the block to the left is a valid move
+   * 
    * @return true if it is valid, false otherwise
    */
   private boolean checkLeft() {
@@ -439,6 +461,7 @@ public class Board {
 
   /**
    * checks to see if a possible rotation is valid
+   * 
    * @param m the test rotation, should only be passes ROT_RIGHT, ROT_LEFT
    * @return true if the rotation is valid, false otherwise
    */
@@ -458,8 +481,8 @@ public class Board {
           // makes sure we arent running off the board
           int row = tempBLocation[0] - (tempBShape.length - 1 - i);
           int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
-          
-          if (row >= 0 && column >=  0) {
+
+          if (row >= 0 && column >= 0) {
             Tile t = tileAt(row, column);
 
             // checks to make sure flip is legal, ignoring itself in the process
@@ -483,7 +506,7 @@ public class Board {
     }
     return true;
   }
-  
+
   /**
    * updates the falling block by moving it down one row
    */
@@ -498,9 +521,9 @@ public class Board {
           // makes sure we aren't running off the board
           int column = fallingBlockLocation[1] - (fallingBlockShape[0].length - 1 - j);
           int row = fallingBlockLocation[0] - (fallingBlockShape.length - 1 - i);
-          if(column >= 0 && row >= 0){
+          if (column >= 0 && row >= 0) {
             update(row, column, fallingBlockShape[i][j]);
-           }
+          }
         }
       }
     }
@@ -557,9 +580,10 @@ public class Board {
   public GridPane getGrid() {
     return grid;
   }
-  
+
   /**
    * gets the indexes of all the filled rows on the board
+   * 
    * @return an ArrayList of the filled indexes
    */
   public ArrayList<Integer> getFullRows() {
@@ -583,7 +607,8 @@ public class Board {
 
   /**
    * removes all the tiles on the lines indicated in the parameter
-   * @param linesToClear     the lines that need to be cleared
+   * 
+   * @param linesToClear the lines that need to be cleared
    */
   public void clearLines(ArrayList<Integer> linesToClear) {
     // rewards a "quadris"
@@ -642,11 +667,11 @@ public class Board {
       rowsNotFalling = true;
     }
   }
-  
-  public String toString(){
+
+  public String toString() {
     String s = "";
-    for(int i = 0; i < boardState.length; i++){
-      for(int j = 0; j < boardState[i].length; j++){
+    for (int i = 0; i < boardState.length; i++) {
+      for (int j = 0; j < boardState[i].length; j++) {
         s += boardState[i][j].isFilled() ? "x" : "o";
       }
       s += "\n";
@@ -656,6 +681,7 @@ public class Board {
 
   /**
    * sets the mode of the object
+   * 
    * @param debugMode whether the object should print out its debug information
    */
   public static void setMode(boolean debugMode/* , boolean logMode */) {

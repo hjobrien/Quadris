@@ -183,6 +183,7 @@ public class Cerulean {
    */
   private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount, int slideCount) {
+//    System.out.println(moveCount + " " + rotCount + " " + slideCount);
     // avoids reference issues
     Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
     for (int i = 0; i < boardState.length; i++) {
@@ -207,7 +208,7 @@ public class Cerulean {
     }
 
     boardCopy.pressed(Move.DROP);
-    //slide parts after block is at bottom, doesn't work if drop terminates block
+    //slide parts after block is at bottom, shouldn't work if drop terminates block
     boardCopy.pressed(Move.LEFT);
     for(int i = 0; i < slideCount; i++){
       boardCopy.pressed(Move.RIGHT);
@@ -236,14 +237,12 @@ public class Cerulean {
       if (getHeight(colCopy) > maxHeight) {
         maxHeight = getHeight(colCopy);
       }
-      // height += (HEIGHT_WEIGHT * getHeight(colCopy));
-      // double voidCount = Math.pow(getNumVoids(colCopy), 2);
-      // voids += (VOID_WEIGHT * (voidCount == 0 ? 0 : ( 1.0 / voidCount)));
+      
       double voidCount = getNumVoids(colCopy);
       voids +=
           (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
                                                                                                  // the
-      // value form
+      // value from
       // being 0 in
       // Ternary
     }
