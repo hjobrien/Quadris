@@ -4,6 +4,17 @@ import javafx.event.EventHandler;
 
 public class BlockAddedHandler implements EventHandler<BlockAddedEvent> {
 
+  
+  
+  
+  
+  //not currently used
+  
+  
+  
+  
+  
+  
   @Override
   public void handle(BlockAddedEvent event) {
 //    Cerulean.submitBlock(event.getBlock(), event.getBoardState());

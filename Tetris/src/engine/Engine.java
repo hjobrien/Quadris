@@ -32,7 +32,7 @@ public class Engine {
   private static boolean logMode;
   // private static boolean debugMode;
 
-  public static final String BLOCK_DATA = "test";
+  public static final String BLOCK_DATA = "Blocks to add";
 
   // lists of numbers corresponding to blocks, translated in the 'genNextBlock' method
   private static int[][] blocks = new int[][] {};
@@ -115,7 +115,7 @@ public class Engine {
   }
 
   /**
-   * 
+   * used for randomized blocks
    * @return a new random instance of Block
    */
   private static Block genRandomBlock() {
@@ -124,6 +124,12 @@ public class Engine {
     return translateToBlock(i);
   }
 
+  /**
+   * gets the next block if consistent blocks are to be used
+   * @param blockNum the block it should add, 
+   * one more than the total number of blocks added at that point
+   * @return the next Block
+   */
   private static Block getNextBlock(int blockNum) {
     Block b = translateToBlock(blocks[gameNum][blockNum]); // change the 0 to gameNum for automated
                                                      // testing TODO
@@ -131,6 +137,11 @@ public class Engine {
     return b;
   }
 
+  /**
+   * translates an integer to a Block
+   * @param i the integer to translate
+   * @return a Block corresponding to that integer
+   */
   private static Block translateToBlock(int i) {
 //     return new RightS();
     switch (i) {
@@ -194,6 +205,11 @@ public class Engine {
     Engine.autoplay = autoplay;
   }
 
+  /**
+   * sets if the Engine should be adding random blocks or consistent blocks
+   * if they are to be non-random, this loads in the required data
+   * @param randomizeBlocks true if random blocks are to be used, false otherwise
+   */
   public static void setRandomizeBlocks(boolean randomizeBlocks) {
     Engine.randomizeBlocks = randomizeBlocks;
     if (!randomizeBlocks) {
@@ -202,7 +218,13 @@ public class Engine {
       blockCount++;
     }
   }
-
+  
+  /**
+   * reads in the blocks to be used in the consistent training mode
+   * the blocks are stored as int's in the Blocks to Add file
+   * @return an array of integers which can be mapped to a block type
+   *         the rows are unique games, each int in the row is one block to be added that game
+   */
   private static int[][] readInBlocks() {
     Scanner fileReader = null;
     try {
@@ -239,6 +261,9 @@ public class Engine {
   }
 
 
+  /**
+   * reset the state of the engine (used between every game)
+   */
   public static void reset() {
     Engine.blockCount = 0;
     if(randomizeBlocks){
@@ -251,6 +276,9 @@ public class Engine {
      Engine.gameNum++; //keep for automated testing
   }
   
+  /**
+   * resets the Engine'es game (used for when the weights are being changed)
+   */
   public static void resetGameNum(){
     Engine.gameNum = 0;
   }

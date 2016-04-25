@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class Game extends Application {
 
 
-  // change this
+  // change these
   public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
   public static final int MAX_GAMES = 40;
   public static final int MAX_GENERATIONS = 1;
@@ -146,6 +146,10 @@ public class Game extends Application {
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
+  /**
+   * gets the average score over the current candidates history
+   * @return the candidates average score
+   */
   private static double getAvgScore() {
     double total = 0;
     for (Integer i : scoreHistory) {

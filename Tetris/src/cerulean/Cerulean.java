@@ -17,32 +17,6 @@ import mainGame.Move;
  * @author Hank
  *
  */
-// 5 2 3 6 2 5 3 4 6 5 6 6 4 5 0 0 5 6 1 4 4 2 0 5 0 4 3 5 6 1 4 1 0 1 5 0 4 3 4 2 4 5 5 2 2 0 4 0 6
-// 6 3 5 6 2 3 6 5 1 0 0 6 6 4 4 5 3 3 3 2 2 6 6 1 6 1 1 0 4 6 4 5 6 2 1 1 0 1 1 6 5 1 5 2 5 1 6 6 6
-// 3 1 4 3 6 5 5 5 0 5 1 5 3 4 0 3 5 2 1 3 5 4 4 3 2 3 4 1 3 3 4 6 4 4 6 4 3 0 2 3 3 5 5 6 6 0 5 3 6
-// 1 2 0 3 6 4 1 4 5 0 4 4 4 2 0 0 1 5 5 4 3 4 6 2 4 2 4 4 2 5 0 5 1 5 1 6 4 5 0 5 3 5 6 4 4 5 5 5 6
-// 1 5 0 6 2 1 5 4 3 4 3 4 2 5 3 4 3 0 3 5 3 4 2 3 2 1 6 4 2 4 1 6 4 0 6 6 1 3 4 1 1 3 2 2 0 4 4 3 0
-// 3 0 1 0 5 0 3 5 2 4 6 1 2 1 3 6 5 5 4 0 4 3 6 5 5 5 4 0 0 1 1 5 1 6 4 0 2 0 3 4 5 0 6 0 1 2 5 3 2
-// 6 6 4 5 3 4 0 3 0 5 2 4 2 0 2 3 3 3 0 6 1 3 3 0 5 5 6 0 4 2 0 0 5 2 4 0 4 2 4 6 5 1 0 6 0 1 5 3 5
-// 4 2 4 5 0 4 2 5 6 1 6 3 5 2 5 2 0 2 1 4 0 6 0 0 6 5 6 5 0 4 1 1 4 2 4 0 4 4 6 0 4 4 3 1 0 3 1 0 1
-// 5 5 2 4 4 2 0 2 4 4 5 6 3 3 5 3 1 1 4 1 3 0 1 6 3 1 2 1 4 2 0 0 6 4 0 2 2 6 1 4 3 3 2 0 2 5 6 2 2
-// 5 5 4 0 0 0 6 2 1 4 1 3 0 6 3 4 5 5 5 6 5 4 0 4 2 4 3 0 0 2 1 4 1 6 6 5 3 2 4 4 3 4 1 6 1 2 0 6 2
-// 6 2 4 2 5 1 2 2 1 6 1 4 0 0 5 2 0 6 3 5 1 4 4 5 1 4 2 5 0 0 1 0 1 0 4 6 4 1 3 6 4 3 0 2 6 2 2 2 6
-// 3 1 0 1 3 5 5 1 2 0 2 0 3 4 3 3 1 6 5 0 5 2 3 4 2 0 3 6 5 2 0 5 6 0 4 3 1 3 1 6 1 6 1 1 5 5 2 2 2
-// 0 3 5 3 1 6 1 1 5 3 5 0
-// 2 1 6 2 3 2 5 2 3 0 1 6 6 0 6 4 0 4 1 4 0 2 3 0 1 0 0 6 4 3 3 0 5 6 6 0 6 0 2 0 2 0 1 4 3 3 5 5 4
-// 6 0 3 0 5 2 6 3 6 0 1 3 3 5 3 2 3 3 0 0 1 3 5 0 3 2 3 4 0 6 4 4 2 0 1 1 2 0 5 0 2 2 5 4 1 6 5 0 2
-// 6 6 3 0 6 6 3 5 1 4 2 4 5 2 4 1 4 5 1 4 3 2 0 1 0 4 4 2 0 4 1 5 0 0 2 4 2 5 5 4 6 4 3 4 2 5 3 5 2
-// 0 6 0 4 3 1 2 1 2 5 0 5 1 4 4 6 4 4 5 6 2 0 4 5 3 6 3 4 6 1 6 3 5 4 3 0 0 2 2 5 3 0 2 0 4 4 5 0 0
-// 3 5 1 0 6 1 5 3 3 2 2 3 1 4 4 4 0 4 2 6 5 2 1 4 4 4 4 5 3 5 5 3 3 6 2 3 3 0 6 1 6 2 3 2 3 4 4 3 4
-// 6 1 0 4 5 1 0 6 0 2 5 2 3 0 3 4 6 0 6 3 2 5 1 2 0 2 3 2 6 4 0 3 5 6 4 0 2 0 4 0 0 5 0 3 6 3 1 6 6
-// 1 3 1 4 4 0 4 0 6 2 2 6 5 3 3 1 1 1 5 0 4 2 2 0 1 2 3 3 5 3 6 4 6 0 4 6 0 6 6 6 4 2 0 4 4 4 1 3 5
-// 2 0 3 5 4 3 6 2 5 5 4 0 6 4 1 1 4 1 6 0 0 2 0 4 2 5 1 4 0 5 4 1 3 3 6 5 3 1 1 3 6 3 5 1 5 1 1 5 6
-// 0 3 2 5 2 1 3 3 6 4 1 1 3 4 0 1 2 2 2 5 5 6 3 5 5 6 0 3 6 6 0 0 5 1 4 6 0 3 5 4 1 1 2 4 3 3 3 2 5
-// 5 5 2 0 1 2 3 6 6 2 0 1 6 5 6 4 3 0 2 3 6 0 1 1 1 3 2 2 4 3 1 6 3 4 6 0 1 5 0 4 5 3 3 4 4 0 6 6 6
-// 6 6 1 0 2 1 6 0 3 6 2 5 1 2 4 3 6 5 6 2 2 0 3 1 4 5 0 2 5 5 1 1 3 0 5 1 6 2 3 3 4 5 1 4 4 0 6 3 2
-// 3 2 0 1 1 1 5 6 6 5 2 2 6 2 5 4 6 5 0 3 1 2 2 6 4 1 4 6 4 0 0 3 1 4 1 1 2 0 0 1 3 6 5 4 0 0 2 1 0
-// 2 6 5 0 3 4 0 3 3 5 5 5
 
 public class Cerulean {
 
@@ -248,7 +222,7 @@ public class Cerulean {
 
   /**
    * evaluates the relative value of the board
-   * 
+   * "fitness function" for machine learning
    * @param boardCopy the board to be analyzed
    * @return the value of the board
    */
@@ -352,10 +326,18 @@ public class Cerulean {
     return height;
   }
 
+  /**
+   * allows the AI's weights to be changed for use in AI_TRAINING mode
+   * @param newWeights the new weights to be used in the fitness function
+   */
   public static void updateWeights(double[] newWeights) {
     weights = newWeights;
   }
 
+  /**
+   * gets the weights of the AI as a string for printing
+   * @return the weights as a String
+   */
   public static String getWeights() {
     String s = "";
     for (double d : weights) {
@@ -364,6 +346,25 @@ public class Cerulean {
     return s;
   }
 
+  /**
+   * the part of the code that makes the AI an AI, this method takes in certain 'species' 
+   * (the weights) and their associated fitness. It then makes a new generation of species that 
+   * share some behavior with their parents
+   * A child is created by first 'crossing over' the two parent genes at some random point such that
+   * (parent 1) xxxxxxxx 
+   *                     =>   (child) xxxooooo
+   * (parent 2) oooooooo
+   * then each gene is determined if it should be mutated (related to the mutationFactor)
+   * and then if it is to be mutated, the value at that gene is multiplied by some
+   * value v such that 0.5 <= v <= 1.5
+   * the final list of children includes the parents so the AI never regresses (elitist selection)
+   * 
+   * @param species the array of all possible parents
+   * @param speciesAvgScore the related fitness of each of the possible parents
+   * @param mutationFactor  the probability a gene at a particular locus will mutate, 
+   *                        should be between 0 and 1
+   * @return an array of possible children whose fitness is to be reevaluated
+   */
   public static double[][] breed(double[][] species, double[] speciesAvgScore,
       double mutationFactor) {
     ArrayList<Double> avgScores = new ArrayList<Double>();
@@ -385,7 +386,7 @@ public class Cerulean {
     newSpecies[0] = bestCandidate;
     newSpecies[1] = secondCandidate;
     for (int i = 2; i < numSpecies; i++) {
-      int crossoverLocus = rand.nextInt(numSpecies);// the place where the genese will cross over
+      int crossoverLocus = rand.nextInt(numSpecies);// the place where the genes will cross over
       double[] child = Arrays.copyOf(bestCandidate, bestCandidate.length);
       for (int j = crossoverLocus; j < secondCandidate.length; j++) {
         child[j] = secondCandidate[j];

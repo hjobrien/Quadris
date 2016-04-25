@@ -6,6 +6,11 @@ import blocks.Tile;
 import cerulean.Cerulean;
 import javafx.scene.paint.Color;
 
+/**
+ * a testing program to see how the fitness function evaluates particular board states
+ * @author Hank
+ *
+ */
 public class BoardClient {
   
   public static final Color COLOR = Color.BLACK;

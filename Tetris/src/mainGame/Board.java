@@ -214,7 +214,7 @@ public class Board {
     // it should be resetting instead
     if (fallingBlock.getGridLocation()[1] < -4) {
       Game.resetGame();
-      System.err.println("Freeze condition: resetting now...");
+      System.err.println("Freeze detected: resetting now...");
       return false;
     }
 
