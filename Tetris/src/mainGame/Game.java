@@ -19,7 +19,9 @@ public class Game extends Application {
 
   // change this
   public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
-  public static final int MAX_GAMES = 20;
+  public static final int MAX_GAMES = 40;
+  public static final int MAX_GENERATIONS = 1;
+  public static final double MUTATION_FACTOR = 0.5;   //value between 0 and 1 where 0 is no mutations ever and 1 is a mutation every time
 
 
   // don't change these
@@ -48,11 +50,14 @@ public class Game extends Application {
   // can be changed if not desired
   private boolean dropDownTerminatesBlock = false;
 
-  public static double[][] SPECIES = new double[][] {{-70, -70, 500}, {-100, -50, 100}, {-200, -70, 300}, {-100, -50, 70}};
+  //seeded possible solutions 
+  public static double[][] species = new double[][] {{-70, -70, 500}, {-100, -50, 100},
+      {-200, -70, 300}, {-100, -50, 70}, {-100, -300, 700}, {-40, -100, 400}};
 
   private static int currentSpecies = 0;
+  private static int generationNum = 0;
 
-  private static double[] speciesAvgScore = new double[SPECIES.length];
+  private static double[] speciesAvgScore = new double[species.length];
 
 
   private static boolean paused = false;
@@ -302,25 +307,26 @@ public class Game extends Application {
             timer.stop();
             gameIsActive = false;
             scoreHistory.add(getScore());
-            if (currentSpecies < SPECIES.length) {
+            if (currentSpecies < species.length) {
               if (playMultiple && Engine.getGameNum() == MAX_GAMES - 1) {
-                speciesAvgScore[currentSpecies] = Game.this.getAvgScore();
+                speciesAvgScore[currentSpecies] = Game.getAvgScore();
                 currentSpecies++;
-                if (currentSpecies < SPECIES.length) {
-                  Cerulean.updateWeights(SPECIES[currentSpecies]);
+                if (currentSpecies < species.length) {
+                  Cerulean.updateWeights(species[currentSpecies]);
                   scoreHistory.clear();
                   resetGame();
                   Engine.resetGameNum();
                 }
-                
+
               } else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
                 resetGame();
               }
             }
-            if(currentSpecies == SPECIES.length){
-              System.out.println("Breeding...");
-              speciesAvgScore[speciesAvgScore.length - 1] = Game.this.getAvgScore();
-              // breed species
+            if (currentSpecies == species.length) {
+              if (generationNum < MAX_GENERATIONS)
+                System.out.println("Breeding...");
+              speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
+              species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
             }
           }
           Renderer.draw(Engine.getBoard());

@@ -1,6 +1,9 @@
 package cerulean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 import java.util.stream.DoubleStream;
 
 import blocks.Block;
@@ -14,8 +17,32 @@ import mainGame.Move;
  * @author Hank
  *
  */
-//5 2 3 6 2 5 3 4 6 5 6 6 4 5 0 0 5 6 1 4 4 2 0 5 0 4 3 5 6 1 4 1 0 1 5 0 4 3 4 2 4 5 5 2 2 0 4 0 6 6 3 5 6 2 3 6 5 1 0 0 6 6 4 4 5 3 3 3 2 2 6 6 1 6 1 1 0 4 6 4 5 6 2 1 1 0 1 1 6 5 1 5 2 5 1 6 6 6 3 1 4 3 6 5 5 5 0 5 1 5 3 4 0 3 5 2 1 3 5 4 4 3 2 3 4 1 3 3 4 6 4 4 6 4 3 0 2 3 3 5 5 6 6 0 5 3 6 1 2 0 3 6 4 1 4 5 0 4 4 4 2 0 0 1 5 5 4 3 4 6 2 4 2 4 4 2 5 0 5 1 5 1 6 4 5 0 5 3 5 6 4 4 5 5 5 6 1 5 0 6 2 1 5 4 3 4 3 4 2 5 3 4 3 0 3 5 3 4 2 3 2 1 6 4 2 4 1 6 4 0 6 6 1 3 4 1 1 3 2 2 0 4 4 3 0 3 0 1 0 5 0 3 5 2 4 6 1 2 1 3 6 5 5 4 0 4 3 6 5 5 5 4 0 0 1 1 5 1 6 4 0 2 0 3 4 5 0 6 0 1 2 5 3 2 6 6 4 5 3 4 0 3 0 5 2 4 2 0 2 3 3 3 0 6 1 3 3 0 5 5 6 0 4 2 0 0 5 2 4 0 4 2 4 6 5 1 0 6 0 1 5 3 5 4 2 4 5 0 4 2 5 6 1 6 3 5 2 5 2 0 2 1 4 0 6 0 0 6 5 6 5 0 4 1 1 4 2 4 0 4 4 6 0 4 4 3 1 0 3 1 0 1 5 5 2 4 4 2 0 2 4 4 5 6 3 3 5 3 1 1 4 1 3 0 1 6 3 1 2 1 4 2 0 0 6 4 0 2 2 6 1 4 3 3 2 0 2 5 6 2 2 5 5 4 0 0 0 6 2 1 4 1 3 0 6 3 4 5 5 5 6 5 4 0 4 2 4 3 0 0 2 1 4 1 6 6 5 3 2 4 4 3 4 1 6 1 2 0 6 2 6 2 4 2 5 1 2 2 1 6 1 4 0 0 5 2 0 6 3 5 1 4 4 5 1 4 2 5 0 0 1 0 1 0 4 6 4 1 3 6 4 3 0 2 6 2 2 2 6 3 1 0 1 3 5 5 1 2 0 2 0 3 4 3 3 1 6 5 0 5 2 3 4 2 0 3 6 5 2 0 5 6 0 4 3 1 3 1 6 1 6 1 1 5 5 2 2 2 0 3 5 3 1 6 1 1 5 3 5 0 
-//2 1 6 2 3 2 5 2 3 0 1 6 6 0 6 4 0 4 1 4 0 2 3 0 1 0 0 6 4 3 3 0 5 6 6 0 6 0 2 0 2 0 1 4 3 3 5 5 4 6 0 3 0 5 2 6 3 6 0 1 3 3 5 3 2 3 3 0 0 1 3 5 0 3 2 3 4 0 6 4 4 2 0 1 1 2 0 5 0 2 2 5 4 1 6 5 0 2 6 6 3 0 6 6 3 5 1 4 2 4 5 2 4 1 4 5 1 4 3 2 0 1 0 4 4 2 0 4 1 5 0 0 2 4 2 5 5 4 6 4 3 4 2 5 3 5 2 0 6 0 4 3 1 2 1 2 5 0 5 1 4 4 6 4 4 5 6 2 0 4 5 3 6 3 4 6 1 6 3 5 4 3 0 0 2 2 5 3 0 2 0 4 4 5 0 0 3 5 1 0 6 1 5 3 3 2 2 3 1 4 4 4 0 4 2 6 5 2 1 4 4 4 4 5 3 5 5 3 3 6 2 3 3 0 6 1 6 2 3 2 3 4 4 3 4 6 1 0 4 5 1 0 6 0 2 5 2 3 0 3 4 6 0 6 3 2 5 1 2 0 2 3 2 6 4 0 3 5 6 4 0 2 0 4 0 0 5 0 3 6 3 1 6 6 1 3 1 4 4 0 4 0 6 2 2 6 5 3 3 1 1 1 5 0 4 2 2 0 1 2 3 3 5 3 6 4 6 0 4 6 0 6 6 6 4 2 0 4 4 4 1 3 5 2 0 3 5 4 3 6 2 5 5 4 0 6 4 1 1 4 1 6 0 0 2 0 4 2 5 1 4 0 5 4 1 3 3 6 5 3 1 1 3 6 3 5 1 5 1 1 5 6 0 3 2 5 2 1 3 3 6 4 1 1 3 4 0 1 2 2 2 5 5 6 3 5 5 6 0 3 6 6 0 0 5 1 4 6 0 3 5 4 1 1 2 4 3 3 3 2 5 5 5 2 0 1 2 3 6 6 2 0 1 6 5 6 4 3 0 2 3 6 0 1 1 1 3 2 2 4 3 1 6 3 4 6 0 1 5 0 4 5 3 3 4 4 0 6 6 6 6 6 1 0 2 1 6 0 3 6 2 5 1 2 4 3 6 5 6 2 2 0 3 1 4 5 0 2 5 5 1 1 3 0 5 1 6 2 3 3 4 5 1 4 4 0 6 3 2 3 2 0 1 1 1 5 6 6 5 2 2 6 2 5 4 6 5 0 3 1 2 2 6 4 1 4 6 4 0 0 3 1 4 1 1 2 0 0 1 3 6 5 4 0 0 2 1 0 2 6 5 0 3 4 0 3 3 5 5 5 
+// 5 2 3 6 2 5 3 4 6 5 6 6 4 5 0 0 5 6 1 4 4 2 0 5 0 4 3 5 6 1 4 1 0 1 5 0 4 3 4 2 4 5 5 2 2 0 4 0 6
+// 6 3 5 6 2 3 6 5 1 0 0 6 6 4 4 5 3 3 3 2 2 6 6 1 6 1 1 0 4 6 4 5 6 2 1 1 0 1 1 6 5 1 5 2 5 1 6 6 6
+// 3 1 4 3 6 5 5 5 0 5 1 5 3 4 0 3 5 2 1 3 5 4 4 3 2 3 4 1 3 3 4 6 4 4 6 4 3 0 2 3 3 5 5 6 6 0 5 3 6
+// 1 2 0 3 6 4 1 4 5 0 4 4 4 2 0 0 1 5 5 4 3 4 6 2 4 2 4 4 2 5 0 5 1 5 1 6 4 5 0 5 3 5 6 4 4 5 5 5 6
+// 1 5 0 6 2 1 5 4 3 4 3 4 2 5 3 4 3 0 3 5 3 4 2 3 2 1 6 4 2 4 1 6 4 0 6 6 1 3 4 1 1 3 2 2 0 4 4 3 0
+// 3 0 1 0 5 0 3 5 2 4 6 1 2 1 3 6 5 5 4 0 4 3 6 5 5 5 4 0 0 1 1 5 1 6 4 0 2 0 3 4 5 0 6 0 1 2 5 3 2
+// 6 6 4 5 3 4 0 3 0 5 2 4 2 0 2 3 3 3 0 6 1 3 3 0 5 5 6 0 4 2 0 0 5 2 4 0 4 2 4 6 5 1 0 6 0 1 5 3 5
+// 4 2 4 5 0 4 2 5 6 1 6 3 5 2 5 2 0 2 1 4 0 6 0 0 6 5 6 5 0 4 1 1 4 2 4 0 4 4 6 0 4 4 3 1 0 3 1 0 1
+// 5 5 2 4 4 2 0 2 4 4 5 6 3 3 5 3 1 1 4 1 3 0 1 6 3 1 2 1 4 2 0 0 6 4 0 2 2 6 1 4 3 3 2 0 2 5 6 2 2
+// 5 5 4 0 0 0 6 2 1 4 1 3 0 6 3 4 5 5 5 6 5 4 0 4 2 4 3 0 0 2 1 4 1 6 6 5 3 2 4 4 3 4 1 6 1 2 0 6 2
+// 6 2 4 2 5 1 2 2 1 6 1 4 0 0 5 2 0 6 3 5 1 4 4 5 1 4 2 5 0 0 1 0 1 0 4 6 4 1 3 6 4 3 0 2 6 2 2 2 6
+// 3 1 0 1 3 5 5 1 2 0 2 0 3 4 3 3 1 6 5 0 5 2 3 4 2 0 3 6 5 2 0 5 6 0 4 3 1 3 1 6 1 6 1 1 5 5 2 2 2
+// 0 3 5 3 1 6 1 1 5 3 5 0
+// 2 1 6 2 3 2 5 2 3 0 1 6 6 0 6 4 0 4 1 4 0 2 3 0 1 0 0 6 4 3 3 0 5 6 6 0 6 0 2 0 2 0 1 4 3 3 5 5 4
+// 6 0 3 0 5 2 6 3 6 0 1 3 3 5 3 2 3 3 0 0 1 3 5 0 3 2 3 4 0 6 4 4 2 0 1 1 2 0 5 0 2 2 5 4 1 6 5 0 2
+// 6 6 3 0 6 6 3 5 1 4 2 4 5 2 4 1 4 5 1 4 3 2 0 1 0 4 4 2 0 4 1 5 0 0 2 4 2 5 5 4 6 4 3 4 2 5 3 5 2
+// 0 6 0 4 3 1 2 1 2 5 0 5 1 4 4 6 4 4 5 6 2 0 4 5 3 6 3 4 6 1 6 3 5 4 3 0 0 2 2 5 3 0 2 0 4 4 5 0 0
+// 3 5 1 0 6 1 5 3 3 2 2 3 1 4 4 4 0 4 2 6 5 2 1 4 4 4 4 5 3 5 5 3 3 6 2 3 3 0 6 1 6 2 3 2 3 4 4 3 4
+// 6 1 0 4 5 1 0 6 0 2 5 2 3 0 3 4 6 0 6 3 2 5 1 2 0 2 3 2 6 4 0 3 5 6 4 0 2 0 4 0 0 5 0 3 6 3 1 6 6
+// 1 3 1 4 4 0 4 0 6 2 2 6 5 3 3 1 1 1 5 0 4 2 2 0 1 2 3 3 5 3 6 4 6 0 4 6 0 6 6 6 4 2 0 4 4 4 1 3 5
+// 2 0 3 5 4 3 6 2 5 5 4 0 6 4 1 1 4 1 6 0 0 2 0 4 2 5 1 4 0 5 4 1 3 3 6 5 3 1 1 3 6 3 5 1 5 1 1 5 6
+// 0 3 2 5 2 1 3 3 6 4 1 1 3 4 0 1 2 2 2 5 5 6 3 5 5 6 0 3 6 6 0 0 5 1 4 6 0 3 5 4 1 1 2 4 3 3 3 2 5
+// 5 5 2 0 1 2 3 6 6 2 0 1 6 5 6 4 3 0 2 3 6 0 1 1 1 3 2 2 4 3 1 6 3 4 6 0 1 5 0 4 5 3 3 4 4 0 6 6 6
+// 6 6 1 0 2 1 6 0 3 6 2 5 1 2 4 3 6 5 6 2 2 0 3 1 4 5 0 2 5 5 1 1 3 0 5 1 6 2 3 3 4 5 1 4 4 0 6 3 2
+// 3 2 0 1 1 1 5 6 6 5 2 2 6 2 5 4 6 5 0 3 1 2 2 6 4 1 4 6 4 0 0 3 1 4 1 1 2 0 0 1 3 6 5 4 0 0 2 1 0
+// 2 6 5 0 3 4 0 3 3 5 5 5
 
 public class Cerulean {
 
@@ -30,8 +57,8 @@ public class Cerulean {
   private static final double HEIGHT_WEIGHT = -70;
   private static final double VOID_WEIGHT = -70;
   private static final double LINE_WEIGHT = 500;
-  
-  private static double[] weights = new double[]{HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT};
+
+  private static double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT};
 
   // private static final double HEIGHT_WEIGHT = -70;
   // private static final double VOID_WEIGHT = -100;
@@ -105,9 +132,10 @@ public class Cerulean {
     for (int moveCount = 0; moveCount < 10; moveCount++) {
       // 10 possible worst case left/right options
       for (int rotCount = 0; rotCount < nextBlockCopy.getNumRotations(); rotCount++) {
-        for (int slideCount = 0; slideCount < 3; slideCount++) {  //from slide one to left, no slide, and one to right;
-//           positions
-//          System.out.println(moveCount + " " + rotCount + " " + slideCount);
+        for (int slideCount = 0; slideCount < 3; slideCount++) { // from slide one to left, no
+                                                                 // slide, and one to right;
+          // positions
+          // System.out.println(moveCount + " " + rotCount + " " + slideCount);
           Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount, 1);
           double[] testWeights = evaluateWeight(testState);
           double testWeight = DoubleStream.of(testWeights).sum();
@@ -166,7 +194,7 @@ public class Cerulean {
     }
     path.add(Move.DROP);
     path.add(Move.LEFT);
-    for(int i = 0; i < slideCount; i++){
+    for (int i = 0; i < slideCount; i++) {
       path.add(Move.RIGHT);
     }
     return path.toArray(new Move[] {});
@@ -183,7 +211,7 @@ public class Cerulean {
    */
   private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount, int slideCount) {
-//    System.out.println(moveCount + " " + rotCount + " " + slideCount);
+    // System.out.println(moveCount + " " + rotCount + " " + slideCount);
     // avoids reference issues
     Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
     for (int i = 0; i < boardState.length; i++) {
@@ -208,9 +236,9 @@ public class Cerulean {
     }
 
     boardCopy.pressed(Move.DROP);
-    //slide parts after block is at bottom, shouldn't work if drop terminates block
+    // slide parts after block is at bottom, shouldn't work if drop terminates block
     boardCopy.pressed(Move.LEFT);
-    for(int i = 0; i < slideCount; i++){
+    for (int i = 0; i < slideCount; i++) {
       boardCopy.pressed(Move.RIGHT);
     }
 
@@ -237,11 +265,10 @@ public class Cerulean {
       if (getHeight(colCopy) > maxHeight) {
         maxHeight = getHeight(colCopy);
       }
-      
+
       double voidCount = getNumVoids(colCopy);
-      voids +=
-          (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
-                                                                                                 // the
+      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
+                                                                                                     // the
       // value from
       // being 0 in
       // Ternary
@@ -331,10 +358,49 @@ public class Cerulean {
 
   public static String getWeights() {
     String s = "";
-    for(double d : weights){
+    for (double d : weights) {
       s += (d + " ");
     }
     return s;
+  }
+
+  public static double[][] breed(double[][] species, double[] speciesAvgScore,
+      double mutationFactor) {
+    ArrayList<Double> avgScores = new ArrayList<Double>();
+    for (double d : speciesAvgScore) {
+      avgScores.add(d);
+    }
+    int bestIndex = avgScores.indexOf(Collections.max(avgScores));
+    avgScores.remove(bestIndex);
+    int secondIndex = avgScores.indexOf(Collections.max(avgScores));
+    if (secondIndex >= bestIndex) {
+      secondIndex++;
+    }
+    double[] bestCandidate = species[bestIndex];
+    double[] secondCandidate = species[secondIndex];
+    int numSpecies = species.length;
+    double[][] newSpecies = new double[numSpecies][];
+    Random rand = new Random();
+    // ensures each generation is never worse than the last one be keeping the top two species
+    newSpecies[0] = bestCandidate;
+    newSpecies[1] = secondCandidate;
+    for (int i = 2; i < numSpecies; i++) {
+      int crossoverLocus = rand.nextInt(numSpecies);// the place where the genese will cross over
+      double[] child = Arrays.copyOf(bestCandidate, bestCandidate.length);
+      for (int j = crossoverLocus; j < secondCandidate.length; j++) {
+        child[j] = secondCandidate[j];
+      }
+      for (int j = 0; j < child.length; j++) {
+        double doMutate = rand.nextDouble();
+        if (doMutate < mutationFactor) {
+          double mutationAmount = rand.nextDouble() + 0.5; // shifts the random from 0-1 to 0.5-1.5
+          child[j] *= mutationAmount;
+        }
+      }
+      newSpecies[i] = child;
+    }
+
+    return newSpecies;
   }
 
 }
