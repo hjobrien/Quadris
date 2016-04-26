@@ -1,7 +1,7 @@
 package mainGame;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
@@ -73,7 +73,7 @@ public class Game extends Application {
 
 
 
-  public static void main(String[] args) throws FileNotFoundException {
+  public static void main(String[] args) throws IOException {
     configureSettings();
 
     launch(args);
@@ -81,10 +81,12 @@ public class Game extends Application {
 
   /**
    * configures the run settings of the game based on the user selected run configuration
-   * @throws FileNotFoundException if AI log file doesn't exist
+   * @throws IOException if the file cannot be created or it cannot be found
    */
-  private static void configureSettings() throws FileNotFoundException {
-    printer = new PrintStream(new File("src/gameLogs/AI output"));
+  private static void configureSettings() throws IOException {
+    File aiLogFile = new File("src/gameLogs/AI output" + System.currentTimeMillis());
+    aiLogFile.createNewFile();
+    printer = new PrintStream(aiLogFile);
     // setup program settings
     switch (GAME_MODE) {
       case DISTRO:
