@@ -33,11 +33,11 @@ public class Board {
   /**
    * makes a new board with a GridPane, a height and a width
    * 
-   * @param height
-   * @param width
-   * @param grid
+   * @param height the number of vertical squares
+   * @param width the number of horizontal squares
+   * @param grid the GridPane
    */
-  public Board(int height, int width, GridPane grid) {
+  public Board(int height, int width, int squareSize, GridPane grid) {
     Tile[][] tempBoard = new Tile[height + 3][width];
     for (int i = 0; i < height + 3; i++) {
       for (int j = 0; j < width; j++) {
@@ -51,7 +51,7 @@ public class Board {
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        Rectangle r = new Rectangle(29, 29);
+        Rectangle r = new Rectangle(squareSize, squareSize);
         r.setFill(Color.WHITE);
         tempBoardRects[i][j] = r;
         grid.add(r, j, i);

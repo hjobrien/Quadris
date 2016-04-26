@@ -28,9 +28,13 @@ public class Cerulean {
   // private static final double VOID_WEIGHT = -50;
   // private static final double LINE_WEIGHT = 70;
 
-  private static final double HEIGHT_WEIGHT = -70;
-  private static final double VOID_WEIGHT = -70;
-  private static final double LINE_WEIGHT = 500;
+//  private static final double HEIGHT_WEIGHT = -70;
+//  private static final double VOID_WEIGHT = -70;
+//  private static final double LINE_WEIGHT = 500;
+  
+private static final double HEIGHT_WEIGHT = -70;
+private static final double VOID_WEIGHT = -97.85;
+private static final double LINE_WEIGHT = 306.77;
 
   private static double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT};
 
@@ -110,7 +114,7 @@ public class Cerulean {
                                                                  // slide, and one to right;
           // positions
           // System.out.println(moveCount + " " + rotCount + " " + slideCount);
-          Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount, 1);
+          Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount, slideCount);
           double[] testWeights = evaluateWeight(testState);
           double testWeight = DoubleStream.of(testWeights).sum();
           // System.out.print(moveCount + " " + rotCount);
@@ -118,7 +122,7 @@ public class Cerulean {
             // printBoard(testState);
             // System.out.println(testWeights[0] + " " + testWeights[1] + " " + testWeights[2]);
             maxWeight = testWeight;
-            bestPath = getPath(moveCount, rotCount, 1);
+            bestPath = getPath(moveCount, rotCount, slideCount);
           }
           nextBlockCopy.setGridLocation(new int[] {0, 0});
 
@@ -230,15 +234,17 @@ public class Cerulean {
     double[] weight = new double[3];
     double voids = 0;
     double height = 0;
-    int maxHeight = 0;
+    double heightScore = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       Tile[] colCopy = new Tile[boardCopy.length];
       for (int j = 0; j < boardCopy.length; j++) {
         colCopy[j] = boardCopy[j][i];
       }
-      if (getHeight(colCopy) > maxHeight) {
-        maxHeight = getHeight(colCopy);
-      }
+      
+      double tempHeightScore = getHeightScore(colCopy) + getExtraHeightScore(boardCopy);
+      if (tempHeightScore > heightScore) {
+        heightScore = tempHeightScore;
+      } 
 
       double voidCount = getNumVoids(colCopy);
       voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
@@ -247,7 +253,8 @@ public class Cerulean {
       // being 0 in
       // Ternary
     }
-    height = weights[0] * Math.pow((maxHeight == 0 ? 0.000000000000001 : maxHeight), HEIGHT_POW);
+    height = weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
+    
     double lines = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       double lineCount = getNumLines(boardCopy);
@@ -259,6 +266,18 @@ public class Cerulean {
     weight[1] = height;
     weight[2] = lines;
     return weight;
+  }
+
+  private static double getHeightScore(Tile[] colCopy) {
+  //gets highest overall
+    int overallHeight = 0;
+    for (int i = colCopy.length - 1; i >= 0; i--) {
+      if (colCopy[i].isFilled()) {
+        overallHeight = colCopy.length - i;
+      }
+    } 
+    
+    return overallHeight;
   }
 
   /**
@@ -314,16 +333,47 @@ public class Cerulean {
    * non active tile in the column
    * 
    * @param tiles the column to be analyzed
+   * @param boardCopy 
    * @return the height of the column
    */
-  private static int getHeight(Tile[] tiles) {
-    int height = 0;
-    for (int i = tiles.length - 1; i >= 0; i--) {
-      if (tiles[i].isFilled()) {
-        height = tiles.length - i;
+//  private static double getHeightScore(Tile[] tiles, Tile[][] boardCopy) {
+//    
+//    //gets highest overall
+//    int overallHeight = 0;
+//    for (int i = tiles.length - 1; i >= 0; i--) {
+//      if (tiles[i].isFilled()) {
+//        overallHeight = tiles.length - i;
+//      }
+//    } 
+//    
+//    return overallHeight;
+//  }
+
+  //returns the highest active tile spot * 0.1
+  private static double getExtraHeightScore(Tile[][] boardCopy) {
+    
+    double extraHeight = Double.POSITIVE_INFINITY;
+    for (int column = 0; column < boardCopy[0].length; column++){
+      int colHeight = Integer.MAX_VALUE;
+      for(int row = boardCopy.length - 1; row >= 0; row--){
+        if(boardCopy[row][column].isActive()){
+          colHeight = row;
+        }
       }
+      if(colHeight < extraHeight){
+        extraHeight = colHeight;
+      }
+//      while (row >= 0 && !foundInRow){
+//        if (boardCopy[row][column].isActive()){
+//          if (row > extraHeight){
+//            extraHeight = row;
+//          }
+//          foundInRow = true;
+//        }
+//        row--;
+//      }
     }
-    return height;
+    return extraHeight * 0.1;
   }
 
   /**

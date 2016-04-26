@@ -19,9 +19,10 @@ public class Game extends Application {
 
   // change these
   public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
-  public static final int MAX_GAMES = 40;
-  public static final int MAX_GENERATIONS = 1;
-  public static final double MUTATION_FACTOR = 0.5;   //value between 0 and 1 where 0 is no mutations ever and 1 is a mutation every time
+  public static final int MAX_GAMES = 10;
+  public static final int MAX_GENERATIONS = 15;
+  public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
+                                                    // ever and 1 is a mutation every time
 
 
   // don't change these
@@ -50,9 +51,10 @@ public class Game extends Application {
   // can be changed if not desired
   private boolean dropDownTerminatesBlock = false;
 
-  //seeded possible solutions 
+  // seeded possible solutions
   public static double[][] species = new double[][] {{-70, -70, 500}, {-100, -50, 100},
-      {-200, -70, 300}, {-100, -50, 70}, {-100, -300, 700}, {-40, -100, 400}};
+      {-200, -70, 300}, {-40, -100, 400}, {-200, -50, 100}, {-400, -300, 100}, {-200, -100, 100},
+      {-150, -70, 400}, {-70, -150, 500}, {-200, -35.4, 100}};
 
   private static int currentSpecies = 0;
   private static int generationNum = 0;
@@ -148,6 +150,7 @@ public class Game extends Application {
 
   /**
    * gets the average score over the current candidates history
+   * 
    * @return the candidates average score
    */
   private static double getAvgScore() {
@@ -169,9 +172,6 @@ public class Game extends Application {
     @Override
     public void handle(KeyEvent key) {
       if (key.getCode() == KeyCode.ESCAPE) {
-        for (double score : speciesAvgScore) {
-          System.out.println("Average: " + score);
-        }
         Renderer.writeScores();
         Renderer.close();
         System.exit(0);
@@ -304,6 +304,7 @@ public class Game extends Application {
           Engine.update();
           if (Engine.getBoard().isFull()) {
             int score = getScore();
+            System.out.println("Species: " + currentSpecies);
             System.out.println("Game " + (Engine.getGameNum() + 1) + " score: " + score);
             System.out.println(Cerulean.getWeights());
             System.out.println("blocks: " + Engine.getBlockCount());
@@ -327,10 +328,19 @@ public class Game extends Application {
               }
             }
             if (currentSpecies == species.length) {
-              if (generationNum < MAX_GENERATIONS)
+              for (double speciesScore : speciesAvgScore) {
+                System.out.println("Average: " + speciesScore);
+              }
+              generationNum++;
+              if (generationNum < MAX_GENERATIONS) {
                 System.out.println("Breeding...");
-              speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
-              species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
+                speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
+                species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
+                currentSpecies = 0;
+                resetGame();
+                Engine.resetGameNum();
+                Cerulean.updateWeights(species[currentSpecies]);
+              }
             }
           }
           Renderer.draw(Engine.getBoard());

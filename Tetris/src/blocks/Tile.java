@@ -26,6 +26,12 @@ public class Tile {
 		this.color = c;
 	}
 	
+	public Tile(Color c, boolean active){
+	  this.isActive = active;
+	  this.isFilled = true;
+	  this.color = c;
+	}
+	
 	public Tile(boolean isActive, boolean isFilled, Color c){
 	  this.isActive = isActive;
 	  this.isFilled = isFilled;

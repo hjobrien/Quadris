@@ -32,17 +32,19 @@ public class Renderer {
   private static boolean doLog;
 
   public static final int VERTICAL_TILES = 20;
-  public static final int HORIZONTAL_TILES = 10;
+  public static final int HORIZONTAL_TILES = 8;
 
   // height should be double width
   private static final int SCREEN_WIDTH = 300;
   private static final int SCREEN_HEIGHT = SCREEN_WIDTH * 2;
 
   private static final int GAME_WIDTH = SCREEN_WIDTH + 175;
-  private static final int GAME_HEIGHT = SCREEN_HEIGHT;
+  private static final int GAME_HEIGHT = SCREEN_HEIGHT - 20;
   
   private static final int HELP_HEIGHT = GAME_HEIGHT - 210;
   private static final int HELP_WIDTH = GAME_WIDTH;
+  
+  private static final int SQUARE_SIZE = 29;
   
   private static PrintStream scorePrinter;
   private static Scanner scoreReader;
@@ -82,8 +84,8 @@ public class Renderer {
     GridPane nextBlock = new GridPane();
     Engine.setMode(doDebug, doLog, autoplay);
     Board.setMode(doDebug);
-    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, grid);
-    Board nextPieceBoard = new Board(4, 4, nextBlock);
+    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
     Engine.setBoards(gameBoard, nextPieceBoard);
     GridPane mainGame = new GridPane();
     mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
@@ -100,10 +102,10 @@ public class Renderer {
     mainGame.add(scoreText, 2, 2);
 
     for (int i = 0; i < 4; i++) {
-      nextBlock.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / HORIZONTAL_TILES));
+      nextBlock.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
     }
     for (int i = 0; i < 4; i++) {
-      nextBlock.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / VERTICAL_TILES));
+      nextBlock.getRowConstraints().add(new RowConstraints(SQUARE_SIZE));
     }
     nextBlock.setGridLinesVisible(true);
     mainGame.add(nextBlock, 2, 0);
@@ -123,10 +125,10 @@ public class Renderer {
    */
   private static void makeBoard(GridPane grid) {
     for (int i = 0; i < HORIZONTAL_TILES; i++) {
-      grid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH / HORIZONTAL_TILES));
+      grid.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
     }
     for (int i = 0; i < VERTICAL_TILES; i++) {
-      grid.getRowConstraints().add(new RowConstraints(SCREEN_HEIGHT / VERTICAL_TILES));
+      grid.getRowConstraints().add(new RowConstraints(SQUARE_SIZE));
     }
     grid.setGridLinesVisible(true);
   }
