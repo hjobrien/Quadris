@@ -22,7 +22,8 @@ public class BoardClient {
   }
   public static String getWeights(Tile[][] testBoard){
     double[] weights = Cerulean.evaluateWeight(testBoard);
-    return "net: " + DoubleStream.of(weights).sum() + " voids: " + weights[0] + " heights: " + weights[1] + " lines: " + weights[2];
+    return "net: " + DoubleStream.of(weights).sum() + " voids: " + weights[0] +
+        " heights: " + weights[1] + " lines: " + weights[2] + " edges: " + weights[3];
   }
   
   public static Tile[][] getBoard(){
@@ -39,17 +40,17 @@ public class BoardClient {
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
 
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
 
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(COLOR), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(COLOR), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(COLOR), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(COLOR), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(COLOR, false), new Tile(COLOR, false), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()}
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()}
 
     };
   }

@@ -1,5 +1,8 @@
 package mainGame;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import cerulean.Cerulean;
@@ -18,8 +21,8 @@ public class Game extends Application {
 
 
   // change these
-  public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
-  public static final int MAX_GAMES = 10;
+  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
+  public static final int MAX_GAMES = 30;
   public static final int MAX_GENERATIONS = 15;
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
                                                     // ever and 1 is a mutation every time
@@ -32,7 +35,7 @@ public class Game extends Application {
   private static boolean randomizeBlocks;
   private static boolean playMultiple; // play multiple games in a row
 
-
+  public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
 
   public static final int MAX_MILLIS_PER_TURN = 1000;
   public static final int MIN_MILLIS_PER_TURN = 100;
@@ -43,6 +46,7 @@ public class Game extends Application {
 
 
   private static AnimationTimer timer;
+  private static PrintStream printer;
   private static int timeScore = 0;
   private static double timePerTurn = MAX_MILLIS_PER_TURN;
 
@@ -52,9 +56,10 @@ public class Game extends Application {
   private boolean dropDownTerminatesBlock = false;
 
   // seeded possible solutions
-  public static double[][] species = new double[][] {{-70, -70, 500}, {-100, -50, 100},
-      {-200, -70, 300}, {-40, -100, 400}, {-200, -50, 100}, {-400, -300, 100}, {-200, -100, 100},
-      {-150, -70, 400}, {-70, -150, 500}, {-200, -35.4, 100}};
+//  public static double[][] species = new double[][] {{-70, -70, 500, 5}, {-100, -50, 100, 2},
+//      {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-200, -50, 100, 0}, {-400, -300, 100, 1}, {-200, -100, 100, 3},
+//      {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
+  public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10, -10, 100, 5}};
 
   private static int currentSpecies = 0;
   private static int generationNum = 0;
@@ -68,7 +73,7 @@ public class Game extends Application {
 
 
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException {
     configureSettings();
 
     launch(args);
@@ -76,8 +81,10 @@ public class Game extends Application {
 
   /**
    * configures the run settings of the game based on the user selected run configuration
+   * @throws FileNotFoundException if AI log file doesn't exist
    */
-  private static void configureSettings() {
+  private static void configureSettings() throws FileNotFoundException {
+    printer = new PrintStream(new File("src/gameLogs/AI output"));
     // setup program settings
     switch (GAME_MODE) {
       case DISTRO:
@@ -102,6 +109,7 @@ public class Game extends Application {
         playMultiple = false;
         break;
       case AUTOPLAY:
+        Cerulean.setWeights(WEIGHTS);
         doDebug = false;
         doLog = false;
         autoplay = true;
@@ -174,6 +182,7 @@ public class Game extends Application {
       if (key.getCode() == KeyCode.ESCAPE) {
         Renderer.writeScores();
         Renderer.close();
+        printer.close();
         System.exit(0);
       } else if (key.getCode() == KeyCode.P) {
         paused = Engine.togglePause();
@@ -304,10 +313,9 @@ public class Game extends Application {
           Engine.update();
           if (Engine.getBoard().isFull()) {
             int score = getScore();
-            System.out.println("Species: " + currentSpecies);
-            System.out.println("Game " + (Engine.getGameNum() + 1) + " score: " + score);
-            System.out.println(Cerulean.getWeights());
-            System.out.println("blocks: " + Engine.getBlockCount());
+            printer.print("Species " + (currentSpecies + 1) + " ");
+            printer.print("Game " + (Engine.getGameNum() + 1) + " score: " + score + " ");
+            printer.println("weights: " + Cerulean.getWeights());
             Renderer.updateHighScores(score);
             timer.stop();
             gameIsActive = false;
@@ -317,7 +325,7 @@ public class Game extends Application {
                 speciesAvgScore[currentSpecies] = Game.getAvgScore();
                 currentSpecies++;
                 if (currentSpecies < species.length) {
-                  Cerulean.updateWeights(species[currentSpecies]);
+                  Cerulean.setWeights(species[currentSpecies]);
                   scoreHistory.clear();
                   resetGame();
                   Engine.resetGameNum();
@@ -328,18 +336,21 @@ public class Game extends Application {
               }
             }
             if (currentSpecies == species.length) {
+              printer.println("--------------------");
               for (double speciesScore : speciesAvgScore) {
-                System.out.println("Average: " + speciesScore);
+                printer.println("Average: " + speciesScore);
               }
+              printer.println("--------------------");
+
               generationNum++;
               if (generationNum < MAX_GENERATIONS) {
-                System.out.println("Breeding...");
+                printer.println("Generation " + generationNum + " over, Breeding...");
                 speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
                 species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
                 currentSpecies = 0;
                 resetGame();
                 Engine.resetGameNum();
-                Cerulean.updateWeights(species[currentSpecies]);
+                Cerulean.setWeights(species[currentSpecies]);
               }
             }
           }

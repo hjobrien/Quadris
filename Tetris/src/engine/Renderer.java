@@ -32,7 +32,7 @@ public class Renderer {
   private static boolean doLog;
 
   public static final int VERTICAL_TILES = 20;
-  public static final int HORIZONTAL_TILES = 8;
+  public static final int HORIZONTAL_TILES = 10;
 
   // height should be double width
   private static final int SCREEN_WIDTH = 300;

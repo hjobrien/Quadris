@@ -1,7 +1,8 @@
 package cerulean;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.DoubleStream;
@@ -35,8 +36,9 @@ public class Cerulean {
 private static final double HEIGHT_WEIGHT = -70;
 private static final double VOID_WEIGHT = -97.85;
 private static final double LINE_WEIGHT = 306.77;
+private static final double EDGE_WEIGHT = 5;
 
-  private static double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT};
+  private static double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT, EDGE_WEIGHT};
 
   // private static final double HEIGHT_WEIGHT = -70;
   // private static final double VOID_WEIGHT = -100;
@@ -231,10 +233,11 @@ private static final double LINE_WEIGHT = 306.77;
    * @return the value of the board
    */
   public static double[] evaluateWeight(Tile[][] boardCopy) {
-    double[] weight = new double[3];
+    double[] weight = new double[4];
     double voids = 0;
     double height = 0;
     double heightScore = 0;
+    double edges = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       Tile[] colCopy = new Tile[boardCopy.length];
       for (int j = 0; j < boardCopy.length; j++) {
@@ -252,6 +255,9 @@ private static final double LINE_WEIGHT = 306.77;
       // value from
       // being 0 in
       // Ternary
+      
+      
+      edges += weights[3] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
     }
     height = weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
     
@@ -261,11 +267,21 @@ private static final double LINE_WEIGHT = 306.77;
       lines +=
           (weights[2] * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
     }
-    // System.out.println("voids: " + voids + " heights: " + height + " lines: " + lines);
     weight[0] = voids;
     weight[1] = height;
     weight[2] = lines;
+    weight[3] = edges;
     return weight;
+  }
+
+  private static double getNumActive(Tile[] colCopy) {
+    int count = 0;
+    for(Tile t : colCopy){
+      if(t.isActive()){
+        count++;
+      }
+    }
+    return count;
   }
 
   private static double getHeightScore(Tile[] colCopy) {
@@ -303,7 +319,6 @@ private static final double LINE_WEIGHT = 306.77;
         numLines++;
       }
     }
-    // if (numLinexrintln(numLines);
     return numLines;
   }
 
@@ -363,15 +378,6 @@ private static final double LINE_WEIGHT = 306.77;
       if(colHeight < extraHeight){
         extraHeight = colHeight;
       }
-//      while (row >= 0 && !foundInRow){
-//        if (boardCopy[row][column].isActive()){
-//          if (row > extraHeight){
-//            extraHeight = row;
-//          }
-//          foundInRow = true;
-//        }
-//        row--;
-//      }
     }
     return extraHeight * 0.1;
   }
@@ -380,7 +386,7 @@ private static final double LINE_WEIGHT = 306.77;
    * allows the AI's weights to be changed for use in AI_TRAINING mode
    * @param newWeights the new weights to be used in the fitness function
    */
-  public static void updateWeights(double[] newWeights) {
+  public static void setWeights(double[] newWeights) {
     weights = newWeights;
   }
 
@@ -400,9 +406,9 @@ private static final double LINE_WEIGHT = 306.77;
    * the part of the code that makes the AI an AI, this method takes in certain 'species' 
    * (the weights) and their associated fitness. It then makes a new generation of species that 
    * share some behavior with their parents
-   * A child is created by first 'crossing over' the two parent genes at some random point such that
+   * A child is created by first 'crossing over' the two parent genes at random points such that
    * (parent 1) xxxxxxxx 
-   *                     =>   (child) xxxooooo
+   *                     =>   (child) oxxooxxx
    * (parent 2) oooooooo
    * then each gene is determined if it should be mutated (related to the mutationFactor)
    * and then if it is to be mutated, the value at that gene is multiplied by some
@@ -436,10 +442,20 @@ private static final double LINE_WEIGHT = 306.77;
     newSpecies[0] = bestCandidate;
     newSpecies[1] = secondCandidate;
     for (int i = 2; i < numSpecies; i++) {
-      int crossoverLocus = rand.nextInt(numSpecies);// the place where the genes will cross over
-      double[] child = Arrays.copyOf(bestCandidate, bestCandidate.length);
-      for (int j = crossoverLocus; j < secondCandidate.length; j++) {
-        child[j] = secondCandidate[j];
+      //single crossover algorithm (works better for long genomes?)
+//      int crossoverLocus = rand.nextInt(numSpecies);// the place where the genes will cross over
+//      double[] child = Arrays.copyOf(bestCandidate, bestCandidate.length);
+//      for (int j = crossoverLocus; j < secondCandidate.length; j++) {
+//        child[j] = secondCandidate[j];
+//      }
+      //many-cross algorithm. this seems to be 'fairer' in that earlier weights change as much as later ones
+      double[] child = new double[bestCandidate.length];
+      for(int j = 0; j < child.length; j++){
+        if(rand.nextBoolean()){
+          child[j] = bestCandidate[j];
+        }else{
+          child[j] = secondCandidate[j];
+        }
       }
       for (int j = 0; j < child.length; j++) {
         double doMutate = rand.nextDouble();
@@ -447,6 +463,8 @@ private static final double LINE_WEIGHT = 306.77;
           double mutationAmount = rand.nextDouble() + 0.5; // shifts the random from 0-1 to 0.5-1.5
           child[j] *= mutationAmount;
         }
+        //rounds to 2 decimal places safely
+        child[j] = new BigDecimal(child[j]).setScale(2, RoundingMode.HALF_UP).doubleValue();
       }
       newSpecies[i] = child;
     }
