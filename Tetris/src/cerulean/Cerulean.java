@@ -234,6 +234,7 @@ private static final double EDGE_WEIGHT = 5;
    */
   public static double[] evaluateWeight(Tile[][] boardCopy) {
     double[] weight = new double[4];
+    boolean full = false;
     double voids = 0;
     double height = 0;
     double heightScore = 0;
@@ -242,6 +243,9 @@ private static final double EDGE_WEIGHT = 5;
       Tile[] colCopy = new Tile[boardCopy.length];
       for (int j = 0; j < boardCopy.length; j++) {
         colCopy[j] = boardCopy[j][i];
+      }
+      if(colCopy[0].isFilled()){
+        full = true;
       }
       
       double tempHeightScore = getHeightScore(colCopy) + getExtraHeightScore(boardCopy);
@@ -267,10 +271,18 @@ private static final double EDGE_WEIGHT = 5;
       lines +=
           (weights[2] * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
     }
-    weight[0] = voids;
-    weight[1] = height;
-    weight[2] = lines;
-    weight[3] = edges;
+    if(!full){
+      weight[0] = voids;
+      weight[1] = height;
+      weight[2] = lines;
+      weight[3] = edges;
+    }
+    else{
+      weight[0] = -10000000;
+      weight[1] = -10000000;
+      weight[2] = -10000000;
+      weight[3] = -10000000;
+    }
     return weight;
   }
 

@@ -21,7 +21,7 @@ public class Game extends Application {
 
 
   // change these
-  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
+  public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
   public static final int MAX_GAMES = 30;
   public static final int MAX_GENERATIONS = 15;
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
@@ -53,13 +53,13 @@ public class Game extends Application {
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
-  private boolean dropDownTerminatesBlock = false;
+  private static boolean dropDownTerminatesBlock = true;
 
   // seeded possible solutions
-//  public static double[][] species = new double[][] {{-70, -70, 500, 5}, {-100, -50, 100, 2},
-//      {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-200, -50, 100, 0}, {-400, -300, 100, 1}, {-200, -100, 100, 3},
-//      {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
-  public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10, -10, 100, 5}};
+  public static double[][] species = new double[][] {{-70, -70, 500, 5}, {-100, -50, 100, 2},
+      {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-200, -50, 100, 0}, {-400, -300, 100, 1}, {-200, -100, 100, 3},
+      {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
+//  public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10, -10, 100, 5}};
 
   private static int currentSpecies = 0;
   private static int generationNum = 0;
@@ -97,10 +97,10 @@ public class Game extends Application {
         playMultiple = false;
         break;
       case DEBUG:
-        doDebug = true;
-        doLog = true;
+        doDebug = false;
+        doLog = false;
         autoplay = false;
-        randomizeBlocks = true;
+        randomizeBlocks = false;
         playMultiple = false;
         break;
       case LOGGER:
@@ -112,6 +112,7 @@ public class Game extends Application {
         break;
       case AUTOPLAY:
         Cerulean.setWeights(WEIGHTS);
+        dropDownTerminatesBlock = false;
         doDebug = false;
         doLog = false;
         autoplay = true;
@@ -119,6 +120,7 @@ public class Game extends Application {
         playMultiple = false;
         break;
       case AI_TRAINING:
+        dropDownTerminatesBlock = false;
         playMultiple = true;
         doDebug = false;
         doLog = false;
@@ -259,6 +261,7 @@ public class Game extends Application {
    * resets the game when called, typically after a loss
    */
   public static void resetGame() {
+    printer.flush();
     speciesAvgScore[currentSpecies] = getAvgScore();
     gameIsActive = true;
     Renderer.writeScores();
