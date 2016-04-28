@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 public class TBlock extends Block {
 		
 	private static BlockType type = BlockType.T_BLOCK;
-	public static final Color COLOR = Color.AQUAMARINE;
+	public static final Color COLOR = Color.CYAN;
 	
 	//[change this index for rotations][row][column]
 	public static final Tile[][][] CONFIGURATIONS = new Tile[][][]{

@@ -213,7 +213,7 @@ public class Board {
     // this if is a hacky fix to stop the game from freezing under certain unknown conditions when
     // it should be resetting instead
     if (fallingBlock.getGridLocation()[1] < -4) {
-      Game.resetGame();
+      Game.resetGame(true);
       System.err.println("Freeze detected: resetting now...");
       return false;
     }

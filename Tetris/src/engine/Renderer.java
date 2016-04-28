@@ -80,13 +80,6 @@ public class Renderer {
 
     // if we only make 1 board and it's in engine, we can always just receive the boardState
     // from engine when we need it and we wont have to be translating boardStates
-    GridPane grid = new GridPane();
-    GridPane nextBlock = new GridPane();
-    Engine.setMode(doDebug, doLog, autoplay);
-    Board.setMode(doDebug);
-    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
-    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-    Engine.setBoards(gameBoard, nextPieceBoard);
     GridPane mainGame = new GridPane();
     mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
     mainGame.getColumnConstraints().add(new ColumnConstraints(20));
@@ -100,7 +93,13 @@ public class Renderer {
     valueProperty.setValue("0");
     scoreText.textProperty().bind(valueProperty);
     mainGame.add(scoreText, 2, 2);
-
+    GridPane grid = new GridPane();
+    GridPane nextBlock = new GridPane();
+    Engine.setMode(doDebug, doLog, autoplay);
+    Board.setMode(doDebug);
+    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
+    Engine.setBoards(gameBoard, nextPieceBoard);
     for (int i = 0; i < 4; i++) {
       nextBlock.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
     }

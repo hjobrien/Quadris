@@ -15,13 +15,14 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Game extends Application {
 
 
   // change these
-  public static final GameMode GAME_MODE = GameMode.AI_TRAINING;
+  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
   public static final int MAX_GAMES = 30;
   public static final int MAX_GENERATIONS = 15;
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
@@ -35,11 +36,16 @@ public class Game extends Application {
   private static boolean randomizeBlocks;
   private static boolean playMultiple; // play multiple games in a row
 
-  public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
+  // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
+  public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
+
 
   public static final int MAX_MILLIS_PER_TURN = 1000;
   public static final int MIN_MILLIS_PER_TURN = 100;
 
+  public static final int VERTICAL_TILES = 20;
+  public static final int HORIZONTAL_TILES = 10;
+  private static final int SQUARE_SIZE = 29;
 
   // if nintendo scoring = false, hank/liam scoring is used
   public static final boolean NINTENDO_SCORING = false;
@@ -57,9 +63,11 @@ public class Game extends Application {
 
   // seeded possible solutions
   public static double[][] species = new double[][] {{-70, -70, 500, 5}, {-100, -50, 100, 2},
-      {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-200, -50, 100, 0}, {-400, -300, 100, 1}, {-200, -100, 100, 3},
-      {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
-//  public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10, -10, 100, 5}};
+      {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-200, -50, 100, 0}, {-400, -300, 100, 1},
+      {-200, -100, 100, 3}, {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8},
+      {-294.75, -34.44, 101.72, 5}};
+  // public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10,
+  // -10, 100, 5}};
 
   private static int currentSpecies = 0;
   private static int generationNum = 0;
@@ -81,12 +89,27 @@ public class Game extends Application {
 
   /**
    * configures the run settings of the game based on the user selected run configuration
+   * 
    * @throws IOException if the file cannot be created or it cannot be found
    */
-  private static void configureSettings() throws IOException {
-    File aiLogFile = new File("src/gameLogs/AI output" + System.currentTimeMillis());
-    aiLogFile.createNewFile();
-    printer = new PrintStream(aiLogFile);
+  public static void configureSettings() {
+    if (GAME_MODE == GameMode.AI_TRAINING) {
+      File aiLogFile = new File("src/gameLogs/AI output" + System.currentTimeMillis());
+      try {
+        aiLogFile.createNewFile();
+        printer = new PrintStream(aiLogFile);
+      } catch (IOException e) {
+        System.err.println("Error on file creation");
+      }
+    }
+
+    GridPane grid = new GridPane();
+    GridPane nextBlock = new GridPane();
+    Engine.setMode(doDebug, doLog, autoplay);
+    Board.setMode(doDebug);
+    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
+    Engine.setBoards(gameBoard, nextPieceBoard);
     // setup program settings
     switch (GAME_MODE) {
       case DISTRO:
@@ -152,12 +175,121 @@ public class Game extends Application {
 
     stage.setScene(boardScene);
 
-    timer = configureTimer();
+    timer = configureTimer(true);
     timer.start();
 
 
     stage.show();
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+  }
+
+  public void run(boolean randomizeBlocks, boolean useGraphics) {
+    long pastTime = 0;
+    Engine.setRandomizeBlocks(randomizeBlocks);
+    timer = configureTimer(useGraphics);
+    timer.start();
+
+    Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+    while (!Engine.getBoard().isFull()) {
+      long now = System.currentTimeMillis();
+      if (!paused && now - pastTime >= timePerTurn) {
+        update(useGraphics);
+        pastTime = now;
+      }
+    }
+  }
+
+  private void update(boolean useGraphics) {
+     Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(),
+     Engine.getBoard().getNumOfFullRows());
+
+    Engine.update();
+    if (Engine.getBoard().isFull()) {
+      int score = getScore();
+      System.out.println("Game " + (Engine.getGameNum() + 1) + ": " + score);
+      if (useGraphics)
+        Renderer.updateHighScores(score);
+      gameIsActive = false;
+      timer.stop();
+
+      if (GAME_MODE == GameMode.AI_TRAINING) {
+
+        printer.print("Species " + (currentSpecies + 1) + " ");
+        printer.print("Game " + (Engine.getGameNum() + 1) + " score: " + score + " ");
+        printer.println("weights: " + Cerulean.getWeights());
+        scoreHistory.add(getScore());
+        if (currentSpecies < species.length) {
+          if (playMultiple && Engine.getGameNum() == MAX_GAMES - 1) {
+            speciesAvgScore[currentSpecies] = Game.getAvgScore();
+            currentSpecies++;
+            if (currentSpecies < species.length) {
+              Cerulean.setWeights(species[currentSpecies]);
+              scoreHistory.clear();
+              resetGame(useGraphics);
+              Engine.resetGameNum();
+            }
+
+          } else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
+            resetGame(useGraphics);
+          }
+        }
+        if (currentSpecies == species.length) {
+          printer.println("--------------------");
+          for (double speciesScore : speciesAvgScore) {
+            printer.println("Average: " + speciesScore);
+          }
+          printer.println("--------------------");
+
+          generationNum++;
+          if (generationNum < MAX_GENERATIONS) {
+            printer.println("Generation " + generationNum + " over, Breeding...");
+            speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
+            species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
+            currentSpecies = 0;
+            resetGame(useGraphics);
+            Engine.resetGameNum();
+            Cerulean.setWeights(species[currentSpecies]);
+          }
+        }
+      } else {
+        resetGame(useGraphics);
+      }
+    }
+    if (useGraphics)
+      Renderer.draw(Engine.getBoard());
+
+    if (!paused) {
+      if (!NINTENDO_SCORING) {
+        timeScore++;
+      }
+    }
+    if (autoplay) {
+      timePerTurn = MIN_MILLIS_PER_TURN;
+    } else {
+      timePerTurn = updateTime(timePerTurn);
+    }
+
+  }
+
+  /**
+   * Aims to change the number of real-world seconds between each game tick without acceleration
+   * 
+   * @param turnTime the current time it takes for one tick
+   * @return a new number of milliseconds for the next tick
+   */
+  private double updateTime(double turnTime) {
+    if (NINTENDO_SCORING) {
+      // probably not the best algorithm
+      return MAX_MILLIS_PER_TURN - (0.09 * getScore());
+    } else {
+      if (turnTime > MIN_MILLIS_PER_TURN) {
+        return MAX_MILLIS_PER_TURN - (0.09 * getScore());
+        // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
+      } else {
+        return MIN_MILLIS_PER_TURN;
+      }
+    }
+
   }
 
   /**
@@ -186,7 +318,8 @@ public class Game extends Application {
       if (key.getCode() == KeyCode.ESCAPE) {
         Renderer.writeScores();
         Renderer.close();
-        printer.close();
+        if (GAME_MODE == GameMode.AI_TRAINING)
+          printer.close();
         System.exit(0);
       } else if (key.getCode() == KeyCode.P) {
         paused = Engine.togglePause();
@@ -196,7 +329,7 @@ public class Game extends Application {
           Renderer.unpause();
         }
       } else if (key.getCode() == KeyCode.R) {
-        resetGame();
+        resetGame(true);
 
       }
       if (!paused) {
@@ -260,11 +393,14 @@ public class Game extends Application {
   /**
    * resets the game when called, typically after a loss
    */
-  public static void resetGame() {
-    printer.flush();
-    speciesAvgScore[currentSpecies] = getAvgScore();
+  public static void resetGame(boolean useGraphics) {
+    if (GAME_MODE == GameMode.AI_TRAINING) {
+      printer.flush();
+      speciesAvgScore[currentSpecies] = getAvgScore();
+    }
     gameIsActive = true;
-    Renderer.writeScores();
+    if (useGraphics)    //TODO: remove, switch to Logger class
+      Renderer.writeScores();
     Engine.reset();
     Engine.getBoard().clearBoard();
     Game.timeScore = 0;
@@ -296,7 +432,7 @@ public class Game extends Application {
    * 
    * @return a fully configured AnimationTimer instance
    */
-  private AnimationTimer configureTimer() {
+  private AnimationTimer configureTimer(boolean useGraphics) {
     return new AnimationTimer() {
       private long pastTime;
 
@@ -309,91 +445,7 @@ public class Game extends Application {
       @Override
       public void handle(long time) {
 
-        long now = System.currentTimeMillis();
-        if (!paused && now - pastTime >= timePerTurn) {
-
-          Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(),
-              Engine.getBoard().getNumOfFullRows());
-
-          Engine.update();
-          if (Engine.getBoard().isFull()) {
-            int score = getScore();
-            printer.print("Species " + (currentSpecies + 1) + " ");
-            printer.print("Game " + (Engine.getGameNum() + 1) + " score: " + score + " ");
-            printer.println("weights: " + Cerulean.getWeights());
-            Renderer.updateHighScores(score);
-            timer.stop();
-            gameIsActive = false;
-            scoreHistory.add(getScore());
-            if (currentSpecies < species.length) {
-              if (playMultiple && Engine.getGameNum() == MAX_GAMES - 1) {
-                speciesAvgScore[currentSpecies] = Game.getAvgScore();
-                currentSpecies++;
-                if (currentSpecies < species.length) {
-                  Cerulean.setWeights(species[currentSpecies]);
-                  scoreHistory.clear();
-                  resetGame();
-                  Engine.resetGameNum();
-                }
-
-              } else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
-                resetGame();
-              }
-            }
-            if (currentSpecies == species.length) {
-              printer.println("--------------------");
-              for (double speciesScore : speciesAvgScore) {
-                printer.println("Average: " + speciesScore);
-              }
-              printer.println("--------------------");
-
-              generationNum++;
-              if (generationNum < MAX_GENERATIONS) {
-                printer.println("Generation " + generationNum + " over, Breeding...");
-                speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
-                species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
-                currentSpecies = 0;
-                resetGame();
-                Engine.resetGameNum();
-                Cerulean.setWeights(species[currentSpecies]);
-              }
-            }
-          }
-          Renderer.draw(Engine.getBoard());
-          pastTime = now;
-        }
-        if (!paused) {
-          if (!NINTENDO_SCORING) {
-            timeScore++;
-          }
-        }
-        if (autoplay) {
-          timePerTurn = MIN_MILLIS_PER_TURN;
-        } else {
-          timePerTurn = updateTime(timePerTurn);
-        }
-
-
-      }
-
-      /**
-       * Aims to change the number of real-world seconds between each game tick without acceleration
-       * 
-       * @param turnTime the current time it takes for one tick
-       * @return a new number of milliseconds for the next tick
-       */
-      private double updateTime(double turnTime) {
-        if (NINTENDO_SCORING) {
-          // probably not the best algorithm
-          return MAX_MILLIS_PER_TURN - (0.09 * getScore());
-        } else {
-          if (turnTime > MIN_MILLIS_PER_TURN) {
-            return MAX_MILLIS_PER_TURN - (0.09 * getScore());
-            // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
-          } else {
-            return MIN_MILLIS_PER_TURN;
-          }
-        }
+        update(useGraphics);
 
       }
     };
