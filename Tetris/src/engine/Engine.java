@@ -87,6 +87,7 @@ public class Engine {
     // board.getGrid().fireEvent(new BlockAddedEvent(nextBlock, board.getBoardState()));
     // }
     Move[] solution = null;
+    long now = System.currentTimeMillis();
     if (autoplay) {
       solution = Cerulean.submitBlock(nextBlock, board.getBoardState());
     }
@@ -101,6 +102,8 @@ public class Engine {
         Engine.getBoard().pressed(m);
       }
     }
+    //time for evaluation and movement of block
+//    System.out.println("\t\t" + (System.currentTimeMillis() -now));
     if (randomizeBlocks)
       nextBlock = genRandomBlock();
     else

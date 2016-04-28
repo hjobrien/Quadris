@@ -183,26 +183,32 @@ public class Game extends Application {
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
-  public void run(boolean randomizeBlocks, boolean useGraphics) {
+  public void run(boolean randomizeBlocks, boolean useGraphics) throws IOException {
+
     long pastTime = 0;
     Engine.setRandomizeBlocks(randomizeBlocks);
-    timer = configureTimer(useGraphics);
-    timer.start();
+    if (useGraphics) {
+      launch();
+    } else {
+      timer = configureTimer(useGraphics);
+      timer.start();
 
-    Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-    while (!Engine.getBoard().isFull()) {
-      long now = System.currentTimeMillis();
-      if (!paused && now - pastTime >= timePerTurn) {
-        update(useGraphics);
-        pastTime = now;
+      Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+      while (!Engine.getBoard().isFull()) {
+        long now = System.currentTimeMillis();
+        if (!paused && now - pastTime >= timePerTurn) {
+          update(useGraphics);
+          pastTime = now;
+        }
       }
     }
   }
 
   private void update(boolean useGraphics) {
-     Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(),
-     Engine.getBoard().getNumOfFullRows());
-
+    if (useGraphics) {
+      Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(),
+          Engine.getBoard().getNumOfFullRows());
+    }
     Engine.update();
     if (Engine.getBoard().isFull()) {
       int score = getScore();
@@ -399,7 +405,7 @@ public class Game extends Application {
       speciesAvgScore[currentSpecies] = getAvgScore();
     }
     gameIsActive = true;
-    if (useGraphics)    //TODO: remove, switch to Logger class
+    if (useGraphics) // TODO: remove, switch to Logger class
       Renderer.writeScores();
     Engine.reset();
     Engine.getBoard().clearBoard();
@@ -444,8 +450,11 @@ public class Game extends Application {
 
       @Override
       public void handle(long time) {
-
-        update(useGraphics);
+        long now = System.currentTimeMillis();
+        if (now - pastTime >= timePerTurn) {
+          update(useGraphics);
+          pastTime = now;
+        }
 
       }
     };
