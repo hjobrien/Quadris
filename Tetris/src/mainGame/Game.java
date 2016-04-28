@@ -40,8 +40,8 @@ public class Game extends Application {
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
 
 
-  public static final int MAX_MILLIS_PER_TURN = 1000;
-  public static final int MIN_MILLIS_PER_TURN = 100;
+  private int maxTimePerTurn = 1000;
+  private int minTimePerTurn = 1;
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
@@ -54,7 +54,7 @@ public class Game extends Application {
   private static AnimationTimer timer;
   private static PrintStream printer;
   private static int timeScore = 0;
-  private static double timePerTurn = MAX_MILLIS_PER_TURN;
+  private double timePerTurn = maxTimePerTurn;
 
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
@@ -79,20 +79,27 @@ public class Game extends Application {
 
   private static boolean gameIsActive = true;
 
-
-
-  public static void main(String[] args) throws IOException {
-    configureSettings();
-
-    launch(args);
+  public Game(){
+    //needed for GUI, no other reason
   }
+
+  public Game(int minTimePerTurn){
+    this();
+    this.minTimePerTurn = minTimePerTurn;
+  }
+
+//  public static void main(String[] args) throws IOException {
+//    configureSettings();
+//
+//    launch(args);
+//  }
 
   /**
    * configures the run settings of the game based on the user selected run configuration
    * 
    * @throws IOException if the file cannot be created or it cannot be found
    */
-  public static void configureSettings() {
+  public void configureSettings() {
     if (GAME_MODE == GameMode.AI_TRAINING) {
       File aiLogFile = new File("src/gameLogs/AI output" + System.currentTimeMillis());
       try {
@@ -183,6 +190,10 @@ public class Game extends Application {
     Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
+  public void run(boolean randomizeBlocks) throws IOException{
+    run(randomizeBlocks, false);
+  }
+  
   public void run(boolean randomizeBlocks, boolean useGraphics) throws IOException {
 
     long pastTime = 0;
@@ -226,7 +237,7 @@ public class Game extends Application {
         scoreHistory.add(getScore());
         if (currentSpecies < species.length) {
           if (playMultiple && Engine.getGameNum() == MAX_GAMES - 1) {
-            speciesAvgScore[currentSpecies] = Game.getAvgScore();
+            speciesAvgScore[currentSpecies] = this.getAvgScore();
             currentSpecies++;
             if (currentSpecies < species.length) {
               Cerulean.setWeights(species[currentSpecies]);
@@ -249,7 +260,7 @@ public class Game extends Application {
           generationNum++;
           if (generationNum < MAX_GENERATIONS) {
             printer.println("Generation " + generationNum + " over, Breeding...");
-            speciesAvgScore[speciesAvgScore.length - 1] = Game.getAvgScore();
+            speciesAvgScore[speciesAvgScore.length - 1] = this.getAvgScore();
             species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
             currentSpecies = 0;
             resetGame(useGraphics);
@@ -270,7 +281,7 @@ public class Game extends Application {
       }
     }
     if (autoplay) {
-      timePerTurn = MIN_MILLIS_PER_TURN;
+      timePerTurn = minTimePerTurn;
     } else {
       timePerTurn = updateTime(timePerTurn);
     }
@@ -286,13 +297,13 @@ public class Game extends Application {
   private double updateTime(double turnTime) {
     if (NINTENDO_SCORING) {
       // probably not the best algorithm
-      return MAX_MILLIS_PER_TURN - (0.09 * getScore());
+      return maxTimePerTurn - (0.09 * getScore());
     } else {
-      if (turnTime > MIN_MILLIS_PER_TURN) {
-        return MAX_MILLIS_PER_TURN - (0.09 * getScore());
+      if (turnTime > minTimePerTurn) {
+        return maxTimePerTurn - (0.09 * getScore());
         // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
       } else {
-        return MIN_MILLIS_PER_TURN;
+        return minTimePerTurn;
       }
     }
 
@@ -303,7 +314,7 @@ public class Game extends Application {
    * 
    * @return the candidates average score
    */
-  private static double getAvgScore() {
+  private double getAvgScore() {
     double total = 0;
     for (Integer i : scoreHistory) {
       total += i;
@@ -399,7 +410,7 @@ public class Game extends Application {
   /**
    * resets the game when called, typically after a loss
    */
-  public static void resetGame(boolean useGraphics) {
+  public void resetGame(boolean useGraphics) {
     if (GAME_MODE == GameMode.AI_TRAINING) {
       printer.flush();
       speciesAvgScore[currentSpecies] = getAvgScore();
@@ -410,7 +421,7 @@ public class Game extends Application {
     Engine.reset();
     Engine.getBoard().clearBoard();
     Game.timeScore = 0;
-    timePerTurn = MAX_MILLIS_PER_TURN;
+    timePerTurn = maxTimePerTurn;
     timer.start();
     Engine.addBlock();
 
@@ -421,7 +432,7 @@ public class Game extends Application {
    *
    * @return the score as a sum of the time score and the lines cleared score
    */
-  private int getScore() {
+  public int getScore() {
     return (timeScore + Engine.getBoard().getBoardScore());
   }
 
@@ -460,7 +471,7 @@ public class Game extends Application {
     };
   }
 
-  public static void togglePause() {
+  public void togglePause() {
     paused = !paused;
   }
 }
