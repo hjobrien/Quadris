@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import blocks.Tile;
 import cerulean.Cerulean;
 import engine.Engine;
 import engine.GameMode;
@@ -22,7 +23,7 @@ public class Game extends Application {
 
 
   // change these
-  public static final GameMode GAME_MODE = GameMode.AUTOPLAY;
+  public static final GameMode GAME_MODE = GameMode.DISTRO;
   public static final int MAX_GAMES = 30;
   public static final int MAX_GENERATIONS = 15;
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
@@ -56,6 +57,10 @@ public class Game extends Application {
   private static int timeScore = 0;
   private double timePerTurn = maxTimePerTurn;
 
+  private static Tile[][] gameBoard = new Tile[VERTICAL_TILES][HORIZONTAL_TILES];
+  private Engine engine;
+  private Renderer renderer;
+  
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
@@ -80,6 +85,8 @@ public class Game extends Application {
   private static boolean gameIsActive = true;
 
   public Game(){
+    renderer = new Renderer(doDebug);
+    System.out.println("called");
     //needed for GUI, no other reason
   }
 
@@ -112,11 +119,11 @@ public class Game extends Application {
 
     GridPane grid = new GridPane();
     GridPane nextBlock = new GridPane();
-    Engine.setMode(doDebug, doLog, autoplay);
-    Board.setMode(doDebug);
-    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
-    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-    Engine.setBoards(gameBoard, nextPieceBoard);
+    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog, renderer);
+//    Board.setMode(doDebug);
+//    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+//    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
+//    Engine.setBoards(gameBoard, nextPieceBoard);
     // setup program settings
     switch (GAME_MODE) {
       case DISTRO:
@@ -170,10 +177,8 @@ public class Game extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
-    Renderer.setMode(doDebug, doLog, autoplay);
-    Scene boardScene = Renderer.makeGame();
-    Renderer.draw(Engine.getBoard());
-    Engine.setRandomizeBlocks(randomizeBlocks);
+    Scene boardScene = renderer.makeGame();
+//    Renderer.draw(Engine.getBoard());
     if (!autoplay) {
       stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
     }
@@ -187,25 +192,25 @@ public class Game extends Application {
 
 
     stage.show();
-    Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+    engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
-  public void run(boolean randomizeBlocks) throws IOException{
-    run(randomizeBlocks, false);
+  public int run(boolean randomizeBlocks) throws IOException{
+    return run(randomizeBlocks, false);
   }
   
-  public void run(boolean randomizeBlocks, boolean useGraphics) throws IOException {
-
+  public int run(boolean randomizeBlocks, boolean useGraphics) throws IOException {
+    configureSettings();
     long pastTime = 0;
-    Engine.setRandomizeBlocks(randomizeBlocks);
+//    Engine.setRandomizeBlocks(randomizeBlocks);
     if (useGraphics) {
       launch();
     } else {
       timer = configureTimer(useGraphics);
       timer.start();
 
-      Engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-      while (!Engine.getBoard().isFull()) {
+      engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+      while (!engine.hasFullBoard()) {
         long now = System.currentTimeMillis();
         if (!paused && now - pastTime >= timePerTurn) {
           update(useGraphics);
@@ -213,40 +218,42 @@ public class Game extends Application {
         }
       }
     }
+    return getScore();
+
   }
 
   private void update(boolean useGraphics) {
     if (useGraphics) {
-      Renderer.updateScore(timeScore + Engine.getBoard().getBoardScore(),
-          Engine.getBoard().getNumOfFullRows());
+      renderer.updateScore(timeScore + engine.getScore(),
+          engine.getNumFullRows());
     }
-    Engine.update();
-    if (Engine.getBoard().isFull()) {
+    engine.update();
+    if (engine.hasFullBoard()) {
       int score = getScore();
-      System.out.println("Game " + (Engine.getGameNum() + 1) + ": " + score);
+      System.out.println("Game " + (engine.getGameNum() + 1) + ": " + score);
       if (useGraphics)
-        Renderer.updateHighScores(score);
+        renderer.updateHighScores(score);
       gameIsActive = false;
       timer.stop();
 
       if (GAME_MODE == GameMode.AI_TRAINING) {
 
         printer.print("Species " + (currentSpecies + 1) + " ");
-        printer.print("Game " + (Engine.getGameNum() + 1) + " score: " + score + " ");
+        printer.print("Game " + (engine.getGameNum() + 1) + " score: " + score + " ");
         printer.println("weights: " + Cerulean.getWeights());
         scoreHistory.add(getScore());
         if (currentSpecies < species.length) {
-          if (playMultiple && Engine.getGameNum() == MAX_GAMES - 1) {
+          if (playMultiple && engine.getGameNum() == MAX_GAMES - 1) {
             speciesAvgScore[currentSpecies] = this.getAvgScore();
             currentSpecies++;
             if (currentSpecies < species.length) {
               Cerulean.setWeights(species[currentSpecies]);
               scoreHistory.clear();
               resetGame(useGraphics);
-              Engine.resetGameNum();
+              engine.resetGameNum();
             }
 
-          } else if (playMultiple && Engine.getGameNum() < MAX_GAMES - 1) {
+          } else if (playMultiple && engine.getGameNum() < MAX_GAMES - 1) {
             resetGame(useGraphics);
           }
         }
@@ -264,7 +271,7 @@ public class Game extends Application {
             species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
             currentSpecies = 0;
             resetGame(useGraphics);
-            Engine.resetGameNum();
+            engine.resetGameNum();
             Cerulean.setWeights(species[currentSpecies]);
           }
         }
@@ -273,7 +280,7 @@ public class Game extends Application {
       }
     }
     if (useGraphics)
-      Renderer.draw(Engine.getBoard());
+      renderer.draw(engine.getBoardState());
 
     if (!paused) {
       if (!NINTENDO_SCORING) {
@@ -333,24 +340,24 @@ public class Game extends Application {
     @Override
     public void handle(KeyEvent key) {
       if (key.getCode() == KeyCode.ESCAPE) {
-        Renderer.writeScores();
-        Renderer.close();
+        renderer.writeScores();
+        renderer.close();
         if (GAME_MODE == GameMode.AI_TRAINING)
           printer.close();
         System.exit(0);
       } else if (key.getCode() == KeyCode.P) {
-        paused = Engine.togglePause();
+        paused = engine.togglePause();
         if (paused) {
-          Renderer.pause();
+          renderer.pause();
         } else {
-          Renderer.unpause();
+          renderer.unpause();
         }
       } else if (key.getCode() == KeyCode.R) {
         resetGame(true);
 
       }
       if (!paused) {
-        Renderer.draw(Engine.getBoard());
+        renderer.draw(engine.getBoardState());
       }
     }
 
@@ -367,31 +374,31 @@ public class Game extends Application {
 
     @Override
     public void handle(KeyEvent key) {
-      if (!paused && Engine.getBoard().rowsAreNotFalling() && !Engine.getBoard().full) {
+      if (!paused && engine.rowsAreNotFalling() && !engine.hasFullBoard()) {
         switch (key.getCode()) {
           case RIGHT:
-            Engine.getBoard().pressed(Move.RIGHT);
+            engine.executeMove(Move.RIGHT);
             break;
           case LEFT:
-            Engine.getBoard().pressed(Move.LEFT);
+            engine.executeMove(Move.LEFT);
             break;
           case X:
-            Engine.getBoard().pressed(Move.ROT_RIGHT);
+            engine.executeMove(Move.ROT_RIGHT);
             break;
           case Z:
-            Engine.getBoard().pressed(Move.ROT_LEFT);
+            engine.executeMove(Move.ROT_LEFT);
             break;
           case DOWN:
-            Engine.getBoard().pressed(Move.DOWN);
+            engine.executeMove(Move.DOWN);
             break;
           case SPACE:
-            Engine.getBoard().pressed(Move.DROP);
+            engine.executeMove(Move.DROP);
             if (dropDownTerminatesBlock)
-              Engine.update();
+              engine.update();
             break;
           case UP:
             if (doDebug) {
-              Engine.getBoard().pressed(Move.UP);
+              engine.executeMove(Move.UP);
             }
             break;
           default:
@@ -399,7 +406,7 @@ public class Game extends Application {
             break;
         }
         if (!paused) {
-          Renderer.draw(Engine.getBoard());
+          renderer.draw(engine.getBoardState());
         }
       }
     }
@@ -417,13 +424,13 @@ public class Game extends Application {
     }
     gameIsActive = true;
     if (useGraphics) // TODO: remove, switch to Logger class
-      Renderer.writeScores();
-    Engine.reset();
-    Engine.getBoard().clearBoard();
+      renderer.writeScores();
+    engine.reset();
+    engine.clearBoard();
     Game.timeScore = 0;
     timePerTurn = maxTimePerTurn;
     timer.start();
-    Engine.addBlock();
+    engine.addBlock();
 
   }
 
@@ -433,7 +440,7 @@ public class Game extends Application {
    * @return the score as a sum of the time score and the lines cleared score
    */
   public int getScore() {
-    return (timeScore + Engine.getBoard().getBoardScore());
+    return (timeScore + engine.getScore());
   }
 
   /**

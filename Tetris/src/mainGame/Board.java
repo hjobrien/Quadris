@@ -8,11 +8,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+@Deprecated
 public class Board {
   private Tile[][] boardState;
   private Block fallingBlock;
   private GridPane grid;
-  public boolean blockAdded = false;
+//  private boolean blockAdded = false;
   private Rectangle[][] boardRects;
   private int numOfFullRows = 0;
 
@@ -22,12 +23,12 @@ public class Board {
   boolean full = false;
 
   // for debugging
-  private static boolean debugMode = false;
+  private boolean debugMode = false;
   // private static boolean debugMode = true;
 
   int boardScore = 0;
 
-  // three extra blocks so that the straight all blocks
+  // three extra blocks so that all blocks
   // (particularly the straight line) can rotate
   // when they are initialized
   /**
@@ -683,8 +684,8 @@ public class Board {
    * 
    * @param debugMode whether the object should print out its debug information
    */
-  public static void setMode(boolean debugMode/* , boolean logMode */) {
-    Board.debugMode = debugMode;
+  public void setMode(boolean debugMode/* , boolean logMode */) {
+    this.debugMode = debugMode;
     // this.logMode = logMode;
   }
 

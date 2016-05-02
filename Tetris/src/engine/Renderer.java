@@ -22,14 +22,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import mainGame.Board;
 
 public class Renderer {
 
 
-  private static boolean doDebug;
+  private boolean doDebug;
 
-  private static boolean doLog;
+//  private boolean doLog;
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
@@ -40,39 +41,51 @@ public class Renderer {
 
   private static final int GAME_WIDTH = SCREEN_WIDTH + 175;
   private static final int GAME_HEIGHT = SCREEN_HEIGHT - 20;
-  
+
   private static final int HELP_HEIGHT = GAME_HEIGHT - 210;
   private static final int HELP_WIDTH = GAME_WIDTH;
-  
+
   private static final int SQUARE_SIZE = 29;
-  
-  private static PrintStream scorePrinter;
-  private static Scanner scoreReader;
-  private static TextArea scoreList = null;
-  private static StackPane pauseView;
-  private static StringProperty valueProperty;
-  private static boolean autoplay = false;
-  
-  private static ArrayList<Integer> highScores = null; // need to put this here because i can't make a
-                                                       // local variable passed to a method in the listener
+
+  private static final Rectangle[][] MAIN_BOARD_RECTS =
+      new Rectangle[VERTICAL_TILES][HORIZONTAL_TILES];
+
+  private PrintStream scorePrinter;
+  private Scanner scoreReader;
+  private TextArea scoreList = null;
+  private StackPane pauseView;
+  private StringProperty valueProperty;
+//  private boolean autoplay = false;
+
+//  private Engine engine;
+
+  private ArrayList<Integer> highScores = null; // need to put this here because i can't make
+                                                       // a
+                                                       // local variable passed to a method in the
+                                                       // listener
 
   /**
    * initialize the run values of the object
-   * @param doDebug     whether the object should print out its debug information
-   * @param doLog       whether the object should log its behavior
+   * 
+   * @param doDebug whether the object should print out its debug information
+   * @param doLog whether the object should log its behavior
    */
-  public static void setMode(boolean doDebug, boolean doLog, boolean auto){
-    Renderer.doDebug = doDebug;
-    Renderer.doLog = doLog;
-    Renderer.autoplay = auto;
+  public Renderer(boolean doDebug) {
+    this.doDebug = doDebug;
+    for(int i = 0; i < MAIN_BOARD_RECTS.length; i++){
+      for(int j = 0; j < MAIN_BOARD_RECTS[i].length; j++){
+        MAIN_BOARD_RECTS[i][j] = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
+      }
+    }
   }
-  
+
   /**
    * called once to do the basic GUI setup things
-   * @return    A Scene containing the relevant StackPanes and GridPanes, its the main Scene
-   * @throws IOException    if file generation can't find a file or otherwise
+   * 
+   * @return A Scene containing the relevant StackPanes and GridPanes, its the main Scene
+   * @throws IOException if file generation can't find a file or otherwise
    */
-  public static Scene makeGame() throws IOException {
+  public Scene makeGame() throws IOException {
     initializeScorePrinter();
     scoreList = new TextArea();
     scoreList.setText(getScoresForDisplay(highScores));
@@ -95,11 +108,8 @@ public class Renderer {
     mainGame.add(scoreText, 2, 2);
     GridPane grid = new GridPane();
     GridPane nextBlock = new GridPane();
-    Engine.setMode(doDebug, doLog, autoplay);
-    Board.setMode(doDebug);
     Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
     Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-    Engine.setBoards(gameBoard, nextPieceBoard);
     for (int i = 0; i < 4; i++) {
       nextBlock.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
     }
@@ -120,9 +130,10 @@ public class Renderer {
 
   /**
    * formats the GridPane in a way that is appropriate
-   * @param grid    a formatted GridPane
+   * 
+   * @param grid a formatted GridPane
    */
-  private static void makeBoard(GridPane grid) {
+  private void makeBoard(GridPane grid) {
     for (int i = 0; i < HORIZONTAL_TILES; i++) {
       grid.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
     }
@@ -134,10 +145,11 @@ public class Renderer {
 
   /**
    * builds the view displayed when the game is paused
-   * @param highScores  a list of the historical high scores
-   * @return    a StackPane containing the necessary components
+   * 
+   * @param highScores a list of the historical high scores
+   * @return a StackPane containing the necessary components
    */
-  private static StackPane constructPauseView(ArrayList<Integer> highScores) {
+  private StackPane constructPauseView(ArrayList<Integer> highScores) {
     final Label nameLabel = new Label("Quadris");
     nameLabel.setStyle(
         "-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
@@ -226,22 +238,25 @@ public class Renderer {
     glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");
     return glass;
   }
+
   /**
    * formats a string for the instructions view
+   * 
    * @param s1 a key to be pressed (e.g. DOWN)
    * @param s2 the result of the key press (e.g. block down)
    * @return a formatted string based on the parameters
    */
-  public static String getInstructions(String s1, String s2) {
+  public String getInstructions(String s1, String s2) {
     return "\n" + String.format("%20s\t%s", s1, s2);
   }
-  
+
   /**
    * formats the high scores into a display-able version
-   * @param highScores  the list of historical high scores
+   * 
+   * @param highScores the list of historical high scores
    * @return a string containing a formatted version of the parameter
    */
-  private static String getScoresForDisplay(ArrayList<Integer> highScores) {
+  private String getScoresForDisplay(ArrayList<Integer> highScores) {
     String scores = "\n\tHigh Scores:\n\n";
     String a = "";
     for (int i = 0; i < highScores.size(); i++) {
@@ -252,12 +267,14 @@ public class Renderer {
     }
     return scores;
   }
-  
+
   /**
    * called for each engine tick, draws the board
+   * 
    * @param board the board to be drawn
    */
-  public static void draw(Board board) {
+  @Deprecated
+  public void draw(Board board) {
     for (int i = 3; i < board.getBoardState().length; i++) {
       for (int j = 0; j < board.getBoardState()[i].length; j++) {
 
@@ -270,16 +287,35 @@ public class Renderer {
       }
     }
   }
+  
+  /**
+   * called for each engine tick, draws the board
+   * 
+   * @param board the board to be drawn
+   */
+  public void draw(Tile[][] board) {
+    for (int i = 3; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+
+        Tile current = board[i][j];
+        if (current.isFilled()) {
+          MAIN_BOARD_RECTS[i - 3][j].setFill(current.getColor());
+        } else {
+          MAIN_BOARD_RECTS[i - 3][j].setFill(Color.WHITE);
+        }
+      }
+    }
+  }
 
   // maybe do more here, for right now it's its own method
-  public static void pause() {
+  public void pause() {
     pauseView.setVisible(true);
   }
 
   /**
    * ends pause view by hiding parts of the pane
    */
-  public static void unpause() {
+  public void unpause() {
     pauseView.setVisible(false);
     for (Node child : pauseView.getChildren()) {
       if ((child instanceof StackPane)) {
@@ -291,18 +327,21 @@ public class Renderer {
 
   /**
    * updates the score shown on the right of the window
-   * @param score   the users current score
-   * @param numOfFullRows  the number of complete rows the user has created (and have then been cleared)
+   * 
+   * @param score the users current score
+   * @param numOfFullRows the number of complete rows the user has created (and have then been
+   *        cleared)
    */
-  public static void updateScore(int score, int numOfFullRows) {
+  public void updateScore(int score, int numOfFullRows) {
     valueProperty.set("\tScore: " + score + "\nLines cleared: " + numOfFullRows);
   }
-  
+
   /**
    * builds the FileIO objects for reading and writing the high scores file
+   * 
    * @throws IOException for various file issues including FileNotFound
    */
-  public static void initializeScorePrinter() throws IOException {
+  public void initializeScorePrinter() throws IOException {
     File scoreFile = new File("src/gameLogs/High Scores");
     if (!scoreFile.exists()) {
       scoreFile.createNewFile();
@@ -314,13 +353,14 @@ public class Renderer {
     }
     scorePrinter = new PrintStream(scoreFile);
   }
-  
+
   /**
    * reads in scores from persistent text-file storage
-   * @param fileReader   a Scanner on the high scores file
-   * @return    a List of integers representing the scores contained in the file
+   * 
+   * @param fileReader a Scanner on the high scores file
+   * @return a List of integers representing the scores contained in the file
    */
-  private static ArrayList<Integer> readScores(Scanner fileReader) {
+  private ArrayList<Integer> readScores(Scanner fileReader) {
     ArrayList<Integer> scores = new ArrayList<Integer>(10);
     while (fileReader.hasNextInt()) {
       scores.add(fileReader.nextInt());
@@ -331,7 +371,7 @@ public class Renderer {
   /**
    * writes the scores to the file
    */
-  public static void writeScores() {
+  public void writeScores() {
     for (int i = 0; i < highScores.size() - 1; i++) {
       scorePrinter.println(highScores.get(i));
     }
@@ -342,10 +382,12 @@ public class Renderer {
   }
 
   /**
-   * updates the scores with the new score from the just-ended game and trims the list to keep it within 10 highscores
+   * updates the scores with the new score from the just-ended game and trims the list to keep it
+   * within 10 highscores
+   * 
    * @param score the new score to add
    */
-  public static void updateHighScores(int score) {
+  public void updateHighScores(int score) {
     if (doDebug) {
       System.out.println(score);
     }
@@ -359,7 +401,7 @@ public class Renderer {
   /**
    * cleans up the file objects when the program is ended
    */
-  public static void close() {
+  public void close() {
     scorePrinter.close();
     scoreReader.close();
   }
