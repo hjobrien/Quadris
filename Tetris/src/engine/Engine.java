@@ -395,15 +395,19 @@ public class Engine {
     }
     // time for evaluation and movement of block
     // System.out.println("\t\t" + (System.currentTimeMillis() -now));
-    if (randomizeBlocks)
+    if (randomizeBlocks){
       nextBlock = genRandomBlock();
-    else
+    }
+    else{
       nextBlock = getNextBlock(blockCount);
-    renderer.draw(nextPieceBoard);
-    activeBlock = nextBlock;
-    updateBoardWithNewBlock(nextBlock);
-    setNotFalling();
-    renderer.draw(nextPieceBoard);
+    }
+    clearBoard(nextPieceBoard);
+    addBlockToDisplay(nextPieceBoard, nextBlock);
+    renderer.drawToNextPieceBoard(nextPieceBoard);
+//    activeBlock = nextBlock;
+//    updateBoardWithNewBlock(nextBlock);
+//    setNotFalling();
+    renderer.drawToGameBoard(gameBoard);
     blockCount++;
   }
 
@@ -426,6 +430,25 @@ public class Engine {
       }
     }
   }
+  
+//might need to be altered for when the stack gets very high
+ /**
+  * sets the tiles in a board to the tiles in a block, to bu used when a tile display is required
+  * 
+  * @param b the block to add
+  */
+ public void addBlockToDisplay(Tile[][] board, Block b) {
+//   int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
+   clearBoard(board);
+   Tile[][] blockShape = b.getShape();
+   for (int i = 0; i < blockShape.length; i++) {
+     for (int j = 0; j < blockShape[i].length; j++) {
+       if(blockShape[i][j].isFilled()){
+         board[i][j] = new Tile(blockShape[i][j].getColor());
+       }
+     }
+   }
+ }
 
   /**
    * used for randomized blocks
@@ -816,10 +839,10 @@ public class Engine {
     }
   }
   
-  public void clearBoard(){
-    for(Tile[] row : gameBoard){
-      for(Tile t : row){
-        t = new Tile();
+  public void clearBoard(Tile[][] board){
+    for(int i = 0; i < board.length; i++){
+      for(int j = 0; j < board[i].length; j++){
+        board[i][j] = new Tile();
       }
     }
   }

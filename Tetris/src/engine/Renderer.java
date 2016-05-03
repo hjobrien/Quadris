@@ -30,7 +30,7 @@ public class Renderer {
 
   private boolean doDebug;
 
-//  private boolean doLog;
+  // private boolean doLog;
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
@@ -50,19 +50,23 @@ public class Renderer {
   private static final Rectangle[][] MAIN_BOARD_RECTS =
       new Rectangle[VERTICAL_TILES][HORIZONTAL_TILES];
 
+  private static final Rectangle[][] NEXT_BOARD_RECTS = new Rectangle[4][4];
+
+//  private static final String NEXT_PIECE_RECTS = null;
+
   private PrintStream scorePrinter;
   private Scanner scoreReader;
   private TextArea scoreList = null;
   private StackPane pauseView;
   private StringProperty valueProperty;
-//  private boolean autoplay = false;
+  // private boolean autoplay = false;
 
-//  private Engine engine;
+  // private Engine engine;
 
   private ArrayList<Integer> highScores = null; // need to put this here because i can't make
-                                                       // a
-                                                       // local variable passed to a method in the
-                                                       // listener
+                                                // a
+                                                // local variable passed to a method in the
+                                                // listener
 
   /**
    * initialize the run values of the object
@@ -72,9 +76,14 @@ public class Renderer {
    */
   public Renderer(boolean doDebug) {
     this.doDebug = doDebug;
-    for(int i = 0; i < MAIN_BOARD_RECTS.length; i++){
-      for(int j = 0; j < MAIN_BOARD_RECTS[i].length; j++){
-        MAIN_BOARD_RECTS[i][j] = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
+    setUpRects(MAIN_BOARD_RECTS);
+    setUpRects(NEXT_BOARD_RECTS);
+  }
+  
+  public void setUpRects(Rectangle[][] rects){
+    for (int i = 0; i < rects.length; i++) {
+      for (int j = 0; j < rects[i].length; j++) {
+        rects[i][j] = new Rectangle(SQUARE_SIZE, SQUARE_SIZE, Color.WHITE);
       }
     }
   }
@@ -107,23 +116,17 @@ public class Renderer {
     scoreText.textProperty().bind(valueProperty);
     mainGame.add(scoreText, 2, 2);
     GridPane grid = new GridPane();
-    GridPane nextBlock = new GridPane();
-    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
-    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-    for (int i = 0; i < 4; i++) {
-      nextBlock.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
-    }
-    for (int i = 0; i < 4; i++) {
-      nextBlock.getRowConstraints().add(new RowConstraints(SQUARE_SIZE));
-    }
-    nextBlock.setGridLinesVisible(true);
-    mainGame.add(nextBlock, 2, 0);
+    GridPane nextBlockGrid = new GridPane();
+//    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+//    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
+    makeBoardGrid(nextBlockGrid, 4,4, NEXT_BOARD_RECTS);
+    mainGame.add(nextBlockGrid, 2, 0);
     mainGame.add(grid, 0, 0, 1, 4);
     main.getChildren().add(mainGame);
     pauseView = constructPauseView(highScores);
     pauseView.setVisible(false);
     main.getChildren().add(pauseView);
-    makeBoard(grid);
+    makeBoardGrid(grid, VERTICAL_TILES, HORIZONTAL_TILES, MAIN_BOARD_RECTS);
     return new Scene(main, GAME_WIDTH, GAME_HEIGHT);
 
   }
@@ -133,12 +136,17 @@ public class Renderer {
    * 
    * @param grid a formatted GridPane
    */
-  private void makeBoard(GridPane grid) {
-    for (int i = 0; i < HORIZONTAL_TILES; i++) {
+  private void makeBoardGrid(GridPane grid, int height, int width, Rectangle[][] associatedRects) {
+    for (int i = 0; i < width; i++) {
       grid.getColumnConstraints().add(new ColumnConstraints(SQUARE_SIZE));
     }
-    for (int i = 0; i < VERTICAL_TILES; i++) {
+    for (int i = 0; i < height; i++) {
       grid.getRowConstraints().add(new RowConstraints(SQUARE_SIZE));
+    }
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
+        grid.add(associatedRects[i][j], j, i);
+      }
     }
     grid.setGridLinesVisible(true);
   }
@@ -287,21 +295,40 @@ public class Renderer {
       }
     }
   }
-  
+
   /**
    * called for each engine tick, draws the board
    * 
    * @param board the board to be drawn
    */
-  public void draw(Tile[][] board) {
-    for (int i = 3; i < board.length; i++) {
+  public void drawToGameBoard(Tile[][] board) {
+    for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
 
         Tile current = board[i][j];
         if (current.isFilled()) {
-          MAIN_BOARD_RECTS[i - 3][j].setFill(current.getColor());
+          MAIN_BOARD_RECTS[i][j].setFill(current.getColor());
         } else {
-          MAIN_BOARD_RECTS[i - 3][j].setFill(Color.WHITE);
+          MAIN_BOARD_RECTS[i][j].setFill(Color.WHITE);
+        }
+      }
+    }
+  }
+
+  /**
+   * called for each engine tick, draws the board
+   * 
+   * @param board the board to be drawn
+   */
+  public void drawToNextPieceBoard(Tile[][] board) {
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+
+        Tile current = board[i][j];
+        if (current.isFilled()) {
+          NEXT_BOARD_RECTS[i][j].setFill(current.getColor());
+        } else {
+          NEXT_BOARD_RECTS[i][j].setFill(Color.WHITE);
         }
       }
     }

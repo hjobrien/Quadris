@@ -86,6 +86,7 @@ public class Game extends Application {
 
   public Game(){
     renderer = new Renderer(doDebug);
+    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog, renderer);
     System.out.println("called");
     //needed for GUI, no other reason
   }
@@ -119,7 +120,6 @@ public class Game extends Application {
 
     GridPane grid = new GridPane();
     GridPane nextBlock = new GridPane();
-    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog, renderer);
 //    Board.setMode(doDebug);
 //    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
 //    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
@@ -193,6 +193,7 @@ public class Game extends Application {
 
     stage.show();
     engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+    renderer.drawToGameBoard(engine.getBoardState());
   }
 
   public int run(boolean randomizeBlocks) throws IOException{
@@ -280,7 +281,7 @@ public class Game extends Application {
       }
     }
     if (useGraphics)
-      renderer.draw(engine.getBoardState());
+      renderer.drawToGameBoard(engine.getBoardState());
 
     if (!paused) {
       if (!NINTENDO_SCORING) {
@@ -357,7 +358,7 @@ public class Game extends Application {
 
       }
       if (!paused) {
-        renderer.draw(engine.getBoardState());
+        renderer.drawToGameBoard(engine.getBoardState());
       }
     }
 
@@ -406,7 +407,7 @@ public class Game extends Application {
             break;
         }
         if (!paused) {
-          renderer.draw(engine.getBoardState());
+          renderer.drawToGameBoard(engine.getBoardState());
         }
       }
     }
@@ -426,7 +427,7 @@ public class Game extends Application {
     if (useGraphics) // TODO: remove, switch to Logger class
       renderer.writeScores();
     engine.reset();
-    engine.clearBoard();
+    engine.clearBoard(engine.getBoardState());
     Game.timeScore = 0;
     timePerTurn = maxTimePerTurn;
     timer.start();
