@@ -16,7 +16,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Game extends Application {
@@ -46,7 +45,7 @@ public class Game extends Application {
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
-  private static final int SQUARE_SIZE = 29;
+  // private static final int SQUARE_SIZE = 29;
 
   // if nintendo scoring = false, hank/liam scoring is used
   public static final boolean NINTENDO_SCORING = false;
@@ -54,13 +53,13 @@ public class Game extends Application {
 
   private static AnimationTimer timer;
   private static PrintStream printer;
-  private static int timeScore = 0;
+  private int timeScore = 0;
   private double timePerTurn = maxTimePerTurn;
 
   private static Tile[][] gameBoard = new Tile[VERTICAL_TILES][HORIZONTAL_TILES];
   private Engine engine;
   private Renderer renderer;
-  
+
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
@@ -84,23 +83,23 @@ public class Game extends Application {
 
   private static boolean gameIsActive = true;
 
-  public Game(){
+  public Game() {
     renderer = new Renderer(doDebug);
-    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog, renderer);
+    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog);
     System.out.println("called");
-    //needed for GUI, no other reason
+    // needed for GUI, no other reason
   }
 
-  public Game(int minTimePerTurn){
+  public Game(int minTimePerTurn) {
     this();
     this.minTimePerTurn = minTimePerTurn;
   }
 
-//  public static void main(String[] args) throws IOException {
-//    configureSettings();
-//
-//    launch(args);
-//  }
+  // public static void main(String[] args) throws IOException {
+  // configureSettings();
+  //
+  // launch(args);
+  // }
 
   /**
    * configures the run settings of the game based on the user selected run configuration
@@ -118,12 +117,12 @@ public class Game extends Application {
       }
     }
 
-    GridPane grid = new GridPane();
-    GridPane nextBlock = new GridPane();
-//    Board.setMode(doDebug);
-//    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
-//    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-//    Engine.setBoards(gameBoard, nextPieceBoard);
+//    GridPane grid = new GridPane();
+//    GridPane nextBlock = new GridPane();
+    // Board.setMode(doDebug);
+    // Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+    // Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
+    // Engine.setBoards(gameBoard, nextPieceBoard);
     // setup program settings
     switch (GAME_MODE) {
       case DISTRO:
@@ -178,7 +177,7 @@ public class Game extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     Scene boardScene = renderer.makeGame();
-//    Renderer.draw(Engine.getBoard());
+    // Renderer.draw(Engine.getBoard());
     if (!autoplay) {
       stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
     }
@@ -193,22 +192,21 @@ public class Game extends Application {
 
     stage.show();
     engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-    renderer.drawToGameBoard(engine.getBoardState());
   }
 
-  public int run(boolean randomizeBlocks) throws IOException{
+  public int run(boolean randomizeBlocks) throws IOException {
     return run(randomizeBlocks, false);
   }
-  
+
   public int run(boolean randomizeBlocks, boolean useGraphics) throws IOException {
     configureSettings();
     long pastTime = 0;
-//    Engine.setRandomizeBlocks(randomizeBlocks);
+    // Engine.setRandomizeBlocks(randomizeBlocks);
     if (useGraphics) {
       launch();
     } else {
-      timer = configureTimer(useGraphics);
-      timer.start();
+//       timer = configureTimer(useGraphics);
+//       timer.start();
 
       engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
       while (!engine.hasFullBoard()) {
@@ -217,6 +215,8 @@ public class Game extends Application {
           update(useGraphics);
           pastTime = now;
         }
+//        renderer.drawToGameBoard(engine.getGameBoard());
+//        renderer.drawToNextPieceBoard(engine.getNextPieceBoard());
       }
     }
     return getScore();
@@ -225,8 +225,7 @@ public class Game extends Application {
 
   private void update(boolean useGraphics) {
     if (useGraphics) {
-      renderer.updateScore(timeScore + engine.getScore(),
-          engine.getNumFullRows());
+      renderer.updateScore(getScore(), engine.getNumFullRows());
     }
     engine.update();
     if (engine.hasFullBoard()) {
@@ -280,8 +279,9 @@ public class Game extends Application {
         resetGame(useGraphics);
       }
     }
-    if (useGraphics)
-      renderer.drawToGameBoard(engine.getBoardState());
+    if (useGraphics){
+      renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
+    }
 
     if (!paused) {
       if (!NINTENDO_SCORING) {
@@ -358,7 +358,7 @@ public class Game extends Application {
 
       }
       if (!paused) {
-        renderer.drawToGameBoard(engine.getBoardState());
+        renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
       }
     }
 
@@ -407,7 +407,7 @@ public class Game extends Application {
             break;
         }
         if (!paused) {
-          renderer.drawToGameBoard(engine.getBoardState());
+          renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
         }
       }
     }
@@ -427,8 +427,8 @@ public class Game extends Application {
     if (useGraphics) // TODO: remove, switch to Logger class
       renderer.writeScores();
     engine.reset();
-    engine.clearBoard(engine.getBoardState());
-    Game.timeScore = 0;
+    engine.clearBoard(engine.getGameBoard());
+    this.timeScore = 0;
     timePerTurn = maxTimePerTurn;
     timer.start();
     engine.addBlock();

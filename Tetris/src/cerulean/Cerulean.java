@@ -9,7 +9,7 @@ import java.util.stream.DoubleStream;
 
 import blocks.Block;
 import blocks.Tile;
-import mainGame.Board;
+import engine.Engine;
 import mainGame.Move;
 
 /**
@@ -105,7 +105,7 @@ private static final double EDGE_WEIGHT = 5;
     // 2
     // + nextBlockCopy.getShape()[0].length - 1;
     // nextBlockCopy.setGridLocation(startingRowIndex, startingColumnIndex);
-    Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0});
+    Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
@@ -201,28 +201,29 @@ private static final double EDGE_WEIGHT = 5;
       }
     }
 
-    Board boardCopy = new Board(tileCopy, nextBlock);
-
-    for (int i = 0; i < 10; i++) {
-      boardCopy.pressed(Move.LEFT);
-    }
+    Engine boardAnalyzer = new Engine(tileCopy, true, false, false);
+    boardAnalyzer.addBlock(nextBlock);
+//    for (int i = 0; i < 10; i++) {
+//      boardAnalyzer.executeMove(Move.LEFT);
+//    }
 
     for (int i = 0; i < moveCount; i++) {
-      boardCopy.pressed(Move.RIGHT);
+      boardAnalyzer.executeMove(Move.RIGHT);
     }
 
     for (int i = 0; i < rotCount; i++) {
-      boardCopy.pressed(Move.ROT_RIGHT);
+      boardAnalyzer.executeMove(Move.ROT_RIGHT);
     }
+    
+    boardAnalyzer.executeMove(Move.DROP);
 
-    boardCopy.pressed(Move.DROP);
     // slide parts after block is at bottom, shouldn't work if drop terminates block
-    boardCopy.pressed(Move.LEFT);
+    boardAnalyzer.executeMove(Move.LEFT);
     for (int i = 0; i < slideCount; i++) {
-      boardCopy.pressed(Move.RIGHT);
+      boardAnalyzer.executeMove(Move.RIGHT);
     }
 
-    return boardCopy.getBoardState();
+    return boardAnalyzer.getGameBoard();
 
   }
 

@@ -16,7 +16,6 @@ import blocks.StraightLine;
 import blocks.TBlock;
 import blocks.Tile;
 import cerulean.Cerulean;
-import mainGame.Board;
 import mainGame.Game;
 import mainGame.Move;
 
@@ -32,9 +31,8 @@ public class Engine {
   private int blockCount = 0;
   private int gameNum = 0;
   private boolean rowsNotFalling = true;
-  private static int score = 0;
+  private int score = 0;
   private int numOfFullRows = 0;
-  private Renderer renderer;
 
 
   // would indicate the game is over
@@ -43,20 +41,19 @@ public class Engine {
   private boolean logMode;
   private boolean debugMode;
 
-  public static final String BLOCK_DATA = "Blocks to add";
+  public static final String BLOCK_DATA = "Blocks to add";  //file name
 
   // lists of numbers corresponding to blocks, translated in the 'genNextBlock' method
-  private static int[][] blocks = new int[][] {};
+  private int[][] blocks = new int[][] {};
 
 
 
-  public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks, boolean log, Renderer renderer) {
+  public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks, boolean log) {
     this.gameBoard = initBoard(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
     this.autoplay = autoplay;
     this.randomizeBlocks = randomizeBlocks;
     this.logMode = log;
-    this.renderer = renderer;
   }
 
   private Tile[][] initBoard(Tile[][] mainBoard) {
@@ -110,10 +107,11 @@ public class Engine {
     // this if is a hacky fix to stop the game from freezing under certain unknown conditions when
     // it should be resetting instead
     if (activeBlock.getGridLocation()[1] < -4) {
-      System.exit(-10);
       System.err.println("Freeze detected: resetting now...");
+      System.exit(-10);
     }
 
+    
     if (checkBlockAtBottom() || checkUnderneath()) {
       if (!rowsNotFalling) {
         int lowestEmptyRow = getLowestEmptyRow();
@@ -158,20 +156,21 @@ public class Engine {
    * @return true if there is an inactive tile, false otherwise
    */
   private boolean checkUnderneath() {
-    boolean isUnderneath = false;
+//    boolean isUnderneath = false;
     for (int i = 0; i < gameBoard.length; i++) {
       for (int j = 0; j < gameBoard[i].length; j++) {
         Tile thisT = gameBoard[i][j];
         if (thisT.isActive()) {
           Tile nextT = gameBoard[i + 1][j];
           if (nextT.isFilled() && !nextT.isActive()) {
-            isUnderneath = true;
-            // return true;
+//            isUnderneath = true;
+             return true;
           }
         }
       }
     }
-    return isUnderneath;
+    return false;
+//    return isUnderneath;
   }
 
 
@@ -363,7 +362,7 @@ public class Engine {
    * @return a 2D array of the board, each index references a possible square and if it is filled or
    *         not
    */
-  public Tile[][] getBoardState() {
+  public Tile[][] getGameBoard() {
     return gameBoard;
   }
 
@@ -403,12 +402,16 @@ public class Engine {
     }
     clearBoard(nextPieceBoard);
     addBlockToDisplay(nextPieceBoard, nextBlock);
-    renderer.drawToNextPieceBoard(nextPieceBoard);
 //    activeBlock = nextBlock;
 //    updateBoardWithNewBlock(nextBlock);
 //    setNotFalling();
-    renderer.drawToGameBoard(gameBoard);
     blockCount++;
+  }
+  
+  public void addBlock(Block b){
+    activeBlock = b;
+    updateBoardWithNewBlock(b);
+
   }
 
   // might need to be altered for when the stack gets very high
@@ -422,10 +425,10 @@ public class Engine {
     Tile[][] blockShape = b.getShape();
     for (int i = 0; i < blockShape.length; i++) {
       for (int j = 0; j < blockShape[i].length; j++) {
-        if (tileAt(i + 3, j + offset).isFilled()) {
+        if (tileAt(i, j + offset).isFilled()) {
           this.full = true;
         } else {
-          updateTileLocation(i + 3, j + offset, blockShape[i][j]);
+          updateTileLocation(i, j + offset, blockShape[i][j]);
         }
       }
     }
@@ -573,16 +576,22 @@ public class Engine {
         if (!Game.NINTENDO_SCORING) {
           score += 3;
         }
-        // System.out.println(fallingBlock.getGridLocation()[1]);
-        if (activeBlock.getGridLocation()[1] == -10) {
-          System.out.println();
-        }
+        //printBoard();
         blockDown();
       }
     } else if (m == Move.UP) {
       blockUp();
     }
 
+  }
+  
+  public void printBoard(){
+    for (Tile[] row : gameBoard){
+      for (Tile t : row){
+        System.out.print(t);
+      }
+      System.out.println();
+    }
   }
 
   /**
@@ -677,7 +686,7 @@ public class Engine {
    * @return true if the rotation is valid, false otherwise
    */
   private boolean checkRotate(Move m) {
-    Block tempB = new Block(activeBlock.getType(), activeBlock.getGridLocation());
+    Block tempB = new Block(activeBlock.getType(), activeBlock.getGridLocation(), activeBlock.getRotationIndex());
     if (m == Move.ROT_LEFT) {
       tempB.rotateLeft();
     } else if (m == Move.ROT_RIGHT) {
@@ -819,12 +828,14 @@ public class Engine {
    */
   public void reset() {
     this.blockCount = 0;
+    this.score = 0;
     if (randomizeBlocks) {
       this.nextBlock = genRandomBlock();
     } else {
       this.nextBlock = getNextBlock(blockCount);
       blockCount++;
     }
+    this.full = false;
     this.gameNum++; // keep for automated testing
   }
 
@@ -848,7 +859,7 @@ public class Engine {
   }
 
   /**
-   * resets the Engine'es game (used for when the weights are being changed)
+   * resets the Engine's game (used for when the weights are being changed)
    */
   public void resetGameNum() {
     this.gameNum = 0;
@@ -873,5 +884,13 @@ public class Engine {
   public boolean rowsAreNotFalling(){
     return rowsNotFalling;
   }
+
+  public Tile[][] getNextPieceBoard() {
+    return nextPieceBoard;
+  }
+
+//  public void setBlock(Block nextBlock) {
+//    this.activeBlock = nextBlock;
+//  }
 
 }

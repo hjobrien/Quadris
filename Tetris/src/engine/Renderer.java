@@ -23,7 +23,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import mainGame.Board;
 
 public class Renderer {
 
@@ -276,32 +275,32 @@ public class Renderer {
     return scores;
   }
 
+//  /**
+//   * called for each engine tick, draws the board
+//   * 
+//   * @param board the board to be drawn
+//   */
+//  @Deprecated
+//  public void draw(Board board) {
+//    for (int i = 3; i < board.getBoardState().length; i++) {
+//      for (int j = 0; j < board.getBoardState()[i].length; j++) {
+//
+//        Tile current = board.getBoardState()[i][j];
+//        if (current.isFilled()) {
+//          board.getBoardRects()[i - 3][j].setFill(current.getColor());
+//        } else {
+//          board.getBoardRects()[i - 3][j].setFill(Color.WHITE);
+//        }
+//      }
+//    }
+//  }
+
   /**
    * called for each engine tick, draws the board
    * 
    * @param board the board to be drawn
    */
-  @Deprecated
-  public void draw(Board board) {
-    for (int i = 3; i < board.getBoardState().length; i++) {
-      for (int j = 0; j < board.getBoardState()[i].length; j++) {
-
-        Tile current = board.getBoardState()[i][j];
-        if (current.isFilled()) {
-          board.getBoardRects()[i - 3][j].setFill(current.getColor());
-        } else {
-          board.getBoardRects()[i - 3][j].setFill(Color.WHITE);
-        }
-      }
-    }
-  }
-
-  /**
-   * called for each engine tick, draws the board
-   * 
-   * @param board the board to be drawn
-   */
-  public void drawToGameBoard(Tile[][] board) {
+  private void drawToGameBoard(Tile[][] board) {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
 
@@ -320,7 +319,7 @@ public class Renderer {
    * 
    * @param board the board to be drawn
    */
-  public void drawToNextPieceBoard(Tile[][] board) {
+  private void drawToNextPieceBoard(Tile[][] board) {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
 
@@ -431,6 +430,11 @@ public class Renderer {
   public void close() {
     scorePrinter.close();
     scoreReader.close();
+  }
+
+  public void drawBoards(Tile[][] nextPieceBoard, Tile[][] gameBoard) {
+    this.drawToGameBoard(gameBoard);
+    this.drawToNextPieceBoard(nextPieceBoard);
   }
 
 
