@@ -22,7 +22,7 @@ public class Game extends Application {
 
 
   // change these
-  public static final GameMode GAME_MODE = GameMode.DISTRO;
+  private GameMode gameMode = GameMode.AUTOPLAY;
   public static final int MAX_GAMES = 30;
   public static final int MAX_GENERATIONS = 15;
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
@@ -59,6 +59,7 @@ public class Game extends Application {
   private static Tile[][] gameBoard = new Tile[VERTICAL_TILES][HORIZONTAL_TILES];
   private Engine engine;
   private Renderer renderer;
+  private Cerulean cerulean;
 
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
@@ -83,17 +84,26 @@ public class Game extends Application {
 
   private static boolean gameIsActive = true;
 
-   public Game() {
-   
-   }
+  public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode) {
+    this.minTimePerTurn = minTimePerTurn;
+    this.gameMode = mode;
+  }
+
+  public Game(int gameHeight, int gameWidth, int minTimePerTurn, GameMode mode, double[] weights) {
+    this.minTimePerTurn = minTimePerTurn;
+    this.gameMode = mode;
+    cerulean = new Cerulean();
+    cerulean.setWeights(weights);
+  }
 
   /**
    * configures the run settings of the game based on the user selected run configuration
    * 
    * @throws IOException if the file cannot be created or it cannot be found
    */
+  @Deprecated
   public void configureSettings() {
-    if (GAME_MODE == GameMode.AI_TRAINING) {
+    if (gameMode == GameMode.AI_TRAINING) {
       File aiLogFile = new File("src/gameLogs/AI output" + System.currentTimeMillis());
       try {
         aiLogFile.createNewFile();
@@ -110,7 +120,7 @@ public class Game extends Application {
     // Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
     // Engine.setBoards(gameBoard, nextPieceBoard);
     // setup program settings
-    switch (GAME_MODE) {
+    switch (gameMode) {
       case DISTRO:
         doDebug = false;
         doLog = false;
@@ -133,7 +143,7 @@ public class Game extends Application {
         playMultiple = false;
         break;
       case AUTOPLAY:
-        Cerulean.setWeights(WEIGHTS);
+        cerulean.setWeights(WEIGHTS);
         dropDownTerminatesBlock = false;
         doDebug = false;
         doLog = false;
@@ -188,33 +198,32 @@ public class Game extends Application {
     System.out.println("called");
   }
 
-  public int run(boolean randomizeBlocks) throws IOException {
-    return run(randomizeBlocks, false);
-  }
-
-  public int run(boolean randomizeBlocks, boolean useGraphics) throws IOException {
-    configureSettings();
-    long pastTime = 0;
-    // Engine.setRandomizeBlocks(randomizeBlocks);
-    if (useGraphics) {
-      launch();
-    } else {
-      setup();
-
-      engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-      while (!engine.hasFullBoard()) {
-        long now = System.currentTimeMillis();
-        if (!paused && now - pastTime >= timePerTurn) {
-          update(useGraphics);
-          pastTime = now;
-        }
-        // renderer.drawToGameBoard(engine.getGameBoard());
-        // renderer.drawToNextPieceBoard(engine.getNextPieceBoard());
-      }
-    }
+  @Deprecated
+  public int run() throws IOException {
+    // launch();
     return getScore();
-
   }
+
+  // public int run(boolean randomizeBlocks, boolean useGraphics){
+  // launch();
+  //// if (useGraphics) {
+  //// launch();
+  //// } else {
+  //// setup();
+  ////
+  //// engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+  //// while (!engine.hasFullBoard()) {
+  //// long now = System.currentTimeMillis(); //TODO: replace with
+  // http://www.mkyong.com/java/how-to-run-a-task-periodically-in-java/
+  //// if (!paused && now - pastTime >= timePerTurn) {
+  //// update(useGraphics);
+  //// pastTime = now;
+  //// }
+  //// }
+  //// }
+  // return getScore();
+  //
+  // }
 
   private void update(boolean useGraphics) {
     if (useGraphics) {
@@ -229,18 +238,18 @@ public class Game extends Application {
       gameIsActive = false;
       timer.stop();
 
-      if (GAME_MODE == GameMode.AI_TRAINING) {
+      if (gameMode == GameMode.AI_TRAINING) {
 
         printer.print("Species " + (currentSpecies + 1) + " ");
         printer.print("Game " + (engine.getGameNum() + 1) + " score: " + score + " ");
-        printer.println("weights: " + Cerulean.getWeights());
+        printer.println("weights: " + cerulean.getWeights());
         scoreHistory.add(getScore());
         if (currentSpecies < species.length) {
           if (playMultiple && engine.getGameNum() == MAX_GAMES - 1) {
             speciesAvgScore[currentSpecies] = this.getAvgScore();
             currentSpecies++;
             if (currentSpecies < species.length) {
-              Cerulean.setWeights(species[currentSpecies]);
+              cerulean.setWeights(species[currentSpecies]);
               scoreHistory.clear();
               resetGame(useGraphics);
               engine.resetGameNum();
@@ -261,11 +270,11 @@ public class Game extends Application {
           if (generationNum < MAX_GENERATIONS) {
             printer.println("Generation " + generationNum + " over, Breeding...");
             speciesAvgScore[speciesAvgScore.length - 1] = this.getAvgScore();
-            species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
+            species = cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
             currentSpecies = 0;
             resetGame(useGraphics);
             engine.resetGameNum();
-            Cerulean.setWeights(species[currentSpecies]);
+            cerulean.setWeights(species[currentSpecies]);
           }
         }
       } else {
@@ -336,7 +345,7 @@ public class Game extends Application {
       if (key.getCode() == KeyCode.ESCAPE) {
         renderer.writeScores();
         renderer.close();
-        if (GAME_MODE == GameMode.AI_TRAINING)
+        if (gameMode == GameMode.AI_TRAINING)
           printer.close();
         System.exit(0);
       } else if (key.getCode() == KeyCode.P) {
@@ -412,7 +421,7 @@ public class Game extends Application {
    * resets the game when called, typically after a loss
    */
   public void resetGame(boolean useGraphics) {
-    if (GAME_MODE == GameMode.AI_TRAINING) {
+    if (gameMode == GameMode.AI_TRAINING) {
       printer.flush();
       speciesAvgScore[currentSpecies] = getAvgScore();
     }

@@ -25,6 +25,7 @@ public class Engine {
   private Tile[][] nextPieceBoard;
   private Block nextBlock = genRandomBlock();
   private Block activeBlock;
+  private Cerulean cerulean;
   private boolean isPaused = false;
   private boolean autoplay = false;
   private boolean randomizeBlocks;
@@ -55,9 +56,14 @@ public class Engine {
     if(!randomizeBlocks && blocks.length == 0){
       blocks = readInBlocks();
     }
+    if(autoplay){
+      cerulean = new Cerulean();
+    }
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
   }
+  
+  
 
   private Tile[][] deepCopy(Tile[][] mainBoard) {
     Tile[][] copy = new Tile[mainBoard.length][mainBoard[0].length];
@@ -397,7 +403,7 @@ public class Engine {
     Move[] solution = null;
     // long now = System.currentTimeMillis();
     if (autoplay) {
-      solution = Cerulean.submitBlock(nextBlock, gameBoard);
+      solution = cerulean.submitBlock(nextBlock, gameBoard);
     }
     activeBlock = nextBlock;
     updateBoardWithNewBlock(nextBlock);
@@ -905,6 +911,11 @@ public class Engine {
 
   public Tile[][] getNextPieceBoard() {
     return nextPieceBoard;
+  }
+
+  public void setGameBoard(Tile[][] newGameBoard) {
+    this.gameBoard = newGameBoard;
+    
   }
 
   // public void setBlock(Block nextBlock) {

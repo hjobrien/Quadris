@@ -24,25 +24,13 @@ public class Cerulean {
   // Board Weight constants
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
-  // good weights: -100, -50, 70 : ~8000x
-  // private static final double HEIGHT_WEIGHT = -100;
-  // private static final double VOID_WEIGHT = -50;
-  // private static final double LINE_WEIGHT = 70;
-
-//  private static final double HEIGHT_WEIGHT = -70;
-//  private static final double VOID_WEIGHT = -70;
-//  private static final double LINE_WEIGHT = 500;
   
 private static final double HEIGHT_WEIGHT = -70;
 private static final double VOID_WEIGHT = -97.85;
 private static final double LINE_WEIGHT = 306.77;
 private static final double EDGE_WEIGHT = 5;
 
-  private static double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT, EDGE_WEIGHT};
-
-  // private static final double HEIGHT_WEIGHT = -70;
-  // private static final double VOID_WEIGHT = -100;
-  // private static final double LINE_WEIGHT = 700;
+  private double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT, EDGE_WEIGHT};
 
 
   // change for how important multiple of an occurrence is
@@ -56,8 +44,9 @@ private static final double EDGE_WEIGHT = 5;
 
   // TODO: add a positive weight for how full each row is?
 
-  private static Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled to prevent
+  private Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled to prevent
                                                                 // errors later on
+  private Engine boardAnalyzer;
 
   /**
    * called when a solution is needed for a given block
@@ -65,7 +54,7 @@ private static final double EDGE_WEIGHT = 5;
    * @return an array of moves needed to get piece to the optimal location, should be some form of
    *         left/right, rotate, drop
    */
-  public static Move[] getSolution() {
+  public Move[] getSolution() {
     return solutionPath;
   }
 
@@ -75,7 +64,7 @@ private static final double EDGE_WEIGHT = 5;
    * @param nextBlockType the kind of block to be analyzed
    * @param boardState the current board state
    */
-  public static Move[] submitBlock(Block nextBlock, Tile[][] boardState) {
+  public Move[] submitBlock(Block nextBlock, Tile[][] boardState) {
     // TODO:
     // ideal behavior: blocks drop normally but an array is generated each time a block is added to
     // the game
@@ -95,16 +84,9 @@ private static final double EDGE_WEIGHT = 5;
    * @param boardState the board state without the block entered, all tiles are not active
    * @return an array of moves that positions the piece in to the optimal location
    */
-  private static Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
+  private Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
 
     double maxWeight = Double.NEGATIVE_INFINITY;
-    // Block nextBlockCopy = new Block(nextBlock.getType(),
-    // new int[] {nextBlock.getGridLocation()[0], nextBlock.getGridLocation()[1]});
-    // int startingRowIndex = nextBlockCopy.getShape().length - 1 + 3;
-    // int startingColumnIndex = (Renderer.HORIZONTAL_TILES - nextBlockCopy.getShape()[0].length) /
-    // 2
-    // + nextBlockCopy.getShape()[0].length - 1;
-    // nextBlockCopy.setGridLocation(startingRowIndex, startingColumnIndex);
     Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
@@ -161,7 +143,7 @@ private static final double EDGE_WEIGHT = 5;
    * @return an array of moves that first shifts the block to the left, then some amount to the
    *         right, rotates, and issues a 'drop' command to terminate the sequence x
    */
-  private static Move[] getPath(int moveCount, int rotCount, int slideCount) {
+  private Move[] getPath(int moveCount, int rotCount, int slideCount) {
     ArrayList<Move> path = new ArrayList<Move>();
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
@@ -189,7 +171,7 @@ private static final double EDGE_WEIGHT = 5;
    * @param rotCount the number of rotations in the test arrangement
    * @return the board with the block moved to a certain position
    */
-  private static Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
+  private Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
       int rotCount, int slideCount) {
     // System.out.println(moveCount + " " + rotCount + " " + slideCount);
     // avoids reference issues
@@ -201,7 +183,10 @@ private static final double EDGE_WEIGHT = 5;
       }
     }
 
-    Engine boardAnalyzer = new Engine(tileCopy, false, false, false);
+    if(boardAnalyzer == null){
+      boardAnalyzer = new Engine(tileCopy, false, false, false);
+    }
+    boardAnalyzer.setGameBoard(tileCopy);
     boardAnalyzer.addBlock(nextBlock);
     for (int i = 0; i < rotCount; i++) {
       boardAnalyzer.executeMove(Move.ROT_RIGHT);
@@ -234,7 +219,7 @@ private static final double EDGE_WEIGHT = 5;
    * @param boardCopy the board to be analyzed
    * @return the value of the board
    */
-  public static double[] evaluateWeight(Tile[][] boardCopy) {
+  public double[] evaluateWeight(Tile[][] boardCopy) {
     double[] weight = new double[4];
     boolean full = false;
     double voids = 0;
@@ -288,7 +273,7 @@ private static final double EDGE_WEIGHT = 5;
     return weight;
   }
 
-  private static double getNumActive(Tile[] colCopy) {
+  private double getNumActive(Tile[] colCopy) {
     int count = 0;
     for(Tile t : colCopy){
       if(t.isActive()){
@@ -298,7 +283,7 @@ private static final double EDGE_WEIGHT = 5;
     return count;
   }
 
-  private static double getHeightScore(Tile[] colCopy) {
+  private double getHeightScore(Tile[] colCopy) {
   //gets highest overall
     int overallHeight = 0;
     for (int i = colCopy.length - 1; i >= 0; i--) {
@@ -316,7 +301,7 @@ private static final double EDGE_WEIGHT = 5;
    * @param boardCopy the board to be analyzed. It should not have been processed to remove lines
    * @return the number of completed lines on the board (rows)
    */
-  private static int getNumLines(Tile[][] boardCopy) {
+  private int getNumLines(Tile[][] boardCopy) {
     int numLines = 0;
     for (int i = 0; i < boardCopy.length; i++) {
       boolean isFull = true;
@@ -343,7 +328,7 @@ private static final double EDGE_WEIGHT = 5;
    * @param tiles the column of tiles to be analyzed
    * @return the number of voids in the column
    */
-  private static double getNumVoids(Tile[] tiles) {
+  private double getNumVoids(Tile[] tiles) {
     boolean hasFoundBlock = false;
     double voidCount = 0;
     for (int i = 0; i < tiles.length; i++) {
@@ -357,29 +342,8 @@ private static final double EDGE_WEIGHT = 5;
     return voidCount;
   }
 
-  /**
-   * gets the height of a column of tiles. The height is defined as the index of the highest filled,
-   * non active tile in the column
-   * 
-   * @param tiles the column to be analyzed
-   * @param boardCopy 
-   * @return the height of the column
-   */
-//  private static double getHeightScore(Tile[] tiles, Tile[][] boardCopy) {
-//    
-//    //gets highest overall
-//    int overallHeight = 0;
-//    for (int i = tiles.length - 1; i >= 0; i--) {
-//      if (tiles[i].isFilled()) {
-//        overallHeight = tiles.length - i;
-//      }
-//    } 
-//    
-//    return overallHeight;
-//  }
-
   //returns the highest active tile spot * 0.1
-  private static double getExtraHeightScore(Tile[][] boardCopy) {
+  private double getExtraHeightScore(Tile[][] boardCopy) {
     
     double extraHeight = Double.POSITIVE_INFINITY;
     for (int column = 0; column < boardCopy[0].length; column++){
@@ -400,7 +364,7 @@ private static final double EDGE_WEIGHT = 5;
    * allows the AI's weights to be changed for use in AI_TRAINING mode
    * @param newWeights the new weights to be used in the fitness function
    */
-  public static void setWeights(double[] newWeights) {
+  public void setWeights(double[] newWeights) {
     System.out.println("weights modified");
     weights = newWeights;
   }
@@ -409,7 +373,7 @@ private static final double EDGE_WEIGHT = 5;
    * gets the weights of the AI as a string for printing
    * @return the weights as a String
    */
-  public static String getWeights() {
+  public String getWeights() {
     String s = "";
     for (double d : weights) {
       s += (d + " ");
@@ -436,8 +400,7 @@ private static final double EDGE_WEIGHT = 5;
    *                        should be between 0 and 1
    * @return an array of possible children whose fitness is to be reevaluated
    */
-  public static double[][] breed(double[][] species, double[] speciesAvgScore,
-      double mutationFactor) {
+  public double[][] breed(double[][] species, double[] speciesAvgScore, double mutationFactor) {
     ArrayList<Double> avgScores = new ArrayList<Double>();
     for (double d : speciesAvgScore) {
       avgScores.add(d);

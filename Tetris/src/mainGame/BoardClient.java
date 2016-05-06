@@ -21,8 +21,9 @@ public class BoardClient {
     
   }
   public static String getWeights(Tile[][] testBoard){
-    Cerulean.setWeights(new double[]{-200, -50, 100, 1.68});
-    double[] weights = Cerulean.evaluateWeight(testBoard);
+    Cerulean cerulean = new Cerulean();
+    cerulean.setWeights(new double[]{-200, -50, 100, 1.68});
+    double[] weights = cerulean.evaluateWeight(testBoard);
     return "net: " + DoubleStream.of(weights).sum() + " voids: " + weights[0] +
         " heights: " + weights[1] + " lines: " + weights[2] + " edges: " + weights[3];
   }
