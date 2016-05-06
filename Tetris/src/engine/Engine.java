@@ -41,24 +41,42 @@ public class Engine {
   private boolean logMode;
   private boolean debugMode;
 
-  public static final String BLOCK_DATA = "Blocks to add";  //file name
+  public static final String BLOCK_DATA = "Blocks to add"; // file name
 
   // lists of numbers corresponding to blocks, translated in the 'genNextBlock' method
-  private int[][] blocks = new int[][] {};
+  private static int[][] blocks = new int[][] {};
 
 
 
   public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks, boolean log) {
-    this.gameBoard = initBoard(mainBoard);
-    this.nextPieceBoard = initBoard(new Tile[4][4]);
     this.autoplay = autoplay;
     this.randomizeBlocks = randomizeBlocks;
     this.logMode = log;
+    if(!randomizeBlocks && blocks.length == 0){
+      blocks = readInBlocks();
+    }
+    this.gameBoard = deepCopy(mainBoard);
+    this.nextPieceBoard = initBoard(new Tile[4][4]);
+  }
+
+  private Tile[][] deepCopy(Tile[][] mainBoard) {
+    Tile[][] copy = new Tile[mainBoard.length][mainBoard[0].length];
+    for (int i = 0; i < mainBoard.length; i++) {
+      for (int j = 0; j < mainBoard[i].length; j++) {
+        if (mainBoard[i][j] != null) {
+          copy[i][j] = new Tile(mainBoard[i][j].isActive(), mainBoard[i][j].isFilled(),
+              mainBoard[i][j].getColor());
+        }else{
+          copy[i][j] = new Tile();
+        }
+      }
+    }
+    return copy;
   }
 
   private Tile[][] initBoard(Tile[][] mainBoard) {
-    for(int i = 0; i < mainBoard.length; i++){
-      for(int j = 0; j < mainBoard[i].length; j++){
+    for (int i = 0; i < mainBoard.length; i++) {
+      for (int j = 0; j < mainBoard[i].length; j++) {
         mainBoard[i][j] = new Tile();
       }
     }
@@ -111,7 +129,7 @@ public class Engine {
       System.exit(-10);
     }
 
-    
+
     if (checkBlockAtBottom() || checkUnderneath()) {
       if (!rowsNotFalling) {
         int lowestEmptyRow = getLowestEmptyRow();
@@ -156,21 +174,21 @@ public class Engine {
    * @return true if there is an inactive tile, false otherwise
    */
   private boolean checkUnderneath() {
-//    boolean isUnderneath = false;
+    // boolean isUnderneath = false;
     for (int i = 0; i < gameBoard.length; i++) {
       for (int j = 0; j < gameBoard[i].length; j++) {
         Tile thisT = gameBoard[i][j];
         if (thisT.isActive()) {
           Tile nextT = gameBoard[i + 1][j];
           if (nextT.isFilled() && !nextT.isActive()) {
-//            isUnderneath = true;
-             return true;
+            // isUnderneath = true;
+            return true;
           }
         }
       }
     }
     return false;
-//    return isUnderneath;
+    // return isUnderneath;
   }
 
 
@@ -394,21 +412,20 @@ public class Engine {
     }
     // time for evaluation and movement of block
     // System.out.println("\t\t" + (System.currentTimeMillis() -now));
-    if (randomizeBlocks){
+    if (randomizeBlocks) {
       nextBlock = genRandomBlock();
-    }
-    else{
+    } else {
       nextBlock = getNextBlock(blockCount);
     }
     clearBoard(nextPieceBoard);
     addBlockToDisplay(nextPieceBoard, nextBlock);
-//    activeBlock = nextBlock;
-//    updateBoardWithNewBlock(nextBlock);
-//    setNotFalling();
+    // activeBlock = nextBlock;
+    // updateBoardWithNewBlock(nextBlock);
+    // setNotFalling();
     blockCount++;
   }
-  
-  public void addBlock(Block b){
+
+  public void addBlock(Block b) {
     activeBlock = b;
     updateBoardWithNewBlock(b);
 
@@ -433,25 +450,25 @@ public class Engine {
       }
     }
   }
-  
-//might need to be altered for when the stack gets very high
- /**
-  * sets the tiles in a board to the tiles in a block, to bu used when a tile display is required
-  * 
-  * @param b the block to add
-  */
- public void addBlockToDisplay(Tile[][] board, Block b) {
-//   int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
-   clearBoard(board);
-   Tile[][] blockShape = b.getShape();
-   for (int i = 0; i < blockShape.length; i++) {
-     for (int j = 0; j < blockShape[i].length; j++) {
-       if(blockShape[i][j].isFilled()){
-         board[i][j] = new Tile(blockShape[i][j].getColor());
-       }
-     }
-   }
- }
+
+  // might need to be altered for when the stack gets very high
+  /**
+   * sets the tiles in a board to the tiles in a block, to bu used when a tile display is required
+   * 
+   * @param b the block to add
+   */
+  public void addBlockToDisplay(Tile[][] board, Block b) {
+    // int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
+    clearBoard(board);
+    Tile[][] blockShape = b.getShape();
+    for (int i = 0; i < blockShape.length; i++) {
+      for (int j = 0; j < blockShape[i].length; j++) {
+        if (blockShape[i][j].isFilled()) {
+          board[i][j] = new Tile(blockShape[i][j].getColor());
+        }
+      }
+    }
+  }
 
   /**
    * used for randomized blocks
@@ -576,7 +593,7 @@ public class Engine {
         if (!Game.NINTENDO_SCORING) {
           score += 3;
         }
-        //printBoard();
+        // printBoard();
         blockDown();
       }
     } else if (m == Move.UP) {
@@ -584,10 +601,10 @@ public class Engine {
     }
 
   }
-  
-  public void printBoard(){
-    for (Tile[] row : gameBoard){
-      for (Tile t : row){
+
+  public void printBoard() {
+    for (Tile[] row : gameBoard) {
+      for (Tile t : row) {
         System.out.print(t);
       }
       System.out.println();
@@ -686,7 +703,8 @@ public class Engine {
    * @return true if the rotation is valid, false otherwise
    */
   private boolean checkRotate(Move m) {
-    Block tempB = new Block(activeBlock.getType(), activeBlock.getGridLocation(), activeBlock.getRotationIndex());
+    Block tempB = new Block(activeBlock.getType(), activeBlock.getGridLocation(),
+        activeBlock.getRotationIndex());
     if (m == Move.ROT_LEFT) {
       tempB.rotateLeft();
     } else if (m == Move.ROT_RIGHT) {
@@ -849,10 +867,10 @@ public class Engine {
       }
     }
   }
-  
-  public void clearBoard(Tile[][] board){
-    for(int i = 0; i < board.length; i++){
-      for(int j = 0; j < board[i].length; j++){
+
+  public void clearBoard(Tile[][] board) {
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
         board[i][j] = new Tile();
       }
     }
@@ -868,20 +886,20 @@ public class Engine {
   public int getGameNum() {
     return this.gameNum;
   }
-  
-  public boolean hasFullBoard(){
+
+  public boolean hasFullBoard() {
     return full;
   }
-  
-  public int getScore(){
+
+  public int getScore() {
     return score;
   }
 
-  public int getNumFullRows(){
+  public int getNumFullRows() {
     return numOfFullRows;
   }
-  
-  public boolean rowsAreNotFalling(){
+
+  public boolean rowsAreNotFalling() {
     return rowsNotFalling;
   }
 
@@ -889,8 +907,8 @@ public class Engine {
     return nextPieceBoard;
   }
 
-//  public void setBlock(Block nextBlock) {
-//    this.activeBlock = nextBlock;
-//  }
+  // public void setBlock(Block nextBlock) {
+  // this.activeBlock = nextBlock;
+  // }
 
 }

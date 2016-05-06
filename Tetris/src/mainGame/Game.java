@@ -41,7 +41,7 @@ public class Game extends Application {
 
 
   private int maxTimePerTurn = 1000;
-  private int minTimePerTurn = 1;
+  private int minTimePerTurn = 100;
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
@@ -83,23 +83,9 @@ public class Game extends Application {
 
   private static boolean gameIsActive = true;
 
-  public Game() {
-    renderer = new Renderer(doDebug);
-    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog);
-    System.out.println("called");
-    // needed for GUI, no other reason
-  }
-
-  public Game(int minTimePerTurn) {
-    this();
-    this.minTimePerTurn = minTimePerTurn;
-  }
-
-  // public static void main(String[] args) throws IOException {
-  // configureSettings();
-  //
-  // launch(args);
-  // }
+   public Game() {
+   
+   }
 
   /**
    * configures the run settings of the game based on the user selected run configuration
@@ -117,8 +103,8 @@ public class Game extends Application {
       }
     }
 
-//    GridPane grid = new GridPane();
-//    GridPane nextBlock = new GridPane();
+    // GridPane grid = new GridPane();
+    // GridPane nextBlock = new GridPane();
     // Board.setMode(doDebug);
     // Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
     // Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
@@ -176,6 +162,7 @@ public class Game extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
+    setup();
     Scene boardScene = renderer.makeGame();
     // Renderer.draw(Engine.getBoard());
     if (!autoplay) {
@@ -194,6 +181,13 @@ public class Game extends Application {
     engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
+  private void setup() {
+    renderer = new Renderer(doDebug);
+    configureSettings();
+    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog);
+    System.out.println("called");
+  }
+
   public int run(boolean randomizeBlocks) throws IOException {
     return run(randomizeBlocks, false);
   }
@@ -205,8 +199,7 @@ public class Game extends Application {
     if (useGraphics) {
       launch();
     } else {
-//       timer = configureTimer(useGraphics);
-//       timer.start();
+      setup();
 
       engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
       while (!engine.hasFullBoard()) {
@@ -215,8 +208,8 @@ public class Game extends Application {
           update(useGraphics);
           pastTime = now;
         }
-//        renderer.drawToGameBoard(engine.getGameBoard());
-//        renderer.drawToNextPieceBoard(engine.getNextPieceBoard());
+        // renderer.drawToGameBoard(engine.getGameBoard());
+        // renderer.drawToNextPieceBoard(engine.getNextPieceBoard());
       }
     }
     return getScore();
@@ -279,7 +272,7 @@ public class Game extends Application {
         resetGame(useGraphics);
       }
     }
-    if (useGraphics){
+    if (useGraphics) {
       renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
     }
 

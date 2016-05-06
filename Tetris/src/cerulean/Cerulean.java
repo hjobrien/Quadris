@@ -201,19 +201,20 @@ private static final double EDGE_WEIGHT = 5;
       }
     }
 
-    Engine boardAnalyzer = new Engine(tileCopy, true, false, false);
+    Engine boardAnalyzer = new Engine(tileCopy, false, false, false);
     boardAnalyzer.addBlock(nextBlock);
-//    for (int i = 0; i < 10; i++) {
-//      boardAnalyzer.executeMove(Move.LEFT);
-//    }
+    for (int i = 0; i < rotCount; i++) {
+      boardAnalyzer.executeMove(Move.ROT_RIGHT);
+    }
+    for (int i = 0; i < 10; i++) {
+      boardAnalyzer.executeMove(Move.LEFT);
+    }
 
     for (int i = 0; i < moveCount; i++) {
       boardAnalyzer.executeMove(Move.RIGHT);
     }
 
-    for (int i = 0; i < rotCount; i++) {
-      boardAnalyzer.executeMove(Move.ROT_RIGHT);
-    }
+
     
     boardAnalyzer.executeMove(Move.DROP);
 
@@ -400,6 +401,7 @@ private static final double EDGE_WEIGHT = 5;
    * @param newWeights the new weights to be used in the fitness function
    */
   public static void setWeights(double[] newWeights) {
+    System.out.println("weights modified");
     weights = newWeights;
   }
 
