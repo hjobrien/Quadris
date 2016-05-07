@@ -40,7 +40,7 @@ public class Game extends Application {
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
 
 
-  private int maxTimePerTurn = 1000;
+  private int maxTimePerTurn = 100;
   private int minTimePerTurn = 100;
 
   public static final int VERTICAL_TILES = 20;
@@ -60,6 +60,7 @@ public class Game extends Application {
   private Engine engine;
   private Renderer renderer;
   private Cerulean cerulean;
+  private boolean useGraphics;
 
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
@@ -84,16 +85,20 @@ public class Game extends Application {
 
   private static boolean gameIsActive = true;
 
-  public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode) {
+  public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
+      boolean useGraphics) {
     this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
+    this.useGraphics = useGraphics;
   }
 
-  public Game(int gameHeight, int gameWidth, int minTimePerTurn, GameMode mode, double[] weights) {
+  public Game(int gameHeight, int gameWidth, int minTimePerTurn, GameMode mode, double[] weights,
+      boolean useGraphics) {
     this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     cerulean = new Cerulean();
     cerulean.setWeights(weights);
+    this.useGraphics = useGraphics;
   }
 
   /**
@@ -172,7 +177,7 @@ public class Game extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
-    setup();
+    setup(useGraphics);
     Scene boardScene = renderer.makeGame();
     // Renderer.draw(Engine.getBoard());
     if (!autoplay) {
@@ -191,39 +196,24 @@ public class Game extends Application {
     engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
   }
 
-  private void setup() {
-    renderer = new Renderer(doDebug);
+  private void setup(boolean useGraphics) {
+    if (useGraphics) {
+      renderer = new Renderer(doDebug);
+    }
     configureSettings();
     engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog);
-    System.out.println("called");
   }
 
-  @Deprecated
-  public int run() throws IOException {
-    // launch();
-    return getScore();
+  public void run(Stage arg0) throws Exception {
+    start(arg0);
   }
 
-  // public int run(boolean randomizeBlocks, boolean useGraphics){
-  // launch();
-  //// if (useGraphics) {
-  //// launch();
-  //// } else {
-  //// setup();
-  ////
-  //// engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-  //// while (!engine.hasFullBoard()) {
-  //// long now = System.currentTimeMillis(); //TODO: replace with
-  // http://www.mkyong.com/java/how-to-run-a-task-periodically-in-java/
-  //// if (!paused && now - pastTime >= timePerTurn) {
-  //// update(useGraphics);
-  //// pastTime = now;
-  //// }
-  //// }
-  //// }
-  // return getScore();
-  //
-  // }
+  public void run() {
+    setup(useGraphics);
+    engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+
+
+  }
 
   private void update(boolean useGraphics) {
     if (useGraphics) {
