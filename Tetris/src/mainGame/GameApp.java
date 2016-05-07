@@ -14,7 +14,7 @@ public class GameApp extends Application{
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
   public static final int MIN_TIME_PER_TURN = 100;
-  public static final boolean USE_GRAPHICS = false;
+  public static final boolean USE_GRAPHICS = true;
   
   public static void main(String args[]) throws Exception {
     launch();
@@ -23,7 +23,7 @@ public class GameApp extends Application{
   @Override
   public void start(Stage arg0) throws Exception {
     Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.DISTRO, USE_GRAPHICS);
-    game.run();
+    game.run(arg0);
     
   }
 }
