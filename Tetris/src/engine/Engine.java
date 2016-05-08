@@ -20,7 +20,8 @@ import mainGame.Game;
 import mainGame.Move;
 
 public class Engine {
-  // private Board board;
+
+
   private Tile[][] gameBoard;
   private Tile[][] nextPieceBoard;
   private Block nextBlock = genRandomBlock();
@@ -47,22 +48,33 @@ public class Engine {
   private static int[][] blocks = new int[][] {};
 
 
-
+  /**
+   * constructs an engine with a board and tells it if it should automatically place blocks and if
+   * the blocks should be randomly generated
+   * 
+   * @param mainBoard the board the engine acts on
+   * @param autoplay whether the engine should automatically place the blocks
+   * @param randomizeBlocks whether blocks should be randomly generated or read from a file
+   */
   public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks) {
     this.autoplay = autoplay;
     this.randomizeBlocks = randomizeBlocks;
-    if(!randomizeBlocks && blocks.length == 0){
+    if (!randomizeBlocks && blocks.length == 0) {
       blocks = readInBlocks();
     }
-    if(autoplay){
+    if (autoplay) {
       cerulean = new Cerulean();
     }
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
   }
-  
-  
 
+
+  /**
+   * copies a board by value
+   * @param mainBoard the board to be copied
+   * @return a new board with the values of the original
+   */
   private Tile[][] deepCopy(Tile[][] mainBoard) {
     Tile[][] copy = new Tile[mainBoard.length][mainBoard[0].length];
     for (int i = 0; i < mainBoard.length; i++) {
@@ -70,7 +82,7 @@ public class Engine {
         if (mainBoard[i][j] != null) {
           copy[i][j] = new Tile(mainBoard[i][j].isActive(), mainBoard[i][j].isFilled(),
               mainBoard[i][j].getColor());
-        }else{
+        } else {
           copy[i][j] = new Tile();
         }
       }
@@ -78,6 +90,11 @@ public class Engine {
     return copy;
   }
 
+  /**
+   * Initialize a board with empty tiles
+   * @param mainBoard the board to be initialized
+   * @return a board whose tiles are non-null, specifically all unfilled and inactive
+   */
   private Tile[][] initBoard(Tile[][] mainBoard) {
     for (int i = 0; i < mainBoard.length; i++) {
       for (int j = 0; j < mainBoard[i].length; j++) {
@@ -98,9 +115,9 @@ public class Engine {
           blockDown();
         } else {
           // block just landed
-//          if (logMode) {
-//            Logger.log(gameBoard, activeBlock, activeBlock);
-//          }
+          // if (logMode) {
+          // Logger.log(gameBoard, activeBlock, activeBlock);
+          // }
           ArrayList<Integer> linesToClear = getFullRows();
           if (!linesToClear.isEmpty()) {
             clearLines(linesToClear);
@@ -227,6 +244,12 @@ public class Engine {
     this.gameBoard[i][j].setColor(t.getColor());
   }
 
+  /**
+   * convenience method for getting a tile at a specified x,y coordinate
+   * @param i the row index
+   * @param j the column index
+   * @return the tile at the specified index
+   */
   public Tile tileAt(int i, int j) {
     return this.gameBoard[i][j];
   }
@@ -429,6 +452,10 @@ public class Engine {
     blockCount++;
   }
 
+  /**
+   * adds a block to the engine as an active block
+   * @param b the block to add
+   */
   public void addBlock(Block b) {
     activeBlock = b;
     updateBoardWithNewBlock(b);
@@ -606,6 +633,9 @@ public class Engine {
 
   }
 
+  /**
+   * prints the board for debugging
+   */
   public void printBoard() {
     for (Tile[] row : gameBoard) {
       for (Tile t : row) {
@@ -827,6 +857,10 @@ public class Engine {
     return blocks;
   }
 
+  /**
+   * gets the number of blocks that have been added
+   * @return the number of blocks that have been added
+   */
   public int getBlockCount() {
     return blockCount;
   }
@@ -859,6 +893,10 @@ public class Engine {
     }
   }
 
+  /**
+   * sets all tiles in the passed board to inactive, unfilled tiles
+   * @param board the board to reset
+   */
   public void clearBoard(Tile[][] board) {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
@@ -874,37 +912,62 @@ public class Engine {
     this.gameNum = 0;
   }
 
+  /**
+   * gets the number of concurrent games this engine has played
+   * @return the number of games the engine has played
+   */
   public int getGameNum() {
     return this.gameNum;
   }
 
+  /**
+   * gets if the engine's board is full
+   * @return true if the board is full, false otherwise
+   */
   public boolean hasFullBoard() {
     return full;
   }
 
+  /**
+   * gets the score of the current game
+   * @return the score of the game
+   */
   public int getScore() {
     return score;
   }
 
+  /**
+   * gets the number of full rows that the engine has cleared
+   * @return the number of full rows
+   */
   public int getNumFullRows() {
     return numOfFullRows;
   }
 
+  /**
+   * gets if rows are currently falling on the board
+   * @return true if rows are falling, false otherwise
+   */
   public boolean rowsAreNotFalling() {
     return rowsNotFalling;
   }
 
+  /**
+   * gets the gameBoard that displays the next piece to be added, used for rendering
+   * @return the gameBoard holding the next piece
+   */
   public Tile[][] getNextPieceBoard() {
     return nextPieceBoard;
   }
 
+  /**
+   * sets the game board the engine should use, used in AI
+   * @param newGameBoard the game board the engine should use
+   */
   public void setGameBoard(Tile[][] newGameBoard) {
     this.gameBoard = newGameBoard;
-    
+
   }
 
-  // public void setBlock(Block nextBlock) {
-  // this.activeBlock = nextBlock;
-  // }
 
 }

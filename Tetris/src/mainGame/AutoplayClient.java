@@ -4,6 +4,11 @@ import engine.GameMode;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * basic client that runs a game in autoplay mode
+ * @author Hank O'Brien
+ *
+ */
 public class AutoplayClient extends Application {
 
   public static final int GAME_HEIGHT = 20;
@@ -21,8 +26,8 @@ public class AutoplayClient extends Application {
 
   @Override
   public void start(Stage arg0) throws Exception {
-    Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.AUTOPLAY, WEIGHTS,
-        USE_GRAPHICS, DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE);
+    Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.AUTOPLAY,
+        USE_GRAPHICS, DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE, WEIGHTS);
     game.run(arg0);
 
   }

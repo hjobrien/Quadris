@@ -38,12 +38,17 @@ public class BlockAddedEvent extends Event{
   }
 
 
-
+  /**
+   * @return returns the board state of the event
+   */
   public Tile[][] getBoardState() {
     return this.boardState;
   }
 
-  
+  /**
+   * 
+   * @return the active block in the event
+   */
   public Block getBlock() {
     return this.block;
   }

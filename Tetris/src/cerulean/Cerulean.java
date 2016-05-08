@@ -24,11 +24,11 @@ public class Cerulean {
   // Board Weight constants
   // negative means its a bad thing being weighted (overall board height)
   // positive means its a good thing (full lines);
-  
-private static final double HEIGHT_WEIGHT = -70;
-private static final double VOID_WEIGHT = -97.85;
-private static final double LINE_WEIGHT = 306.77;
-private static final double EDGE_WEIGHT = 5;
+
+  private static final double HEIGHT_WEIGHT = -70;
+  private static final double VOID_WEIGHT = -97.85;
+  private static final double LINE_WEIGHT = 306.77;
+  private static final double EDGE_WEIGHT = 5;
 
   private double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT, EDGE_WEIGHT};
 
@@ -45,7 +45,7 @@ private static final double EDGE_WEIGHT = 5;
   // TODO: add a positive weight for how full each row is?
 
   private Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled to prevent
-                                                                // errors later on
+                                                         // errors later on
   private Engine boardAnalyzer;
 
   /**
@@ -87,7 +87,8 @@ private static final double EDGE_WEIGHT = 5;
   private Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
 
     double maxWeight = Double.NEGATIVE_INFINITY;
-    Block nextBlockCopy = new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
+    Block nextBlockCopy =
+        new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
     // TODO: reduce number of loops reps
@@ -98,7 +99,8 @@ private static final double EDGE_WEIGHT = 5;
                                                                  // slide, and one to right;
           // positions
           // System.out.println(moveCount + " " + rotCount + " " + slideCount);
-          Tile[][] testState = positionBlock(nextBlockCopy, boardState, moveCount, rotCount, slideCount);
+          Tile[][] testState =
+              positionBlock(nextBlockCopy, boardState, moveCount, rotCount, slideCount);
           double[] testWeights = evaluateWeight(testState);
           double testWeight = DoubleStream.of(testWeights).sum();
           // System.out.print(moveCount + " " + rotCount);
@@ -171,8 +173,8 @@ private static final double EDGE_WEIGHT = 5;
    * @param rotCount the number of rotations in the test arrangement
    * @return the board with the block moved to a certain position
    */
-  private Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount,
-      int rotCount, int slideCount) {
+  private Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount, int rotCount,
+      int slideCount) {
     // System.out.println(moveCount + " " + rotCount + " " + slideCount);
     // avoids reference issues
     Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
@@ -183,7 +185,7 @@ private static final double EDGE_WEIGHT = 5;
       }
     }
 
-    if(boardAnalyzer == null){
+    if (boardAnalyzer == null) {
       boardAnalyzer = new Engine(tileCopy, false, false);
     }
     boardAnalyzer.setGameBoard(tileCopy);
@@ -200,7 +202,7 @@ private static final double EDGE_WEIGHT = 5;
     }
 
 
-    
+
     boardAnalyzer.executeMove(Move.DROP);
 
     // slide parts after block is at bottom, shouldn't work if drop terminates block
@@ -214,8 +216,8 @@ private static final double EDGE_WEIGHT = 5;
   }
 
   /**
-   * evaluates the relative value of the board
-   * "fitness function" for machine learning
+   * evaluates the relative value of the board "fitness function" for machine learning
+   * 
    * @param boardCopy the board to be analyzed
    * @return the value of the board
    */
@@ -231,14 +233,14 @@ private static final double EDGE_WEIGHT = 5;
       for (int j = 0; j < boardCopy.length; j++) {
         colCopy[j] = boardCopy[j][i];
       }
-      if(colCopy[0].isFilled()){
+      if (colCopy[0].isFilled()) {
         full = true;
       }
-      
+
       double tempHeightScore = getHeightScore(colCopy) + getExtraHeightScore(boardCopy);
       if (tempHeightScore > heightScore) {
         heightScore = tempHeightScore;
-      } 
+      }
 
       double voidCount = getNumVoids(colCopy);
       voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
@@ -246,25 +248,25 @@ private static final double EDGE_WEIGHT = 5;
       // value from
       // being 0 in
       // Ternary
-      
-      
+
+
       edges += weights[3] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
     }
-    height = weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
-    
+    height =
+        weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
+
     double lines = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       double lineCount = getNumLines(boardCopy);
       lines +=
           (weights[2] * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
     }
-    if(!full){
+    if (!full) {
       weight[0] = voids;
       weight[1] = height;
       weight[2] = lines;
       weight[3] = edges;
-    }
-    else{
+    } else {
       weight[0] = -10000000;
       weight[1] = -10000000;
       weight[2] = -10000000;
@@ -273,25 +275,37 @@ private static final double EDGE_WEIGHT = 5;
     return weight;
   }
 
+  /**
+   * returns the number of active tiles in a column
+   * 
+   * @param colCopy the column of tiles to analyze
+   * @return the number of active tiles it contains
+   */
   private double getNumActive(Tile[] colCopy) {
     int count = 0;
-    for(Tile t : colCopy){
-      if(t.isActive()){
+    for (Tile t : colCopy) {
+      if (t.isActive()) {
         count++;
       }
     }
     return count;
   }
 
+  /**
+   * produces a score based on the height of a column
+   * 
+   * @param colCopy the column to be scored
+   * @return the score of the column
+   */
   private double getHeightScore(Tile[] colCopy) {
-  //gets highest overall
+    // gets highest overall
     int overallHeight = 0;
     for (int i = colCopy.length - 1; i >= 0; i--) {
       if (colCopy[i].isFilled()) {
         overallHeight = colCopy.length - i;
       }
-    } 
-    
+    }
+
     return overallHeight;
   }
 
@@ -342,18 +356,24 @@ private static final double EDGE_WEIGHT = 5;
     return voidCount;
   }
 
-  //returns the highest active tile spot * 0.1
+  /**
+   * analyzes each column of the board to get their height score, only scores columns under the
+   * maximum height
+   * 
+   * @param boardCopy the board to be analyzed
+   * @return the sum of the score of all lines under the maximum one multiplied by 0.1
+   */
   private double getExtraHeightScore(Tile[][] boardCopy) {
-    
+
     double extraHeight = Double.POSITIVE_INFINITY;
-    for (int column = 0; column < boardCopy[0].length; column++){
+    for (int column = 0; column < boardCopy[0].length; column++) {
       int colHeight = Integer.MAX_VALUE;
-      for(int row = boardCopy.length - 1; row >= 0; row--){
-        if(boardCopy[row][column].isActive()){
+      for (int row = boardCopy.length - 1; row >= 0; row--) {
+        if (boardCopy[row][column].isActive()) {
           colHeight = row;
         }
       }
-      if(colHeight < extraHeight){
+      if (colHeight < extraHeight) {
         extraHeight = colHeight;
       }
     }
@@ -362,6 +382,7 @@ private static final double EDGE_WEIGHT = 5;
 
   /**
    * allows the AI's weights to be changed for use in AI_TRAINING mode
+   * 
    * @param newWeights the new weights to be used in the fitness function
    */
   public void setWeights(double[] newWeights) {
@@ -371,6 +392,7 @@ private static final double EDGE_WEIGHT = 5;
 
   /**
    * gets the weights of the AI as a string for printing
+   * 
    * @return the weights as a String
    */
   public String getWeights() {
@@ -382,22 +404,19 @@ private static final double EDGE_WEIGHT = 5;
   }
 
   /**
-   * the part of the code that makes the AI an AI, this method takes in certain 'species' 
-   * (the weights) and their associated fitness. It then makes a new generation of species that 
-   * share some behavior with their parents
-   * A child is created by first 'crossing over' the two parent genes at random points such that
-   * (parent 1) xxxxxxxx 
-   *                     =>   (child) oxxooxxx
-   * (parent 2) oooooooo
-   * then each gene is determined if it should be mutated (related to the mutationFactor)
-   * and then if it is to be mutated, the value at that gene is multiplied by some
-   * value v such that 0.5 <= v <= 1.5
-   * the final list of children includes the parents so the AI never regresses (elitist selection)
+   * the part of the code that makes the AI an AI, this method takes in certain 'species' (the
+   * weights) and their associated fitness. It then makes a new generation of species that share
+   * some behavior with their parents A child is created by first 'crossing over' the two parent
+   * genes at random points such that (parent 1) xxxxxxxx => (child) oxxooxxx (parent 2) oooooooo
+   * then each gene is determined if it should be mutated (related to the mutationFactor) and then
+   * if it is to be mutated, the value at that gene is multiplied by some value v such that 0.5 <= v
+   * <= 1.5 the final list of children includes the parents so the AI never regresses (elitist
+   * selection)
    * 
    * @param species the array of all possible parents
    * @param speciesAvgScore the related fitness of each of the possible parents
-   * @param mutationFactor  the probability a gene at a particular locus will mutate, 
-   *                        should be between 0 and 1
+   * @param mutationFactor the probability a gene at a particular locus will mutate, should be
+   *        between 0 and 1
    * @return an array of possible children whose fitness is to be reevaluated
    */
   public double[][] breed(double[][] species, double[] speciesAvgScore, double mutationFactor) {
@@ -420,18 +439,19 @@ private static final double EDGE_WEIGHT = 5;
     newSpecies[0] = bestCandidate;
     newSpecies[1] = secondCandidate;
     for (int i = 2; i < numSpecies; i++) {
-      //single crossover algorithm (works better for long genomes?)
-//      int crossoverLocus = rand.nextInt(numSpecies);// the place where the genes will cross over
-//      double[] child = Arrays.copyOf(bestCandidate, bestCandidate.length);
-//      for (int j = crossoverLocus; j < secondCandidate.length; j++) {
-//        child[j] = secondCandidate[j];
-//      }
-      //many-cross algorithm. this seems to be 'fairer' in that earlier weights change as much as later ones
+      // single crossover algorithm (works better for long genomes?)
+      // int crossoverLocus = rand.nextInt(numSpecies);// the place where the genes will cross over
+      // double[] child = Arrays.copyOf(bestCandidate, bestCandidate.length);
+      // for (int j = crossoverLocus; j < secondCandidate.length; j++) {
+      // child[j] = secondCandidate[j];
+      // }
+      // many-cross algorithm. this seems to be 'fairer' in that earlier weights change as much as
+      // later ones
       double[] child = new double[bestCandidate.length];
-      for(int j = 0; j < child.length; j++){
-        if(rand.nextBoolean()){
+      for (int j = 0; j < child.length; j++) {
+        if (rand.nextBoolean()) {
           child[j] = bestCandidate[j];
-        }else{
+        } else {
           child[j] = secondCandidate[j];
         }
       }
@@ -441,7 +461,7 @@ private static final double EDGE_WEIGHT = 5;
           double mutationAmount = rand.nextDouble() + 0.5; // shifts the random from 0-1 to 0.5-1.5
           child[j] *= mutationAmount;
         }
-        //rounds to 2 decimal places safely
+        // rounds to 2 decimal places safely
         child[j] = new BigDecimal(child[j]).setScale(2, RoundingMode.HALF_UP).doubleValue();
       }
       newSpecies[i] = child;

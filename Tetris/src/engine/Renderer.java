@@ -24,6 +24,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * class that handles graphical output of all kinds from the game when run in graphical mode this
+ * includes drawing the board, updating the score, and keeping track of all-time top scores 
+ * 
+ * @author Hank O'Brien
+ *
+ */
 public class Renderer {
 
 
@@ -51,7 +58,7 @@ public class Renderer {
 
   private static final Rectangle[][] NEXT_BOARD_RECTS = new Rectangle[4][4];
 
-//  private static final String NEXT_PIECE_RECTS = null;
+  // private static final String NEXT_PIECE_RECTS = null;
 
   private PrintStream scorePrinter;
   private Scanner scoreReader;
@@ -78,17 +85,30 @@ public class Renderer {
     setUpRects(MAIN_BOARD_RECTS);
     setUpRects(NEXT_BOARD_RECTS);
   }
-  
-  public void update(int score, int numFullRows, boolean hasFullBoard, Tile[][] gameBoard, Tile[][] nextBoard) {
+
+  /**
+   * updates the status of all graphical things, including drawing the game boards
+   * @param score the score to display
+   * @param numFullRows the number of full rows the engine has cleared
+   * @param hasFullBoard if the engine has a full board
+   * @param gameBoard the board to draw as the main game board
+   * @param nextBoard the board to draw as the next piece board
+   */
+  public void update(int score, int numFullRows, boolean hasFullBoard, Tile[][] gameBoard,
+      Tile[][] nextBoard) {
     updateScore(score, numFullRows);
     drawBoards(gameBoard, nextBoard);
-    if(hasFullBoard){
+    if (hasFullBoard) {
       updateHighScores(score);
     }
-    
+
   }
-  
-  public void setUpRects(Rectangle[][] rects){
+
+  /**
+   * initialize the Rectangle arrays to the square size and to the color white
+   * @param rects the Rectangle array to initialize
+   */
+  public void setUpRects(Rectangle[][] rects) {
     for (int i = 0; i < rects.length; i++) {
       for (int j = 0; j < rects[i].length; j++) {
         rects[i][j] = new Rectangle(SQUARE_SIZE, SQUARE_SIZE, Color.WHITE);
@@ -125,9 +145,9 @@ public class Renderer {
     mainGame.add(scoreText, 2, 2);
     GridPane grid = new GridPane();
     GridPane nextBlockGrid = new GridPane();
-//    Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
-//    Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-    makeBoardGrid(nextBlockGrid, 4,4, NEXT_BOARD_RECTS);
+    // Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
+    // Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
+    makeBoardGrid(nextBlockGrid, 4, 4, NEXT_BOARD_RECTS);
     mainGame.add(nextBlockGrid, 2, 0);
     mainGame.add(grid, 0, 0, 1, 4);
     main.getChildren().add(mainGame);
@@ -151,8 +171,8 @@ public class Renderer {
     for (int i = 0; i < height; i++) {
       grid.getRowConstraints().add(new RowConstraints(SQUARE_SIZE));
     }
-    for(int i = 0; i < height; i++){
-      for(int j = 0; j < width; j++){
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
         grid.add(associatedRects[i][j], j, i);
       }
     }
@@ -284,25 +304,25 @@ public class Renderer {
     return scores;
   }
 
-//  /**
-//   * called for each engine tick, draws the board
-//   * 
-//   * @param board the board to be drawn
-//   */
-//  @Deprecated
-//  public void draw(Board board) {
-//    for (int i = 3; i < board.getBoardState().length; i++) {
-//      for (int j = 0; j < board.getBoardState()[i].length; j++) {
-//
-//        Tile current = board.getBoardState()[i][j];
-//        if (current.isFilled()) {
-//          board.getBoardRects()[i - 3][j].setFill(current.getColor());
-//        } else {
-//          board.getBoardRects()[i - 3][j].setFill(Color.WHITE);
-//        }
-//      }
-//    }
-//  }
+  // /**
+  // * called for each engine tick, draws the board
+  // *
+  // * @param board the board to be drawn
+  // */
+  // @Deprecated
+  // public void draw(Board board) {
+  // for (int i = 3; i < board.getBoardState().length; i++) {
+  // for (int j = 0; j < board.getBoardState()[i].length; j++) {
+  //
+  // Tile current = board.getBoardState()[i][j];
+  // if (current.isFilled()) {
+  // board.getBoardRects()[i - 3][j].setFill(current.getColor());
+  // } else {
+  // board.getBoardRects()[i - 3][j].setFill(Color.WHITE);
+  // }
+  // }
+  // }
+  // }
 
   /**
    * called for each engine tick, draws the board
@@ -324,9 +344,9 @@ public class Renderer {
   }
 
   /**
-   * called for each engine tick, draws the board
+   * called for each engine tick, draws the nextBoard
    * 
-   * @param board the board to be drawn
+   * @param board the nextBoard to be drawn
    */
   private void drawToNextPieceBoard(Tile[][] board) {
     for (int i = 0; i < board.length; i++) {
@@ -342,7 +362,9 @@ public class Renderer {
     }
   }
 
-  // maybe do more here, for right now it's its own method
+  /**
+   * toggles the pause state of the renderer
+   */
   public void pause() {
     pauseView.setVisible(true);
   }
@@ -441,6 +463,11 @@ public class Renderer {
     scoreReader.close();
   }
 
+  /**
+   * draws the two boards to the screen by updating the color of the rectangles
+   * @param gameBoard the mainGame to draw
+   * @param nextPieceBoard the nextBoard to draw
+   */
   public void drawBoards(Tile[][] gameBoard, Tile[][] nextPieceBoard) {
     this.drawToGameBoard(gameBoard);
     this.drawToNextPieceBoard(nextPieceBoard);
