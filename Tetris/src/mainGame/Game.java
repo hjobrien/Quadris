@@ -30,17 +30,17 @@ public class Game extends Application {
 
 
   // don't change these
-  private static boolean doDebug;
-  private static boolean doLog;
-  private static boolean autoplay;
-  private static boolean randomizeBlocks;
-  private static boolean playMultiple; // play multiple games in a row
+  private boolean doDebug;
+  // private static boolean doLog;
+  private boolean autoplay;
+  private boolean randomizeBlocks;
+  private boolean playMultiple; // play multiple games in a row
 
   // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
 
 
-  private int maxTimePerTurn = 100;
+  private int maxTimePerTurn = 1000;
   private int minTimePerTurn = 100;
 
   public static final int VERTICAL_TILES = 20;
@@ -65,13 +65,13 @@ public class Game extends Application {
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
-  private static boolean dropDownTerminatesBlock = true;
+  private boolean dropDownTerminatesBlock = true;
 
   // seeded possible solutions
-  public static double[][] species = new double[][] {{-70, -70, 500, 5}, {-100, -50, 100, 2},
-      {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-200, -50, 100, 0}, {-400, -300, 100, 1},
-      {-200, -100, 100, 3}, {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8},
-      {-294.75, -34.44, 101.72, 5}};
+  public static double[][] species =
+      new double[][] {WEIGHTS, {-70, -70, 500, 5}, {-100, -50, 100, 2}, {-200, -70, 300, 7},
+          {-40, -100, 400, 1}, {-400, -300, 100, 1}, {-200, -100, 100, 3}, {-150, -70, 400, 0},
+          {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
   // public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10,
   // -10, 100, 5}};
 
@@ -84,30 +84,65 @@ public class Game extends Application {
   private static boolean paused = false;
 
   private static boolean gameIsActive = true;
+  
+  
+  public Game(){
+    this(VERTICAL_TILES, HORIZONTAL_TILES, 100, GameMode.DISTRO, true, false, true, false);
+  }
 
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
-      boolean useGraphics) {
+      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple) {
     this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
+    this.doDebug = doDebug;
+    this.randomizeBlocks = randomizeBlocks;
+    this.playMultiple = playMultiple;
   }
 
   public Game(int gameHeight, int gameWidth, int minTimePerTurn, GameMode mode, double[] weights,
-      boolean useGraphics) {
+      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple) {
     this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
+    this.useGraphics = useGraphics;
+    this.doDebug = doDebug;
+    this.autoplay = true;   //inferred because weights were passed
+    this.dropDownTerminatesBlock = false;
     cerulean = new Cerulean();
     cerulean.setWeights(weights);
-    this.useGraphics = useGraphics;
+    this.randomizeBlocks = randomizeBlocks;
+    this.playMultiple = playMultiple;
   }
 
-  /**
-   * configures the run settings of the game based on the user selected run configuration
-   * 
-   * @throws IOException if the file cannot be created or it cannot be found
-   */
-  @Deprecated
-  public void configureSettings() {
+
+  @Override
+  public void start(Stage stage) throws Exception {
+    setup(useGraphics);
+    if (useGraphics) {
+      Scene boardScene = renderer.makeGame();
+      if (!autoplay) {
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
+      }
+
+      stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
+
+      stage.setScene(boardScene);
+
+    }
+    timer = configureTimer(useGraphics);
+    timer.start();
+
+
+    engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+    if(useGraphics){
+      stage.show();
+    }
+  }
+
+  private void setup(boolean useGraphics) {
+    if (useGraphics) {
+      renderer = new Renderer(doDebug);
+    }
     if (gameMode == GameMode.AI_TRAINING) {
       File aiLogFile = new File("src/gameLogs/AI output" + System.currentTimeMillis());
       try {
@@ -117,91 +152,7 @@ public class Game extends Application {
         System.err.println("Error on file creation");
       }
     }
-
-    // GridPane grid = new GridPane();
-    // GridPane nextBlock = new GridPane();
-    // Board.setMode(doDebug);
-    // Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES, SQUARE_SIZE, grid);
-    // Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
-    // Engine.setBoards(gameBoard, nextPieceBoard);
-    // setup program settings
-    switch (gameMode) {
-      case DISTRO:
-        doDebug = false;
-        doLog = false;
-        autoplay = false;
-        randomizeBlocks = true;
-        playMultiple = false;
-        break;
-      case DEBUG:
-        doDebug = false;
-        doLog = false;
-        autoplay = false;
-        randomizeBlocks = false;
-        playMultiple = false;
-        break;
-      case LOGGER:
-        doDebug = false;
-        doLog = true;
-        autoplay = false;
-        randomizeBlocks = true;
-        playMultiple = false;
-        break;
-      case AUTOPLAY:
-        cerulean.setWeights(WEIGHTS);
-        dropDownTerminatesBlock = false;
-        doDebug = false;
-        doLog = false;
-        autoplay = true;
-        randomizeBlocks = true;
-        playMultiple = false;
-        break;
-      case AI_TRAINING:
-        dropDownTerminatesBlock = false;
-        playMultiple = true;
-        doDebug = false;
-        doLog = false;
-        autoplay = true;
-        randomizeBlocks = false;
-        break;
-      default:
-        System.err.println("Error: unsupported mode");
-        doDebug = false;
-        doLog = false;
-        autoplay = false;
-        randomizeBlocks = true;
-        playMultiple = false;
-        break;
-    }
-  }
-
-  @Override
-  public void start(Stage stage) throws Exception {
-    setup(useGraphics);
-    Scene boardScene = renderer.makeGame();
-    // Renderer.draw(Engine.getBoard());
-    if (!autoplay) {
-      stage.addEventFilter(KeyEvent.KEY_PRESSED, new UserInputHandler());
-    }
-
-    stage.addEventFilter(KeyEvent.KEY_PRESSED, new BasicInputHandler());
-
-    stage.setScene(boardScene);
-
-    timer = configureTimer(true);
-    timer.start();
-
-
-    stage.show();
-    engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-  }
-
-  private void setup(boolean useGraphics) {
-    if (useGraphics) {
-      renderer = new Renderer(doDebug);
-    }
-    configureSettings();
-    engine = new Engine(gameBoard, autoplay, randomizeBlocks, doLog);
+    engine = new Engine(gameBoard, autoplay, randomizeBlocks);
   }
 
   public void run(Stage arg0) throws Exception {
@@ -211,7 +162,8 @@ public class Game extends Application {
   public void run() {
     setup(useGraphics);
     engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-
+    timer = configureTimer(useGraphics);
+    timer.start();
 
   }
 
@@ -272,7 +224,7 @@ public class Game extends Application {
       }
     }
     if (useGraphics) {
-      renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
+      renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
     }
 
     if (!paused) {
@@ -350,7 +302,7 @@ public class Game extends Application {
 
       }
       if (!paused) {
-        renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
+        renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
       }
     }
 
@@ -399,7 +351,7 @@ public class Game extends Application {
             break;
         }
         if (!paused) {
-          renderer.drawBoards(engine.getNextPieceBoard(), engine.getGameBoard());
+          renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         }
       }
     }

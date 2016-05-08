@@ -39,7 +39,6 @@ public class Engine {
   // would indicate the game is over
   boolean full = false;
 
-  private boolean logMode;
   private boolean debugMode;
 
   public static final String BLOCK_DATA = "Blocks to add"; // file name
@@ -49,10 +48,9 @@ public class Engine {
 
 
 
-  public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks, boolean log) {
+  public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks) {
     this.autoplay = autoplay;
     this.randomizeBlocks = randomizeBlocks;
-    this.logMode = log;
     if(!randomizeBlocks && blocks.length == 0){
       blocks = readInBlocks();
     }
@@ -100,9 +98,9 @@ public class Engine {
           blockDown();
         } else {
           // block just landed
-          if (logMode) {
-            Logger.log(gameBoard, activeBlock, activeBlock);
-          }
+//          if (logMode) {
+//            Logger.log(gameBoard, activeBlock, activeBlock);
+//          }
           ArrayList<Integer> linesToClear = getFullRows();
           if (!linesToClear.isEmpty()) {
             clearLines(linesToClear);
@@ -774,19 +772,6 @@ public class Engine {
   public boolean togglePause() {
     isPaused = !isPaused;
     return isPaused;
-  }
-
-
-  /**
-   * also serves to initialize values to the engine
-   * 
-   * @param debugMode whether the engine should operate in debugMode
-   * @param logMode whether the engine should log its actions
-   */
-  public void setMode(boolean debugMode, boolean logMode, boolean autoplay) {
-    // Engine.debugMode = debugMode;
-    this.logMode = logMode;
-    this.autoplay = autoplay;
   }
 
   /**

@@ -79,6 +79,15 @@ public class Renderer {
     setUpRects(NEXT_BOARD_RECTS);
   }
   
+  public void update(int score, int numFullRows, boolean hasFullBoard, Tile[][] gameBoard, Tile[][] nextBoard) {
+    updateScore(score, numFullRows);
+    drawBoards(gameBoard, nextBoard);
+    if(hasFullBoard){
+      updateHighScores(score);
+    }
+    
+  }
+  
   public void setUpRects(Rectangle[][] rects){
     for (int i = 0; i < rects.length; i++) {
       for (int j = 0; j < rects[i].length; j++) {
@@ -432,7 +441,7 @@ public class Renderer {
     scoreReader.close();
   }
 
-  public void drawBoards(Tile[][] nextPieceBoard, Tile[][] gameBoard) {
+  public void drawBoards(Tile[][] gameBoard, Tile[][] nextPieceBoard) {
     this.drawToGameBoard(gameBoard);
     this.drawToNextPieceBoard(nextPieceBoard);
   }

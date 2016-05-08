@@ -184,7 +184,7 @@ private static final double EDGE_WEIGHT = 5;
     }
 
     if(boardAnalyzer == null){
-      boardAnalyzer = new Engine(tileCopy, false, false, false);
+      boardAnalyzer = new Engine(tileCopy, false, false);
     }
     boardAnalyzer.setGameBoard(tileCopy);
     boardAnalyzer.addBlock(nextBlock);
