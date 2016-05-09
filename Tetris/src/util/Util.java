@@ -23,4 +23,13 @@ public class Util {
    */
   public static final ListeningExecutorService exec =
       MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+  
+  public static boolean sleep(long nanos){
+    try{
+      Thread.sleep(nanos / 1000000, (int)(nanos % 1000000));
+    }catch(InterruptedException e){
+      return true;
+    }
+    return false;
+  }
 }

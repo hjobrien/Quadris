@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import util.Util;
 
 public class Game extends Application {
 
@@ -40,8 +41,8 @@ public class Game extends Application {
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
 
 
-  private int maxTimePerTurn = 1000;
-  private int minTimePerTurn = 100;
+  private int maxTimePerTurn = 1000000000;    //nanoseconds
+  private int minTimePerTurn = 100000000;     //nanoseconds
 
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
@@ -50,12 +51,11 @@ public class Game extends Application {
   // if nintendo scoring = false, hank/liam scoring is used
   public static final boolean NINTENDO_SCORING = false;
 
-
-  private static AnimationTimer timer;
   private static PrintStream printer;
   private int timeScore = 0;
-  private double timePerTurn = maxTimePerTurn;
+  private long timePerTurn = maxTimePerTurn;
 
+  private AnimationTimer timer;
   private static Tile[][] gameBoard = new Tile[VERTICAL_TILES][HORIZONTAL_TILES];
   private Engine engine;
   private Renderer renderer;
@@ -164,11 +164,22 @@ public class Game extends Application {
       stage.setScene(boardScene);
 
     }
-    timer = configureTimer(useGraphics);
-    timer.start();
+
 
 
     engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
+    if(!useGraphics){
+      Util.exec.submit(() -> {
+        while(!engine.hasFullBoard()){
+          Util.sleep(timePerTurn);
+          update(useGraphics);
+        }
+      });
+    }
+    else{
+    timer = configureTimer(useGraphics);
+    timer.start();
+    }
     if (useGraphics) {
       stage.show();
     }
@@ -209,9 +220,12 @@ public class Game extends Application {
   public void run() {
     setup(useGraphics);
     engine.addBlock();
-    //TODO: make timer thread-agnostic
-    timer = configureTimer(useGraphics);
-    timer.start();
+    Util.exec.submit(() -> {
+      while(!engine.hasFullBoard()){
+        Util.sleep(timePerTurn);
+        update(useGraphics);
+      }
+    });
 
   }
 
@@ -230,7 +244,7 @@ public class Game extends Application {
       if (useGraphics)
         renderer.updateHighScores(score);
       gameIsActive = false;
-      timer.stop();
+//      timer.stop();
 
       if (gameMode == GameMode.AI_TRAINING) {
 
@@ -298,18 +312,19 @@ public class Game extends Application {
    * @param turnTime the current time it takes for one tick
    * @return a new number of milliseconds for the next tick
    */
-  private double updateTime(double turnTime) {
-    if (NINTENDO_SCORING) {
-      // probably not the best algorithm
-      return maxTimePerTurn - (0.09 * getScore());
-    } else {
-      if (turnTime > minTimePerTurn) {
-        return maxTimePerTurn - (0.09 * getScore());
-        // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
-      } else {
-        return minTimePerTurn;
-      }
-    }
+  private long updateTime(long turnTime) {
+//    if (NINTENDO_SCORING) {
+//      // probably not the best algorithm
+//      return maxTimePerTurn - (0.09 * getScore());
+//    } else {
+//      if (turnTime > minTimePerTurn) {
+//        return maxTimePerTurn - (0.09 * getScore());
+//        // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
+//      } else {
+//        return minTimePerTurn;
+//      }
+//    }
+    return turnTime - 2500000;
 
   }
 
@@ -426,8 +441,9 @@ public class Game extends Application {
     engine.clearBoard(engine.getGameBoard());
     this.timeScore = 0;
     timePerTurn = maxTimePerTurn;
-    timer.start();
+//    timer.start();
     engine.addBlock();
+    
 
   }
 
@@ -459,16 +475,15 @@ public class Game extends Application {
 
       @Override
       public void start() {
-        pastTime = System.currentTimeMillis();
+        pastTime = System.nanoTime();
         super.start();
       }
 
       @Override
       public void handle(long time) {
-        long now = System.currentTimeMillis();
-        if (now - pastTime >= timePerTurn) {
+        if (time - pastTime >= timePerTurn) {
           update(useGraphics);
-          pastTime = now;
+          pastTime = time;
         }
 
       }

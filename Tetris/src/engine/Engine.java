@@ -109,6 +109,8 @@ public class Engine {
    * and line clearing
    */
   public void update() {
+//    printBoard();
+//    System.out.println();
     if (!isPaused) { // little hacky, could be improved
       if (activeBlock.isFalling()) {
         if (checkDown()) {
@@ -872,6 +874,7 @@ public class Engine {
   public void reset() {
     this.blockCount = 0;
     this.score = 0;
+    this.numOfFullRows = 0;
     if (randomizeBlocks) {
       this.nextBlock = genRandomBlock();
     } else {
