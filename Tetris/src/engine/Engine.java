@@ -26,7 +26,7 @@ public class Engine {
 
   private Tile[][] gameBoard;
   private Tile[][] nextPieceBoard;
-  private Block nextBlock = genRandomBlock();
+  private Block nextBlock;
   private Block activeBlock;
   private Cerulean cerulean;
   private boolean isPaused = false;
@@ -61,14 +61,19 @@ public class Engine {
   public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks) {
     this.autoplay = autoplay;
     this.randomizeBlocks = randomizeBlocks;
+    this.gameBoard = deepCopy(mainBoard);
+    this.nextPieceBoard = initBoard(new Tile[4][4]);
     if (!randomizeBlocks && blocks.length == 0) {
       blocks = readInBlocks();
+      nextBlock = getNextBlock(blockCount);
+    }
+    else{
+      nextBlock = getRandomBlock();
     }
     if (autoplay) {
       cerulean = new Cerulean();
     }
-    this.gameBoard = deepCopy(mainBoard);
-    this.nextPieceBoard = initBoard(new Tile[4][4]);
+
   }
 
 
@@ -152,7 +157,7 @@ public class Engine {
     if (activeBlock.getGridLocation()[1] < -4) {
       System.err.println("Freeze detected: resetting now...");
       Util.sleep(10);
-      printBoard();
+//      printBoard();
       System.exit(-10);
     }
 
@@ -454,7 +459,7 @@ public class Engine {
     // time for evaluation and movement of block
     // System.out.println("\t\t" + (System.currentTimeMillis() -now));
     if (randomizeBlocks) {
-      nextBlock = genRandomBlock();
+      nextBlock = getRandomBlock();
     } else {
       nextBlock = getNextBlock(blockCount);
     }
@@ -520,7 +525,7 @@ public class Engine {
    * 
    * @return a new random instance of Block
    */
-  private Block genRandomBlock() {
+  private Block getRandomBlock() {
     Random r = new Random();
     int i = r.nextInt(7);
     return translateToBlock(i);
@@ -534,9 +539,8 @@ public class Engine {
    * @return the next Block
    */
   private Block getNextBlock(int blockNum) {
-    printBoard();
+//    printBoard();
     Block b = translateToBlock(blocks[gameNum][blockNum]);
-    System.out.println(b.getType() + "\t" + gameNum + " " + blockNum);
     // System.out.println(gameNum + " " + blockNum + " " + b.getType());
     return b;
   }
@@ -890,7 +894,7 @@ public class Engine {
     this.score = 0;
     this.numOfFullRows = 0;
     if (randomizeBlocks) {
-      this.nextBlock = genRandomBlock();
+      this.nextBlock = getRandomBlock();
     } else {
       this.nextBlock = getNextBlock(blockCount);
       blockCount++;
