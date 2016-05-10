@@ -61,7 +61,15 @@ public class Tile {
 	}
 	
 	public String toString(){
-	  return (isFilled ? "x " : "o ");
+	  if(isActive){
+	    return "X ";
+	  }
+	  else if(isFilled){
+	    return "x ";
+	  }
+	  else{
+	    return "o ";
+	  }
 	}
 
 }

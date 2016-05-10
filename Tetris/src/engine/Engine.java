@@ -18,6 +18,8 @@ import blocks.Tile;
 import cerulean.Cerulean;
 import mainGame.Game;
 import mainGame.Move;
+import mainGame.ScoreMode;
+import util.Util;
 
 public class Engine {
 
@@ -149,6 +151,8 @@ public class Engine {
     // it should be resetting instead
     if (activeBlock.getGridLocation()[1] < -4) {
       System.err.println("Freeze detected: resetting now...");
+      Util.sleep(10);
+      printBoard();
       System.exit(-10);
     }
 
@@ -163,7 +167,7 @@ public class Engine {
           rowsNotFalling = true;
         }
       }
-      if (Game.NINTENDO_SCORING) {
+      if (Game.SCORING == ScoreMode.NINTENDO || Game.SCORING == ScoreMode.SIMPLE) {
         score += 1;
       }
       return false;
@@ -349,33 +353,41 @@ public class Engine {
   public void clearLines(ArrayList<Integer> linesToClear) {
     // rewards a "quadris"
     if (linesToClear.size() == 4) {
-      if (Game.NINTENDO_SCORING) {
+      if (Game.SCORING == ScoreMode.NINTENDO) {
         score += 1200;
-      } else {
+      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
         score += 900;
+      } else if (Game.SCORING == ScoreMode.SIMPLE){
+        score += 700;
       }
     }
 
     if (linesToClear.size() == 3) {
-      if (Game.NINTENDO_SCORING) {
+      if (Game.SCORING == ScoreMode.NINTENDO) {
         score += 300;
-      } else {
+      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
         score += 300;
+      } else if (Game.SCORING == ScoreMode.SIMPLE){
+        score += 450;
       }
     }
 
     if (linesToClear.size() == 2) {
-      if (Game.NINTENDO_SCORING) {
+      if (Game.SCORING == ScoreMode.NINTENDO) {
         score += 120;
-      } else {
+      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
         score += 200;
+      } else if (Game.SCORING == ScoreMode.SIMPLE){
+        score += 250;
       }
     }
 
     if (linesToClear.size() == 1) {
-      if (Game.NINTENDO_SCORING) {
+      if (Game.SCORING == ScoreMode.NINTENDO) {
         score += 40;
-      } else {
+      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
+        score += 100;
+      } else if (Game.SCORING == ScoreMode.SIMPLE){
         score += 100;
       }
     }
@@ -616,14 +628,14 @@ public class Engine {
       }
     } else if (m == Move.DOWN) {
       if (checkDown()) {
-        if (!Game.NINTENDO_SCORING) {
+        if (Game.SCORING == ScoreMode.HANK_LIAM) {
           score += 2;
         }
         blockDown();
       }
     } else if (m == Move.DROP) {
       while (checkDown()) {
-        if (!Game.NINTENDO_SCORING) {
+        if (Game.SCORING == ScoreMode.HANK_LIAM) {
           score += 3;
         }
         // printBoard();

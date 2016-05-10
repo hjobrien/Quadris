@@ -41,22 +41,22 @@ public class Game extends Application {
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
 
 
-  private int maxTimePerTurn = 1000000000;    //nanoseconds
-  private int minTimePerTurn = 100000000;     //nanoseconds
+  private int maxTimePerTurn = 1000000000; // nanoseconds
+  private int minTimePerTurn = 100000000; // nanoseconds
 
-  public static final int VERTICAL_TILES = 20;
-  public static final int HORIZONTAL_TILES = 10;
+  public static final int DEFAULT_VERTICAL_TILES = 20;
+  public static final int DEFAULT_HORIZONTAL_TILES = 10;
   // private static final int SQUARE_SIZE = 29;
 
   // if nintendo scoring = false, hank/liam scoring is used
-  public static final boolean NINTENDO_SCORING = false;
+  public static final ScoreMode SCORING = ScoreMode.HANK_LIAM;
 
   private static PrintStream printer;
   private int timeScore = 0;
   private long timePerTurn = maxTimePerTurn;
 
   private AnimationTimer timer;
-  private static Tile[][] gameBoard = new Tile[VERTICAL_TILES][HORIZONTAL_TILES];
+  private Tile[][] gameBoard/* = new Tile[DEFAULT_VERTICAL_TILES][DEFAULT_HORIZONTAL_TILES] */;
   private Engine engine;
   private Renderer renderer;
   private Cerulean cerulean;
@@ -89,7 +89,8 @@ public class Game extends Application {
    * convenience constructor that initializes the game to some suggested settings
    */
   public Game() {
-    this(VERTICAL_TILES, HORIZONTAL_TILES, 100, GameMode.DISTRO, true, false, true, false);
+    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e9, GameMode.DISTRO, true, false,
+        true, false);
   }
 
   /**
@@ -106,19 +107,21 @@ public class Game extends Application {
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
       boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple) {
-    this.minTimePerTurn = minTimePerTurn;
+    // this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
     this.randomizeBlocks = randomizeBlocks;
     this.playMultiple = playMultiple;
-    engine = new Engine(gameBoard, autoplay, randomizeBlocks);
+    this.autoplay = false;
+    this.gameBoard = new Tile[boardHeight][boardWidth];
+    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks);
   }
 
   /**
    * comprehensive constructor to be used when an autoplaying game is requested, above the existing
-   * constructor the caller additionally specifies weights to be used by the AI
-   * other values are inferred based on autoplay
+   * constructor the caller additionally specifies weights to be used by the AI other values are
+   * inferred based on autoplay
    * 
    * @param boardHeight the height of the board
    * @param boardWidth the width of the board
@@ -133,17 +136,13 @@ public class Game extends Application {
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
       boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple,
       double[] weights) {
-    this.minTimePerTurn = minTimePerTurn;
-    this.gameMode = mode;
-    this.useGraphics = useGraphics;
-    this.doDebug = doDebug;
+    this(boardHeight, boardWidth, minTimePerTurn, mode, useGraphics, doDebug, randomizeBlocks,
+        playMultiple);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
-    cerulean = new Cerulean();
+    this.cerulean = new Cerulean();
     cerulean.setWeights(weights);
-    this.randomizeBlocks = randomizeBlocks;
-    this.playMultiple = playMultiple;
-    engine = new Engine(gameBoard, autoplay, randomizeBlocks);
+    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks);
   }
 
 
@@ -152,7 +151,7 @@ public class Game extends Application {
    * the key method for interacting with the JavaFX UI
    */
   public void start(Stage stage) throws Exception {
-    setup(useGraphics);
+    run();
     if (useGraphics) {
       Scene boardScene = renderer.makeGame();
       if (!autoplay) {
@@ -164,29 +163,14 @@ public class Game extends Application {
       stage.setScene(boardScene);
 
     }
-
-
-
-    engine.addBlock(); // needs to be towards the end of method so initial event fires correctly
-    if(!useGraphics){
-      Util.exec.submit(() -> {
-        while(!engine.hasFullBoard()){
-          Util.sleep(timePerTurn);
-          update(useGraphics);
-        }
-      });
-    }
-    else{
     timer = configureTimer(useGraphics);
     timer.start();
-    }
-    if (useGraphics) {
-      stage.show();
-    }
+    stage.show();
   }
 
   /**
    * sets up key parts of the object including files for logging
+   * 
    * @param useGraphics whether the object is being run in graphical output mode
    */
   private void setup(boolean useGraphics) {
@@ -205,8 +189,9 @@ public class Game extends Application {
   }
 
   /**
-   * simple method to start the game from external clients while running in graphical mode
-   * this method signature reflects that of the JavaFX start method
+   * simple method to start the game from external clients while running in graphical mode this
+   * method signature reflects that of the JavaFX start method
+   * 
    * @param arg0 the base JavaFX stage
    * @throws Exception for a myriad of GUI things
    */
@@ -220,91 +205,100 @@ public class Game extends Application {
   public void run() {
     setup(useGraphics);
     engine.addBlock();
+    // engine updates on separate thread every timePerTurn nanoseconds
     Util.exec.submit(() -> {
-      while(!engine.hasFullBoard()){
-        Util.sleep(timePerTurn);
-        update(useGraphics);
+      while (true) { //controls number of max games, change from infinite games
+        while (!engine.hasFullBoard()) {
+          Util.sleep(timePerTurn);
+          engine.update();
+          if (engine.hasFullBoard()) {
+            timer.stop();
+            System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
+            // engine.reset(); //causes game to freeze repeatably
+          }
+          timePerTurn = updateTime(timePerTurn);
+        }
+        resetGame(useGraphics);
       }
     });
 
   }
 
-  /**
-   * method called for each game update
-   * @param useGraphics whether the game is using a graphical output
-   */
-  private void update(boolean useGraphics) {
-    if (useGraphics) {
-      renderer.updateScore(getScore(), engine.getNumFullRows());
-    }
-    engine.update();
-    if (engine.hasFullBoard()) {
-      int score = getScore();
-      System.out.println("Game " + (engine.getGameNum() + 1) + ": " + score);
-      if (useGraphics)
-        renderer.updateHighScores(score);
-      gameIsActive = false;
-//      timer.stop();
-
-      if (gameMode == GameMode.AI_TRAINING) {
-
-        printer.print("Species " + (currentSpecies + 1) + " ");
-        printer.print("Game " + (engine.getGameNum() + 1) + " score: " + score + " ");
-        printer.println("weights: " + cerulean.getWeights());
-        scoreHistory.add(getScore());
-        if (currentSpecies < species.length) {
-          if (playMultiple && engine.getGameNum() == MAX_GAMES - 1) {
-            speciesAvgScore[currentSpecies] = this.getAvgScore();
-            currentSpecies++;
-            if (currentSpecies < species.length) {
-              cerulean.setWeights(species[currentSpecies]);
-              scoreHistory.clear();
-              resetGame(useGraphics);
-              engine.resetGameNum();
-            }
-
-          } else if (playMultiple && engine.getGameNum() < MAX_GAMES - 1) {
-            resetGame(useGraphics);
-          }
-        }
-        if (currentSpecies == species.length) {
-          printer.println("--------------------");
-          for (double speciesScore : speciesAvgScore) {
-            printer.println("Average: " + speciesScore);
-          }
-          printer.println("--------------------");
-
-          generationNum++;
-          if (generationNum < MAX_GENERATIONS) {
-            printer.println("Generation " + generationNum + " over, Breeding...");
-            speciesAvgScore[speciesAvgScore.length - 1] = this.getAvgScore();
-            species = cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
-            currentSpecies = 0;
-            resetGame(useGraphics);
-            engine.resetGameNum();
-            cerulean.setWeights(species[currentSpecies]);
-          }
-        }
-      } else {
-        resetGame(useGraphics);
-      }
-    }
-    if (useGraphics) {
-      renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
-    }
-
-    if (!paused) {
-      if (!NINTENDO_SCORING) {
-        timeScore++;
-      }
-    }
-    if (autoplay) {
-      timePerTurn = minTimePerTurn;
-    } else {
-      timePerTurn = updateTime(timePerTurn);
-    }
-
-  }
+  // /**
+  // * method called for each game update
+  // *
+  // * @param useGraphics whether the game is using a graphical output
+  // */
+  // private void update(boolean useGraphics) {
+  //// engine.update();
+  // if (engine.hasFullBoard()) {
+  // int score = getScore();
+  // System.out.println("Game " + (engine.getGameNum() + 1) + ": " + score);
+  //// if (useGraphics)
+  //// renderer.updateHighScores(score);
+  // gameIsActive = false;
+  // // timer.stop();
+  //
+  //// if (gameMode == GameMode.AI_TRAINING) {
+  ////
+  //// printer.print("Species " + (currentSpecies + 1) + " ");
+  //// printer.print("Game " + (engine.getGameNum() + 1) + " score: " + score + " ");
+  //// printer.println("weights: " + cerulean.getWeights());
+  //// scoreHistory.add(getScore());
+  //// if (currentSpecies < species.length) {
+  //// if (playMultiple && engine.getGameNum() == MAX_GAMES - 1) {
+  //// speciesAvgScore[currentSpecies] = this.getAvgScore();
+  //// currentSpecies++;
+  //// if (currentSpecies < species.length) {
+  //// cerulean.setWeights(species[currentSpecies]);
+  //// scoreHistory.clear();
+  //// resetGame(useGraphics);
+  //// engine.resetGameNum();
+  //// }
+  ////
+  //// } else if (playMultiple && engine.getGameNum() < MAX_GAMES - 1) {
+  //// resetGame(useGraphics);
+  //// }
+  //// }
+  //// if (currentSpecies == species.length) {
+  //// printer.println("--------------------");
+  //// for (double speciesScore : speciesAvgScore) {
+  //// printer.println("Average: " + speciesScore);
+  //// }
+  //// printer.println("--------------------");
+  ////
+  //// generationNum++;
+  //// if (generationNum < MAX_GENERATIONS) {
+  //// printer.println("Generation " + generationNum + " over, Breeding...");
+  //// speciesAvgScore[speciesAvgScore.length - 1] = this.getAvgScore();
+  //// species = cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
+  //// currentSpecies = 0;
+  //// resetGame(useGraphics);
+  //// engine.resetGameNum();
+  //// cerulean.setWeights(species[currentSpecies]);
+  //// }
+  //// }
+  //// }
+  // /*else*/{
+  // resetGame(useGraphics);
+  // }
+  // }
+  // if (useGraphics) {
+  // renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
+  // }
+  //
+  // if (!paused) {
+  // if (SCORING == ScoreMode.HANK_LIAM) {
+  // timeScore++;
+  // }
+  // }
+  // if (autoplay) {
+  // timePerTurn = minTimePerTurn;
+  // } else {
+  // timePerTurn = updateTime(timePerTurn);
+  // }
+  //
+  // }
 
   /**
    * Aims to change the number of real-world seconds between each game tick without acceleration
@@ -313,18 +307,24 @@ public class Game extends Application {
    * @return a new number of milliseconds for the next tick
    */
   private long updateTime(long turnTime) {
-//    if (NINTENDO_SCORING) {
-//      // probably not the best algorithm
-//      return maxTimePerTurn - (0.09 * getScore());
-//    } else {
-//      if (turnTime > minTimePerTurn) {
-//        return maxTimePerTurn - (0.09 * getScore());
-//        // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
-//      } else {
-//        return minTimePerTurn;
-//      }
-//    }
-    return turnTime - 2500000;
+    // if (NINTENDO_SCORING) {
+    // // probably not the best algorithm
+    // return maxTimePerTurn - (0.09 * getScore());
+    // } else {
+    // if (turnTime > minTimePerTurn) {
+    // return maxTimePerTurn - (0.09 * getScore());
+    // // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
+    // } else {
+    // return minTimePerTurn;
+    // }
+    // }
+    if (autoplay) {
+      return minTimePerTurn;
+    } else if (turnTime - 2500000 > minTimePerTurn) {
+      return turnTime - 2500000;
+    } else {
+      return minTimePerTurn;
+    }
 
   }
 
@@ -365,7 +365,7 @@ public class Game extends Application {
           renderer.unpause();
         }
       } else if (key.getCode() == KeyCode.R) {
-        resetGame(true);
+        resetGame(useGraphics);
 
       }
       if (!paused) {
@@ -441,9 +441,9 @@ public class Game extends Application {
     engine.clearBoard(engine.getGameBoard());
     this.timeScore = 0;
     timePerTurn = maxTimePerTurn;
-//    timer.start();
+    timer.start();
     engine.addBlock();
-    
+
 
   }
 
@@ -471,19 +471,20 @@ public class Game extends Application {
    */
   private AnimationTimer configureTimer(boolean useGraphics) {
     return new AnimationTimer() {
-      private long pastTime;
 
       @Override
       public void start() {
-        pastTime = System.nanoTime();
         super.start();
       }
 
+      // UI updates on UI thread every frame refresh
       @Override
       public void handle(long time) {
-        if (time - pastTime >= timePerTurn) {
-          update(useGraphics);
-          pastTime = time;
+        renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
+        renderer.updateScore(getScore(), engine.getNumFullRows());
+        if (engine.hasFullBoard()) {
+          renderer.updateHighScores(getScore());
+          timer.stop();
         }
 
       }
