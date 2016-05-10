@@ -534,7 +534,9 @@ public class Engine {
    * @return the next Block
    */
   private Block getNextBlock(int blockNum) {
+    printBoard();
     Block b = translateToBlock(blocks[gameNum][blockNum]);
+    System.out.println(b.getType() + "\t" + gameNum + " " + blockNum);
     // System.out.println(gameNum + " " + blockNum + " " + b.getType());
     return b;
   }

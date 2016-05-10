@@ -1,12 +1,21 @@
 package mainGame;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+import com.google.common.util.concurrent.ListenableFuture;
 
-public class ParellelizedClient extends Application{
-  public static final int MIN_TIME_PER_TURN = 1;
+import engine.GameMode;
+import util.Util;
+
+public class ParellelizedClient{
+  public static final int GAME_HEIGHT = 20;
+  public static final int GAME_WIDTH = 10;
+  public static final int MIN_TIME_PER_TURN = 100000000;
+  public static final boolean USE_GRAPHICS = false;
+  public static final boolean DO_DEBUG = false;
+  public static final boolean RANDOMIZE = true;
+  public static final boolean PLAY_MULTIPLE = false;
 
   private static int gameNumber = 0;
 
@@ -15,12 +24,9 @@ public class ParellelizedClient extends Application{
 //    ArrayList<ListenableFuture<Integer>> scores = new ArrayList<ListenableFuture<Integer>>();
 //    for (int i = 0; i < 4; i++) {
 //      ListenableFuture<Integer> gameScore = Util.exec.submit(() -> {
-//        Game game = new Game(); // only seems to use this info if not running in
-//        // graphics mode
-//        game.configureSettings();
-//        boolean randomizeBlocks = false;
-//        game.run(randomizeBlocks);
-//        return game.getScore();
+//        Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.DISTRO, USE_GRAPHICS,
+//        DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE);
+//        return game.run();
 //      });
 //      gameScore.addListener(() -> {
 //        try {
@@ -33,11 +39,5 @@ public class ParellelizedClient extends Application{
 //      scores.add(gameScore);
 //    }
 //    System.out.println("\nRuntime: " + (System.currentTimeMillis() - now));
-  }
-
-  @Override
-  public void start(Stage arg0) throws Exception {
-    // TODO Auto-generated method stub
-    
   }
 }

@@ -46,12 +46,12 @@ public class Renderer {
   private static final int SCREEN_HEIGHT = SCREEN_WIDTH * 2;
 
   private static final int GAME_WIDTH = SCREEN_WIDTH + 175;
-  private static final int GAME_HEIGHT = SCREEN_HEIGHT - 20;
+  private static final int GAME_HEIGHT = SCREEN_HEIGHT;
 
   private static final int HELP_HEIGHT = GAME_HEIGHT - 210;
   private static final int HELP_WIDTH = GAME_WIDTH;
 
-  private static final int SQUARE_SIZE = 29;
+  private static final int SQUARE_SIZE = 30;
 
   private static final Rectangle[][] MAIN_BOARD_RECTS =
       new Rectangle[VERTICAL_TILES][HORIZONTAL_TILES];

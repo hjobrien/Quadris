@@ -3,6 +3,7 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.DoubleStream;
@@ -386,7 +387,6 @@ public class Cerulean {
    * @param newWeights the new weights to be used in the fitness function
    */
   public void setWeights(double[] newWeights) {
-    System.out.println("weights modified");
     weights = newWeights;
   }
 
