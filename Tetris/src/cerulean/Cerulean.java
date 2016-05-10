@@ -244,11 +244,8 @@ public class Cerulean {
       }
 
       double voidCount = getNumVoids(colCopy);
-      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
-                                                                                                     // the
-      // value from
-      // being 0 in
-      // Ternary
+      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), 
+    		  VOID_POW)); // keeps the value from being 0 in Ternary
 
 
       edges += weights[3] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);

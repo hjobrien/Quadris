@@ -49,7 +49,7 @@ public class Game extends Application {
   // private static final int SQUARE_SIZE = 29;
 
   // if nintendo scoring = false, hank/liam scoring is used
-  public static final ScoreMode SCORING = ScoreMode.HANK_LIAM;
+  public static ScoreMode scoring;
 
   private static PrintStream printer;
   private int timeScore = 0;
@@ -90,7 +90,7 @@ public class Game extends Application {
    */
   public Game() {
     this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e9, GameMode.DISTRO, true, false,
-        true, false);
+        true, false, ScoreMode.SIMPLE);
   }
 
   /**
@@ -106,7 +106,7 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple) {
+      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple, ScoreMode s) {
     // this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
@@ -116,6 +116,7 @@ public class Game extends Application {
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight][boardWidth];
     this.engine = new Engine(gameBoard, autoplay, randomizeBlocks);
+    this.scoring = s;
   }
 
   /**
@@ -135,9 +136,9 @@ public class Game extends Application {
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
       boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple,
-      double[] weights) {
+      double[] weights, ScoreMode s) {
     this(boardHeight, boardWidth, minTimePerTurn, mode, useGraphics, doDebug, randomizeBlocks,
-        playMultiple);
+        playMultiple, s);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
     this.cerulean = new Cerulean();

@@ -172,7 +172,7 @@ public class Engine {
           rowsNotFalling = true;
         }
       }
-      if (Game.SCORING == ScoreMode.NINTENDO || Game.SCORING == ScoreMode.SIMPLE) {
+      if (Game.scoring == ScoreMode.NINTENDO || Game.scoring == ScoreMode.SIMPLE) {
         score += 1;
       }
       return false;
@@ -358,41 +358,41 @@ public class Engine {
   public void clearLines(ArrayList<Integer> linesToClear) {
     // rewards a "quadris"
     if (linesToClear.size() == 4) {
-      if (Game.SCORING == ScoreMode.NINTENDO) {
+      if (Game.scoring == ScoreMode.NINTENDO) {
         score += 1200;
-      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
+      } else if (Game.scoring == ScoreMode.HANK_LIAM){
         score += 900;
-      } else if (Game.SCORING == ScoreMode.SIMPLE){
+      } else if (Game.scoring == ScoreMode.SIMPLE){
         score += 700;
       }
     }
 
     if (linesToClear.size() == 3) {
-      if (Game.SCORING == ScoreMode.NINTENDO) {
+      if (Game.scoring == ScoreMode.NINTENDO) {
         score += 300;
-      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
+      } else if (Game.scoring == ScoreMode.HANK_LIAM){
         score += 300;
-      } else if (Game.SCORING == ScoreMode.SIMPLE){
+      } else if (Game.scoring == ScoreMode.SIMPLE){
         score += 450;
       }
     }
 
     if (linesToClear.size() == 2) {
-      if (Game.SCORING == ScoreMode.NINTENDO) {
+      if (Game.scoring == ScoreMode.NINTENDO) {
         score += 120;
-      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
+      } else if (Game.scoring == ScoreMode.HANK_LIAM){
         score += 200;
-      } else if (Game.SCORING == ScoreMode.SIMPLE){
+      } else if (Game.scoring == ScoreMode.SIMPLE){
         score += 250;
       }
     }
 
     if (linesToClear.size() == 1) {
-      if (Game.SCORING == ScoreMode.NINTENDO) {
+      if (Game.scoring == ScoreMode.NINTENDO) {
         score += 40;
-      } else if (Game.SCORING == ScoreMode.HANK_LIAM){
+      } else if (Game.scoring == ScoreMode.HANK_LIAM){
         score += 100;
-      } else if (Game.SCORING == ScoreMode.SIMPLE){
+      } else if (Game.scoring == ScoreMode.SIMPLE){
         score += 100;
       }
     }
@@ -634,14 +634,14 @@ public class Engine {
       }
     } else if (m == Move.DOWN) {
       if (checkDown()) {
-        if (Game.SCORING == ScoreMode.HANK_LIAM) {
+        if (Game.scoring == ScoreMode.HANK_LIAM) {
           score += 2;
         }
         blockDown();
       }
     } else if (m == Move.DROP) {
       while (checkDown()) {
-        if (Game.SCORING == ScoreMode.HANK_LIAM) {
+        if (Game.scoring == ScoreMode.HANK_LIAM) {
           score += 3;
         }
         // printBoard();
