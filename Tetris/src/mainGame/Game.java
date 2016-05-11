@@ -457,7 +457,7 @@ public class Game extends Application {
 	if (scoring == ScoreMode.HANK_LIAM){
 		return (timeScore + engine.getScore());
 	} else if (scoring == ScoreMode.NINTENDO){
-		//TODO
+		return engine.getScore();
 	} else if (scoring == ScoreMode.SIMPLE){
 		return engine.getScore();
 	}

@@ -19,7 +19,7 @@ public class GameApp extends Application {
   public static final boolean DEBUG = false;
   public static final boolean RANDOMIZE = true;
   public static final boolean PLAY_MULTIPLE = false;
-  public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
+  public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;
 
   public static void main(String args[]) throws Exception {
     launch();
