@@ -451,10 +451,18 @@ public class Game extends Application {
 
   /**
    *
-   * @return the score as a sum of the time score and the lines cleared score
+   * @return the score based on the scoring system
    */
   public int getScore() {
-    return (timeScore + engine.getScore());
+	if (scoring == ScoreMode.HANK_LIAM){
+		return (timeScore + engine.getScore());
+	} else if (scoring == ScoreMode.NINTENDO){
+		//TODO
+	} else if (scoring == ScoreMode.SIMPLE){
+		return engine.getScore();
+	}
+	//shouldn't happen
+	return -1;
   }
 
   /**

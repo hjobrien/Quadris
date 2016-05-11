@@ -1,12 +1,6 @@
 package mainGame;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
-import engine.GameMode;
-import util.Util;
 
 public class ParellelizedClient{
   public static final int GAME_HEIGHT = 20;
