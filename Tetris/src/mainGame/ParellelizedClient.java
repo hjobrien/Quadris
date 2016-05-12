@@ -27,7 +27,7 @@ public class ParellelizedClient {
     List<ListenableFuture<Integer>> results = new ArrayList<>();
     for(int i = 0; i <  maxGames; i++){
       final int j = i;
-      results.add(Util.compute.submit(() -> Game.runGame(j)));
+      results.add(Util.compute.submit(() -> Game.runGame(j, SCORE_MODE)));
     }
     try{
       gameScores = Futures.allAsList(results).get();

@@ -37,25 +37,9 @@ public class Engine {
 	private int numOfFullRows = 0;
 	private ScoreMode scoreMode;
 
-<<<<<<< HEAD
-  private Tile[][] gameBoard;
-  private Tile[][] nextPieceBoard;
-  private Block nextBlock;
-  private Block activeBlock;
-  private Cerulean cerulean;
-  private boolean isPaused = false;
-  private boolean autoplay = false;
-  private boolean randomizeBlocks;
-  private int blockCount = 0;
-  private static int gameNum = 0;
-  private boolean rowsNotFalling = true;
-  private int score = 0;
-  private int numOfFullRows = 0;
-=======
+
 	// would indicate the game is over
 	boolean full = false;
->>>>>>> branch 'master' of https://github.com/hjobrien/Tetris.git
-
 	private boolean debugMode;
 
 	public static final String BLOCK_DATA = "Blocks to add"; // file name

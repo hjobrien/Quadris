@@ -33,7 +33,7 @@ public class GameApp extends Application {
     userGame.run(arg0);
     Stage other = new Stage();
     Game aiGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.AUTOPLAY,
-        USE_GRAPHICS, DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE, WEIGHTS);
+        USE_GRAPHICS, DEBUG, RANDOMIZE, PLAY_MULTIPLE, WEIGHTS, SCORE_MODE);
     aiGame.run(other);
     other.show();
 

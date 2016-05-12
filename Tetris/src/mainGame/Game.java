@@ -255,9 +255,9 @@ public class Game extends Application {
 
   }
   
-  public static int runGame(int gameNum){
+  public static int runGame(int gameNum, ScoreMode scoring){
     Game game = new Game(20, 10, 10000, GameMode.AUTOPLAY,
-        false, false, false, false, WEIGHTS);
+        false, false, false, false, WEIGHTS, scoring);
     game.engine.setGameNumber(gameNum);
 //    System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
     game.setup(game.useGraphics);
