@@ -140,11 +140,6 @@ public class Engine {
 						setNotFalling();
 						if (getScoreMode() == ScoreMode.NINTENDO){
 							score += 10;
-						
-							//should reward a board clear
-							if (getLowestEmptyRow() == gameBoard.length - 1){
-								score += 2000;
-							}
 						} else if (getScoreMode() == ScoreMode.SIMPLE){
 							score += 1;
 						}
@@ -387,6 +382,7 @@ public class Engine {
 		ScoreMode sm = getScoreMode();
 
 		if (linesToClear.size() == 4) {
+			//display "Quadris" graphic
 			if (sm == ScoreMode.NINTENDO) {
 				score += 1000;
 			} else if (sm == ScoreMode.HANK_LIAM) {
@@ -431,6 +427,13 @@ public class Engine {
 				updateTileLocation(linesToClear.get(i), j, new Tile());
 			}
 		}
+		
+		//should reward a board clear
+		System.out.println(getLowestEmptyRow() + " " + (gameBoard.length - 1));
+		if (boardIsEmpty()){
+			//TODO display board clear graphic
+			score += 2000;
+		}
 
 		rowsNotFalling = false;
 		setNotFalling();
@@ -448,6 +451,17 @@ public class Engine {
 			activeBlock.stoppedFalling();
 			rowsNotFalling = true;
 		}
+	}
+
+	private boolean boardIsEmpty() {
+		for (Tile[] row : gameBoard){
+			for (Tile t : row){
+				if (t.isFilled()){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -592,6 +606,8 @@ public class Engine {
 	 */
 	private Block translateToBlock(int i) {
 		// return new RightS();
+
+		i = 4;            
 		switch (i) {
 		case 0:
 			return new LeftL();
