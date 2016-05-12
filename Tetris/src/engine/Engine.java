@@ -33,7 +33,7 @@ public class Engine {
   private boolean autoplay = false;
   private boolean randomizeBlocks;
   private int blockCount = 0;
-  private int gameNum = 0;
+  private static int gameNum = 0;
   private boolean rowsNotFalling = true;
   private int score = 0;
   private int numOfFullRows = 0;
@@ -988,6 +988,12 @@ public class Engine {
   public void setGameBoard(Tile[][] newGameBoard) {
     this.gameBoard = newGameBoard;
 
+  }
+
+
+  public void setGameNumber(int gameNum) {
+    this.gameNum = gameNum;
+    
   }
 
 

@@ -1,7 +1,7 @@
 package blocks;
 
-import engine.Renderer;
 import javafx.scene.paint.Color;
+import renderer.Renderer;
 
 public class Block {
   private Tile[][][] configurations = new Tile[][][] {};

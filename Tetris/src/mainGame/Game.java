@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 import blocks.Tile;
 import cerulean.Cerulean;
 import engine.Engine;
 import engine.GameMode;
-import engine.Renderer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import renderer.Renderer;
 import util.Util;
 
 public class Game extends Application {
@@ -46,7 +48,6 @@ public class Game extends Application {
 
   public static final int DEFAULT_VERTICAL_TILES = 20;
   public static final int DEFAULT_HORIZONTAL_TILES = 10;
-  // private static final int SQUARE_SIZE = 29;
 
   // if nintendo scoring = false, hank/liam scoring is used
   public static final ScoreMode SCORING = ScoreMode.HANK_LIAM;
@@ -77,6 +78,7 @@ public class Game extends Application {
 
   private static int currentSpecies = 0;
   private static int generationNum = 0;
+  private static int gameNumber = 0;
 
   private static double[] speciesAvgScore = new double[species.length];
 
@@ -89,7 +91,7 @@ public class Game extends Application {
    * convenience constructor that initializes the game to some suggested settings
    */
   public Game() {
-    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e9, GameMode.DISTRO, true, false,
+    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, GameMode.DISTRO, true, false,
         true, false);
   }
 
@@ -107,7 +109,7 @@ public class Game extends Application {
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
       boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple) {
-    // this.minTimePerTurn = minTimePerTurn;
+     this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
@@ -202,12 +204,13 @@ public class Game extends Application {
   /**
    * simple method to run the game when not in graphics mode
    */
-  public void run() {
+  public ListenableFuture<Integer> run() {
+    int score = 0;
     setup(useGraphics);
     engine.addBlock();
     // engine updates on separate thread every timePerTurn nanoseconds
-    Util.exec.submit(() -> {
-      while (true) { //controls number of max games, change from infinite games
+    ListenableFuture<Integer> gameScore = Util.exec.submit(() -> {
+//      while (true) { //controls number of max games, change from infinite games
         while (!engine.hasFullBoard()) {
           Util.sleep(timePerTurn);
           engine.update();
@@ -218,10 +221,29 @@ public class Game extends Application {
           }
           timePerTurn = updateTime(timePerTurn);
         }
-        resetGame(useGraphics);
-      }
+        return engine.getScore();
+//        resetGame(useGraphics);
+//      }
     });
+    return gameScore;
 
+  }
+  
+  public static int runGame(int gameNum){
+    Game game = new Game(20, 10, 10000, GameMode.AUTOPLAY,
+        false, false, false, false, WEIGHTS);
+    game.engine.setGameNumber(gameNum);
+//    System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
+    game.setup(game.useGraphics);
+    game.engine.addBlock();
+    while(!game.engine.hasFullBoard()){
+      game.engine.update();
+      if(game.engine.hasFullBoard()){
+        System.out.println("Done: " + gameNum + " " + game.getScore());
+      }
+    }
+    return game.getScore();
+    
   }
 
   // /**
