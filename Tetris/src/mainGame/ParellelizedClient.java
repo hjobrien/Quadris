@@ -18,6 +18,7 @@ public class ParellelizedClient {
   public static final boolean DO_DEBUG = false;
   public static final boolean RANDOMIZE = false;
   public static final boolean PLAY_MULTIPLE = false;
+  public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
 
   private static int maxGames = 10;
 
@@ -41,5 +42,24 @@ public class ParellelizedClient {
     System.out.println(((double)total) / gameScores.size());
     
     System.exit(0);
+//    long now = System.currentTimeMillis();
+//    ArrayList<ListenableFuture<Integer>> scores = new ArrayList<ListenableFuture<Integer>>();
+//    for (int i = 0; i < 4; i++) {
+//      ListenableFuture<Integer> gameScore = Util.exec.submit(() -> {
+//        Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.DISTRO, USE_GRAPHICS,
+//        DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE, SCORE_MODE);
+//        return game.run();
+//      });
+//      gameScore.addListener(() -> {
+//        try {
+//          System.out.println(gameScore.get());
+//        } catch (Exception e) {
+//          // TODO Auto-generated catch block
+//          e.printStackTrace();
+//        }
+//      }, Util.exec);
+//      scores.add(gameScore);
+//    }
+//    System.out.println("\nRuntime: " + (System.currentTimeMillis() - now));
   }
 }
