@@ -15,7 +15,7 @@ public class AutoplayClient extends Application {
   public static final int GAME_WIDTH = 10;
   public static final int MIN_TIME_PER_TURN = 100000000;
   public static final boolean USE_GRAPHICS = true;
-  public static final boolean DO_DEBUG = false;
+  public static final boolean DEBUG = false;
   public static final boolean RANDOMIZE = true;
   public static final boolean PLAY_MULTIPLE = true;
   public static final double[] WEIGHTS = new double[] {-70, -97.85, 306.77, 5};
@@ -28,7 +28,7 @@ public class AutoplayClient extends Application {
   @Override
   public void start(Stage arg0) throws Exception {
     Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.AUTOPLAY,
-        USE_GRAPHICS, DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE, WEIGHTS, SCORE_MODE);
+        USE_GRAPHICS, DEBUG, RANDOMIZE, PLAY_MULTIPLE, WEIGHTS, SCORE_MODE);
     game.run(arg0);
 
   }
