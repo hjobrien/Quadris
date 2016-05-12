@@ -139,6 +139,11 @@ public class Engine {
 						setNotFalling();
 						if (Game.scoring == ScoreMode.NINTENDO){
 							score += 10;
+						
+							//should reward a board clear
+							if (getLowestEmptyRow() == gameBoard.length - 1){
+								score += 2000;
+							}
 						} else if (Game.scoring == ScoreMode.SIMPLE){
 							score += 1;
 						}

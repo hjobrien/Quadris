@@ -20,8 +20,10 @@ public enum ScoreMode {
    * 2 Lines = 150 points
    * 3 Lines = 350 points
    * 4 Lines = 1000 points (aka a Tetris)
-   * Clear the board = 2000
+   * Clear the board = 2000 TODO
    * Every piece = 10 points
+   * 
+   * Top Score for Liam: 6130
    */
   NINTENDO(1),
   
