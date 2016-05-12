@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
  * @author Hank
  *
  */
-public class BoardClient {
+public class BoardEvaluationClient {
   
   public static final Color COLOR = Color.BLACK;
   

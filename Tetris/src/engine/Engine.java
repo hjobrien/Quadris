@@ -16,7 +16,6 @@ import blocks.StraightLine;
 import blocks.TBlock;
 import blocks.Tile;
 import cerulean.Cerulean;
-import mainGame.Game;
 import mainGame.Move;
 import mainGame.ScoreMode;
 import util.Util;
@@ -36,6 +35,7 @@ public class Engine {
 	private boolean rowsNotFalling = true;
 	private int score = 0;
 	private int numOfFullRows = 0;
+	private ScoreMode scoreMode;
 
 	// would indicate the game is over
 	boolean full = false;
@@ -60,7 +60,8 @@ public class Engine {
 	 *            whether blocks should be randomly generated or read from a
 	 *            file
 	 */
-	public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks) {
+	public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks, ScoreMode scoring) {
+		this.scoreMode = scoring;
 		this.autoplay = autoplay;
 		this.randomizeBlocks = randomizeBlocks;
 		this.gameBoard = deepCopy(mainBoard);
@@ -137,23 +138,23 @@ public class Engine {
 						clearLines(linesToClear);
 					} else {
 						setNotFalling();
-						if (Game.scoring == ScoreMode.NINTENDO){
+						if (getScoreMode() == ScoreMode.NINTENDO){
 							score += 10;
 						
 							//should reward a board clear
 							if (getLowestEmptyRow() == gameBoard.length - 1){
 								score += 2000;
 							}
-						} else if (Game.scoring == ScoreMode.SIMPLE){
+						} else if (getScoreMode() == ScoreMode.SIMPLE){
 							score += 1;
 						}
 						addBlock();
 					}
 				}
 			} else {
-				if (Game.scoring == ScoreMode.NINTENDO){
+				if (getScoreMode() == ScoreMode.NINTENDO){
 					score += 10;
-				} else if (Game.scoring == ScoreMode.SIMPLE){
+				} else if (getScoreMode() == ScoreMode.SIMPLE){
 					score += 1;
 				}
 				addBlock();
@@ -383,7 +384,7 @@ public class Engine {
 	public void clearLines(ArrayList<Integer> linesToClear) {
 		// rewards a "quadris"
 
-		ScoreMode sm = Game.scoring;
+		ScoreMode sm = getScoreMode();
 
 		if (linesToClear.size() == 4) {
 			if (sm == ScoreMode.NINTENDO) {
@@ -673,14 +674,14 @@ public class Engine {
 			}
 		} else if (m == Move.DOWN) {
 			if (checkDown()) {
-				if (Game.scoring == ScoreMode.HANK_LIAM) {
+				if (getScoreMode() == ScoreMode.HANK_LIAM) {
 					score += 2;
 				}
 				blockDown();
 			}
 		} else if (m == Move.DROP) {
 			while (checkDown()) {
-				if (Game.scoring == ScoreMode.HANK_LIAM) {
+				if (getScoreMode() == ScoreMode.HANK_LIAM) {
 					score += 3;
 				}
 				// printBoard();
@@ -1049,6 +1050,10 @@ public class Engine {
 	public void setGameBoard(Tile[][] newGameBoard) {
 		this.gameBoard = newGameBoard;
 
+	}
+	
+	public ScoreMode getScoreMode(){
+		return this.scoreMode;
 	}
 
 }

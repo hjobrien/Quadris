@@ -187,7 +187,8 @@ public class Cerulean {
     }
 
     if (boardAnalyzer == null) {
-      boardAnalyzer = new Engine(tileCopy, false, false);
+    	//null refers to a lack of score mode
+      boardAnalyzer = new Engine(tileCopy, false, false, null);
     }
     boardAnalyzer.setGameBoard(tileCopy);
     boardAnalyzer.addBlock(nextBlock);

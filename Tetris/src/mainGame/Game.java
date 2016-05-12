@@ -48,8 +48,8 @@ public class Game extends Application {
   public static final int DEFAULT_HORIZONTAL_TILES = 10;
   // private static final int SQUARE_SIZE = 29;
 
-  // if nintendo scoring = false, hank/liam scoring is used
-  public static ScoreMode scoring;
+  //can be Hank_Liam, Nintendo, or Simple
+  public ScoreMode scoring;
 
   private static PrintStream printer;
   private int timeScore = 0;
@@ -81,9 +81,9 @@ public class Game extends Application {
   private static double[] speciesAvgScore = new double[species.length];
 
 
-  private static boolean paused = false;
+  private boolean paused = false;
 
-  private static boolean gameIsActive = true;
+  private boolean gameIsActive = true;
 
   /**
    * convenience constructor that initializes the game to some suggested settings
@@ -106,7 +106,7 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple, ScoreMode s) {
+      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple, ScoreMode scoring) {
     // this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
@@ -115,8 +115,34 @@ public class Game extends Application {
     this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight][boardWidth];
-    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks);
-    this.scoring = s;
+    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks, scoring);
+    this.scoring = scoring;
+  }
+  
+  /**
+   * comprehensive constructor that sets all parts of the games configuration
+   * 
+   * @param boardHeight the height of the board
+   * @param boardWidth the width of the board
+   * @param minTimePerTurn the minimum time between game updates, in milliseconds
+   * @param mode the gameMode to be used
+   * @param useGraphics whether the game should expose its working through a GUI
+   * @param doDebug whether the game should display debug information
+   * @param randomizeBlocks whether blocks should be randomly generated or read from a file
+   * @param playMultiple whether multiple games should be played consecutively
+   */
+  public Game(Tile[][] board, int minTimePerTurn, GameMode mode,
+      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple, ScoreMode scoring) {
+    // this.minTimePerTurn = minTimePerTurn;
+    this.gameMode = mode;
+    this.useGraphics = useGraphics;
+    this.doDebug = doDebug;
+    this.randomizeBlocks = randomizeBlocks;
+    this.playMultiple = playMultiple;
+    this.autoplay = false;
+    this.gameBoard = board;
+    this.scoring = scoring;
+    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks, scoring);
   }
 
   /**
@@ -136,14 +162,14 @@ public class Game extends Application {
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
       boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple,
-      double[] weights, ScoreMode s) {
+      double[] weights, ScoreMode scoring) {
     this(boardHeight, boardWidth, minTimePerTurn, mode, useGraphics, doDebug, randomizeBlocks,
-        playMultiple, s);
+        playMultiple, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
     this.cerulean = new Cerulean();
     cerulean.setWeights(weights);
-    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks);
+    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks, scoring);
   }
 
 
@@ -505,5 +531,9 @@ public class Game extends Application {
    */
   public void togglePause() {
     paused = !paused;
+  }
+  
+  public ScoreMode getScoringMode(){
+	  return this.scoring;
   }
 }
