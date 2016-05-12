@@ -382,7 +382,7 @@ public class Engine {
 		ScoreMode sm = getScoreMode();
 
 		if (linesToClear.size() == 4) {
-			//display "Quadris" graphic
+			//TODO display "Quadris" graphic
 			if (sm == ScoreMode.NINTENDO) {
 				score += 1000;
 			} else if (sm == ScoreMode.HANK_LIAM) {
@@ -429,7 +429,6 @@ public class Engine {
 		}
 		
 		//should reward a board clear
-		System.out.println(getLowestEmptyRow() + " " + (gameBoard.length - 1));
 		if (boardIsEmpty()){
 			//TODO display board clear graphic
 			score += 2000;
