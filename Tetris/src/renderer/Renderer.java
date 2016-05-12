@@ -1,4 +1,4 @@
-package engine;
+package renderer;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,22 +41,23 @@ public class Renderer {
   public static final int VERTICAL_TILES = 20;
   public static final int HORIZONTAL_TILES = 10;
 
+  public static final int SQUARE_SIZE = 30;
+
   // height should be double width
-  private static final int SCREEN_WIDTH = 300;
-  private static final int SCREEN_HEIGHT = SCREEN_WIDTH * 2;
+  public static final int GAME_WIDTH = HORIZONTAL_TILES * SQUARE_SIZE;
+  public static final int GAME_HEIGHT = GAME_WIDTH * 2;
 
-  private static final int GAME_WIDTH = SCREEN_WIDTH + 175;
-  private static final int GAME_HEIGHT = SCREEN_HEIGHT;
+  public static final int SCREEN_WIDTH = GAME_WIDTH + 175;
+  public static final int SCREEN_HEIGHT = GAME_HEIGHT;
 
-  private static final int HELP_HEIGHT = GAME_HEIGHT - 210;
-  private static final int HELP_WIDTH = GAME_WIDTH;
+  public static final int HELP_HEIGHT = SCREEN_HEIGHT - 210;
+  public static final int HELP_WIDTH = SCREEN_WIDTH;
 
-  private static final int SQUARE_SIZE = 30;
 
-  private static final Rectangle[][] MAIN_BOARD_RECTS =
+  public static final Rectangle[][] MAIN_BOARD_RECTS =
       new Rectangle[VERTICAL_TILES][HORIZONTAL_TILES];
 
-  private static final Rectangle[][] NEXT_BOARD_RECTS = new Rectangle[4][4];
+  public static final Rectangle[][] NEXT_BOARD_RECTS = new Rectangle[4][4];
 
   // private static final String NEXT_PIECE_RECTS = null;
 
@@ -128,10 +129,8 @@ public class Renderer {
     scoreList.setText(getScoresForDisplay(highScores));
     StackPane main = new StackPane();
 
-    // if we only make 1 board and it's in engine, we can always just receive the boardState
-    // from engine when we need it and we wont have to be translating boardStates
     GridPane mainGame = new GridPane();
-    mainGame.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
+    mainGame.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
     mainGame.getColumnConstraints().add(new ColumnConstraints(20));
     mainGame.getColumnConstraints().add(new ColumnConstraints(150));
 
@@ -155,7 +154,7 @@ public class Renderer {
     pauseView.setVisible(false);
     main.getChildren().add(pauseView);
     makeBoardGrid(grid, VERTICAL_TILES, HORIZONTAL_TILES, MAIN_BOARD_RECTS);
-    return new Scene(main, GAME_WIDTH, GAME_HEIGHT);
+    return new Scene(main, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   }
 
@@ -191,8 +190,8 @@ public class Renderer {
         "-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
     GridPane pauseGrid = new GridPane();
 
-    pauseGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH));
-    pauseGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH - SCREEN_WIDTH));
+    pauseGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
+    pauseGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
     pauseGrid.getRowConstraints().add(new RowConstraints(540));
 
     Button helpButton = new Button("Instructions");
