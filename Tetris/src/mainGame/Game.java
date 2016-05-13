@@ -233,7 +233,7 @@ public class Game extends Application {
    * simple method to run the game when not in graphics mode
    */
   public ListenableFuture<Integer> run() {
-    int score = 0;
+//    int score = 0;
     setup(useGraphics);
     engine.addBlock();
     // engine updates on separate thread every timePerTurn nanoseconds
@@ -510,7 +510,8 @@ public class Game extends Application {
 	} else if (scoring == ScoreMode.SIMPLE){
 		return engine.getScore();
 	}
-	throw new RuntimeException("Invalid score mode");
+	//shouldn't happen
+	return -1;
   }
 
   /**

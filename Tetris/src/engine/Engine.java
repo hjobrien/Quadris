@@ -1,19 +1,8 @@
 package engine;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
 
 import blocks.Block;
-import blocks.LeftL;
-import blocks.LeftS;
-import blocks.RightL;
-import blocks.RightS;
-import blocks.Square;
-import blocks.StraightLine;
-import blocks.TBlock;
 import blocks.Tile;
 import cerulean.Cerulean;
 import mainGame.Move;
@@ -47,7 +36,7 @@ public class Engine {
 
 	// lists of numbers corresponding to blocks, translated in the
 	// 'genNextBlock' method
-	private static int[][] blocks = new int[][] {};
+//	private static int[][] blocks = new int[][] {};
 
 	/**
 	 * constructs an engine with a board and tells it if it should automatically
@@ -562,61 +551,61 @@ public class Engine {
 		}
 	}
 
-	/**
-	 * used for randomized blocks
-	 * 
-	 * @return a new random instance of Block
-	 */
-	private Block getRandomBlock() {
-		Random r = new Random();
-		int i = r.nextInt(7);
-		return translateToBlock(i);
-	}
+//	/**
+//	 * used for randomized blocks
+//	 * 
+//	 * @return a new random instance of Block
+//	 */
+//	private Block getRandomBlock() {
+//		Random r = new Random();
+//		int i = r.nextInt(7);
+//		return translateToBlock(i);
+//	}
 
-	/**
-	 * gets the next block if consistent blocks are to be used
-	 * 
-	 * @param blockNum
-	 *            the block it should add, one more than the total number of
-	 *            blocks added at that point
-	 * @return the next Block
-	 */
-	private Block getNextBlock(int blockNum) {
-		// printBoard();
-		Block b = translateToBlock(blocks[gameNum][blockNum]);
-		// System.out.println(gameNum + " " + blockNum + " " + b.getType());
-		return b;
-	}
+//	/**
+//	 * gets the next block if consistent blocks are to be used
+//	 * 
+//	 * @param blockNum
+//	 *            the block it should add, one more than the total number of
+//	 *            blocks added at that point
+//	 * @return the next Block
+//	 */
+//	private Block getNextBlock(int blockNum) {
+//		// printBoard();
+//		Block b = translateToBlock(blocks[gameNum][blockNum]);
+//		// System.out.println(gameNum + " " + blockNum + " " + b.getType());
+//		return b;
+//	}
 
-	/**
-	 * translates an integer to a Block
-	 * 
-	 * @param i
-	 *            the integer to translate
-	 * @return a Block corresponding to that integer
-	 */
-	private Block translateToBlock(int i) {
-		// return new RightS();
-
-		i = 4;            
-		switch (i) {
-		case 0:
-			return new LeftL();
-		case 1:
-			return new RightL();
-		case 2:
-			return new LeftS();
-		case 3:
-			return new RightS();
-		case 4:
-			return new StraightLine();
-		case 5:
-			return new TBlock();
-		case 6:
-			return new Square();
-		}
-		throw new RuntimeException("bad random num");
-	}
+//	/**
+//	 * translates an integer to a Block
+//	 * 
+//	 * @param i
+//	 *            the integer to translate
+//	 * @return a Block corresponding to that integer
+//	 */
+//	private Block translateToBlock(int i) {
+//		// return new RightS();
+//
+//		i = 4;            
+//		switch (i) {
+//		case 0:
+//			return new LeftL();
+//		case 1:
+//			return new RightL();
+//		case 2:
+//			return new LeftS();
+//		case 3:
+//			return new RightS();
+//		case 4:
+//			return new StraightLine();
+//		case 5:
+//			return new TBlock();
+//		case 6:
+//			return new Square();
+//		}
+//		throw new RuntimeException("bad random num");
+//	}
 
 	/**
 	 * updates the falling block by moving it down one row
@@ -896,44 +885,44 @@ public class Engine {
 //		}
 //	}
 
-	/**
-	 * reads in the blocks to be used in the consistent training mode the blocks
-	 * are stored as int's in the Blocks to Add file
-	 * 
-	 * @return an array of integers which can be mapped to a block type the rows
-	 *         are unique games, each int in the row is one block to be added
-	 *         that game
-	 */
-	private int[][] readInBlocks() {
-		Scanner fileReader = null;
-		try {
-			fileReader = new Scanner(new File(BLOCK_DATA));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		int numGames = 0;
-		// scan through once for numbers of lines
-		while (fileReader.hasNextLine()) {
-			numGames++;
-			fileReader.nextLine();
-		}
-		// Reinitialized
-		try {
-			fileReader = new Scanner(new File(BLOCK_DATA));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		int[][] blocks = new int[numGames][];
-		for (int i = 0; i < numGames; i++) {
-			String[] textNums = fileReader.nextLine().split(" ");
-			int[] nums = new int[textNums.length];
-			for (int j = 0; j < textNums.length; j++) {
-				nums[j] = Integer.parseInt(textNums[j]);
-			}
-			blocks[i] = nums;
-		}
-		return blocks;
-	}
+//	/**
+//	 * reads in the blocks to be used in the consistent training mode the blocks
+//	 * are stored as int's in the Blocks to Add file
+//	 * 
+//	 * @return an array of integers which can be mapped to a block type the rows
+//	 *         are unique games, each int in the row is one block to be added
+//	 *         that game
+//	 */
+//	private int[][] readInBlocks() {
+//		Scanner fileReader = null;
+//		try {
+//			fileReader = new Scanner(new File(BLOCK_DATA));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		int numGames = 0;
+//		// scan through once for numbers of lines
+//		while (fileReader.hasNextLine()) {
+//			numGames++;
+//			fileReader.nextLine();
+//		}
+//		// Reinitialized
+//		try {
+//			fileReader = new Scanner(new File(BLOCK_DATA));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		int[][] blocks = new int[numGames][];
+//		for (int i = 0; i < numGames; i++) {
+//			String[] textNums = fileReader.nextLine().split(" ");
+//			int[] nums = new int[textNums.length];
+//			for (int j = 0; j < textNums.length; j++) {
+//				nums[j] = Integer.parseInt(textNums[j]);
+//			}
+//			blocks[i] = nums;
+//		}
+//		return blocks;
+//	}
 
 	/**
 	 * gets the number of blocks that have been added
