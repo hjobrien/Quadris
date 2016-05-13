@@ -18,7 +18,6 @@ public class Engine {
 	private Cerulean cerulean;
 	private boolean isPaused = false;
 	private boolean autoplay = false;
-//	private boolean randomizeBlocks;
 	private int blockCount = 0;
 	private int gameNum = 0;
 	private boolean rowsNotFalling = true;
@@ -27,10 +26,12 @@ public class Engine {
 	private ScoreMode scoreMode;
 	private BlockGenerator blockGenerator;
 
+	private boolean canPressUpToRotate = false;
+	private boolean debugMode;
 
 	// would indicate the game is over
 	boolean full = false;
-	private boolean debugMode;
+	
 
 	public static final String BLOCK_DATA = "Blocks to add"; // file name
 
@@ -60,7 +61,6 @@ public class Engine {
 		if (autoplay) {
 			cerulean = new Cerulean();
 		}
-
 	}
 
 	/**
@@ -107,17 +107,11 @@ public class Engine {
 	 * logging game state, and line clearing
 	 */
 	public void update() {
-		// printBoard();
-		// System.out.println();
 		if (!isPaused) { // little hacky, could be improved
 			if (activeBlock.isFalling()) {
 				if (checkDown()) {
 					blockDown();
 				} else {
-					// block just landed
-					// if (logMode) {
-					// Logger.log(gameBoard, activeBlock, activeBlock);
-					// }
 					ArrayList<Integer> linesToClear = getFullRows();
 					if (!linesToClear.isEmpty()) {
 						clearLines(linesToClear);
@@ -154,9 +148,9 @@ public class Engine {
 		// .println(activeBlock.getGridLocation()[0] + " " +
 		// activeBlock.getGridLocation()[1]);
 		// }
+		
 		// this if is a hacky fix to stop the game from freezing under certain
-		// unknown conditions when
-		// it should be resetting instead
+		// unknown conditions when it should be resetting instead
 		if (activeBlock.getGridLocation()[1] < -4) {
 			System.err.println("Freeze detected: resetting now...");
 			Util.sleep(10);
@@ -178,10 +172,6 @@ public class Engine {
 		}
 
 		return true;
-		/*
-		 * if lowestEmptyRow has blocks above it: set blocks under
-		 * lowestEmptyLine to inactive keep blocks above lowestEmptyLine active
-		 */
 	}
 
 	/**
@@ -551,62 +541,6 @@ public class Engine {
 		}
 	}
 
-//	/**
-//	 * used for randomized blocks
-//	 * 
-//	 * @return a new random instance of Block
-//	 */
-//	private Block getRandomBlock() {
-//		Random r = new Random();
-//		int i = r.nextInt(7);
-//		return translateToBlock(i);
-//	}
-
-//	/**
-//	 * gets the next block if consistent blocks are to be used
-//	 * 
-//	 * @param blockNum
-//	 *            the block it should add, one more than the total number of
-//	 *            blocks added at that point
-//	 * @return the next Block
-//	 */
-//	private Block getNextBlock(int blockNum) {
-//		// printBoard();
-//		Block b = translateToBlock(blocks[gameNum][blockNum]);
-//		// System.out.println(gameNum + " " + blockNum + " " + b.getType());
-//		return b;
-//	}
-
-//	/**
-//	 * translates an integer to a Block
-//	 * 
-//	 * @param i
-//	 *            the integer to translate
-//	 * @return a Block corresponding to that integer
-//	 */
-//	private Block translateToBlock(int i) {
-//		// return new RightS();
-//
-//		i = 4;            
-//		switch (i) {
-//		case 0:
-//			return new LeftL();
-//		case 1:
-//			return new RightL();
-//		case 2:
-//			return new LeftS();
-//		case 3:
-//			return new RightS();
-//		case 4:
-//			return new StraightLine();
-//		case 5:
-//			return new TBlock();
-//		case 6:
-//			return new Square();
-//		}
-//		throw new RuntimeException("bad random num");
-//	}
-
 	/**
 	 * updates the falling block by moving it down one row
 	 */
@@ -687,11 +621,9 @@ public class Engine {
 			if (debugMode){
 				blockUp();
 			}
-			//doesn't work for some reason
-			//most tetris games have the up key rotate the block in a specified direction
-			/*
-			 * else { executeMove(Move.ROT_LEFT); }
-			 */
+			if (canPressUpToRotate){
+				 executeMove(Move.ROT_LEFT);
+			}
 		}
 
 	}

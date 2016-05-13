@@ -459,9 +459,7 @@ public class Game extends Application {
               engine.update();
             break;
           case UP:
-            if (doDebug) {
               engine.executeMove(Move.UP);
-            }
             break;
           default:
             // key pressed wasn't an active key, do nothing
