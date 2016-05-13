@@ -49,7 +49,7 @@ public class BoardTestClient extends Application{
 	  
 	  public static Tile[][] getBoard(){
 	    return new Tile[][]{
-	    	//			column 1						column 2					column 3				column 4				column 5				column 6				column 7					column 8				column 9				column 10
+	    	//					column 1				column 2				column 3				column 4				column 5				column 6				column 7				column 8				column 9				column 10
 	      new Tile[]{new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            )},               
 	      new Tile[]{new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            )},
 	      new Tile[]{new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            ), new Tile(            )},
