@@ -29,13 +29,14 @@ public class Engine {
 	private Cerulean cerulean;
 	private boolean isPaused = false;
 	private boolean autoplay = false;
-	private boolean randomizeBlocks;
+//	private boolean randomizeBlocks;
 	private int blockCount = 0;
 	private int gameNum = 0;
 	private boolean rowsNotFalling = true;
 	private int score = 0;
 	private int numOfFullRows = 0;
 	private ScoreMode scoreMode;
+	private BlockGenerator blockGenerator;
 
 
 	// would indicate the game is over
@@ -60,18 +61,13 @@ public class Engine {
 	 *            whether blocks should be randomly generated or read from a
 	 *            file
 	 */
-	public Engine(Tile[][] mainBoard, boolean autoplay, boolean randomizeBlocks, ScoreMode scoring) {
+	public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring) {
 		this.scoreMode = scoring;
 		this.autoplay = autoplay;
-		this.randomizeBlocks = randomizeBlocks;
+		this.blockGenerator = generator;
 		this.gameBoard = deepCopy(mainBoard);
 		this.nextPieceBoard = initBoard(new Tile[4][4]);
-		if (!randomizeBlocks && blocks.length == 0) {
-			blocks = readInBlocks();
-			nextBlock = getNextBlock(blockCount);
-		} else {
-			nextBlock = getRandomBlock();
-		}
+		nextBlock = blockGenerator.generateBlock();
 		if (autoplay) {
 			cerulean = new Cerulean();
 		}
@@ -503,11 +499,7 @@ public class Engine {
 		}
 		// time for evaluation and movement of block
 		// System.out.println("\t\t" + (System.currentTimeMillis() -now));
-		if (randomizeBlocks) {
-			nextBlock = getRandomBlock();
-		} else {
-			nextBlock = getNextBlock(blockCount);
-		}
+		nextBlock = blockGenerator.generateBlock();
 		clearBoard(nextPieceBoard);
 		addBlockToDisplay(nextPieceBoard, nextBlock);
 		// activeBlock = nextBlock;
@@ -888,21 +880,21 @@ public class Engine {
 		return isPaused;
 	}
 
-	/**
-	 * sets if the Engine should be adding random blocks or consistent blocks if
-	 * they are to be non-random, this loads in the required data
-	 * 
-	 * @param randomizeBlocks
-	 *            true if random blocks are to be used, false otherwise
-	 */
-	public void setRandomizeBlocks(boolean randomizeBlocks) {
-		this.randomizeBlocks = randomizeBlocks;
-		if (!randomizeBlocks) {
-			blocks = readInBlocks();
-			nextBlock = getNextBlock(this.blockCount);
-			blockCount++;
-		}
-	}
+//	/**
+//	 * sets if the Engine should be adding random blocks or consistent blocks if
+//	 * they are to be non-random, this loads in the required data
+//	 * 
+//	 * @param randomizeBlocks
+//	 *            true if random blocks are to be used, false otherwise
+//	 */
+//	public void setRandomizeBlocks(boolean randomizeBlocks) {
+//		this.randomizeBlocks = randomizeBlocks;
+//		if (!randomizeBlocks) {
+//			blocks = readInBlocks();
+//			nextBlock = getNextBlock(this.blockCount);
+//			blockCount++;
+//		}
+//	}
 
 	/**
 	 * reads in the blocks to be used in the consistent training mode the blocks
@@ -959,12 +951,14 @@ public class Engine {
 		this.blockCount = 0;
 		this.score = 0;
 		this.numOfFullRows = 0;
-		if (randomizeBlocks) {
-			this.nextBlock = getRandomBlock();
-		} else {
-			this.nextBlock = getNextBlock(blockCount);
-			blockCount++;
-		}
+		this.blockGenerator.reset();
+		this.nextBlock = blockGenerator.generateBlock();
+//		if (randomizeBlocks) {
+//			this.nextBlock = getRandomBlock();
+//		} else {
+//			this.nextBlock = getNextBlock(blockCount);
+//			blockCount++;
+//		}
 		this.full = false;
 		this.gameNum++; // keep for automated testing
 	}

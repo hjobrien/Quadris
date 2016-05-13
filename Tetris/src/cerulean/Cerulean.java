@@ -3,7 +3,6 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.DoubleStream;
@@ -11,6 +10,7 @@ import java.util.stream.DoubleStream;
 import blocks.Block;
 import blocks.Tile;
 import engine.Engine;
+import engine.RandomizeBlocks;
 import mainGame.Move;
 
 /**
@@ -188,7 +188,7 @@ public class Cerulean {
 
     if (boardAnalyzer == null) {
     	//null refers to a lack of score mode
-      boardAnalyzer = new Engine(tileCopy, false, false, null);
+      boardAnalyzer = new Engine(tileCopy, false, new RandomizeBlocks(), null);
     }
     boardAnalyzer.setGameBoard(tileCopy);
     boardAnalyzer.addBlock(nextBlock);

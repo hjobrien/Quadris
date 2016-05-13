@@ -9,8 +9,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import blocks.Tile;
 import cerulean.Cerulean;
+import engine.BlockGenerator;
 import engine.Engine;
 import engine.GameMode;
+import engine.RandomizeBlocks;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -36,7 +38,7 @@ public class Game extends Application {
   private boolean doDebug;
   // private static boolean doLog;
   private boolean autoplay;
-  private boolean randomizeBlocks;
+//  private boolean randomizeBlocks;
   private boolean playMultiple; // play multiple games in a row
 
   // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
@@ -91,7 +93,7 @@ public class Game extends Application {
    */
   public Game() {
     this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, GameMode.DISTRO, true, false,
-        true, false, ScoreMode.SIMPLE);
+        new RandomizeBlocks(), false, ScoreMode.SIMPLE);
   }
 
   /**
@@ -107,16 +109,16 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple, ScoreMode scoring) {
+      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple, ScoreMode scoring) {
      this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-    this.randomizeBlocks = randomizeBlocks;
+//    this.randomizeBlocks = randomizeBlocks;
     this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight][boardWidth];
-    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks, scoring);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring);
     this.scoring = scoring;
   }
   
@@ -133,17 +135,17 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    */
   public Game(Tile[][] board, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple, ScoreMode scoring) {
+      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple, ScoreMode scoring) {
     // this.minTimePerTurn = minTimePerTurn;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-    this.randomizeBlocks = randomizeBlocks;
+//    this.randomizeBlocks = randomizeBlocks;
     this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = board;
     this.scoring = scoring;
-    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks, scoring);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring);
   }
 
   /**
@@ -162,15 +164,15 @@ public class Game extends Application {
    * @param weights the weights to be passed to the AI for its evaluation function
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, boolean randomizeBlocks, boolean playMultiple,
+      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple,
       double[] weights, ScoreMode scoring) {
-    this(boardHeight, boardWidth, minTimePerTurn, mode, useGraphics, doDebug, randomizeBlocks,
+    this(boardHeight, boardWidth, minTimePerTurn, mode, useGraphics, doDebug, generator,
         playMultiple, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
     this.cerulean = new Cerulean();
     cerulean.setWeights(weights);
-    this.engine = new Engine(gameBoard, autoplay, randomizeBlocks, scoring);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring);
   }
 
 
@@ -257,7 +259,7 @@ public class Game extends Application {
   
   public static int runGame(int gameNum, ScoreMode scoring){
     Game game = new Game(20, 10, 10000, GameMode.AUTOPLAY,
-        false, false, false, false, WEIGHTS, scoring);
+        false, false, null, false, WEIGHTS, scoring);
     game.engine.setGameNumber(gameNum);
 //    System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
     game.setup(game.useGraphics);
