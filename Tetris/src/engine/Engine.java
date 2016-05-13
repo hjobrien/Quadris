@@ -48,8 +48,7 @@ public class Engine {
 	 * @param autoplay
 	 *            whether the engine should automatically place the blocks
 	 * @param randomizeBlocks
-	 *            whether blocks should be randomly generated or read from a
-	 *            file
+	 *            whether blocks should be randomly generated or read from a file
 	 */
 	public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring) {
 		this.scoreMode = scoring;

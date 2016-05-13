@@ -357,17 +357,9 @@ public class Game extends Application {
    * @return a new number of milliseconds for the next tick
    */
   private long updateTime(long turnTime) {
-    // if (NINTENDO_SCORING) {
-    // // probably not the best algorithm
-    // return maxTimePerTurn - (0.09 * getScore());
-    // } else {
-    // if (turnTime > minTimePerTurn) {
-    // return maxTimePerTurn - (0.09 * getScore());
-    // // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
-    // } else {
-    // return minTimePerTurn;
-    // }
-    // }
+	  
+	//could also be a function of score (getScore())
+	  
     if (autoplay) {
       return minTimePerTurn;
     } else if (turnTime - 2500000 > minTimePerTurn) {
@@ -508,8 +500,7 @@ public class Game extends Application {
 	} else if (scoring == ScoreMode.SIMPLE){
 		return engine.getScore();
 	}
-	//shouldn't happen
-	return -1;
+	throw new RuntimeException("Invalid Score Mode");
   }
 
   /**
