@@ -1,4 +1,4 @@
-package engine;
+package event;
 
 import javafx.event.Event;
 import javafx.event.EventType;

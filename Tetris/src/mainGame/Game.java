@@ -510,8 +510,7 @@ public class Game extends Application {
 	} else if (scoring == ScoreMode.SIMPLE){
 		return engine.getScore();
 	}
-	//shouldn't happen
-	return -1;
+	throw new RuntimeException("Invalid score mode");
   }
 
   /**
