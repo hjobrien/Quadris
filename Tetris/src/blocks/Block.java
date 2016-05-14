@@ -58,9 +58,8 @@ public class Block {
     }
     this.type = type;
     // row, column of bottom right corner
-    int startingRowIndex = configurations[rotationIndex].length - 1 + 3;
-    int startingColumnIndex =
-        (Renderer.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2
+    int startingRowIndex = 3;
+    int startingColumnIndex = (Renderer.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2
             + configurations[rotationIndex][0].length - 1;
     locationInGrid = new int[] {startingRowIndex, startingColumnIndex};
   }

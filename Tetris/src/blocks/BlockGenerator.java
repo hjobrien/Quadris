@@ -1,6 +1,4 @@
-package engine;
-
-import blocks.Block;
+package blocks;
 
 public interface BlockGenerator {
 

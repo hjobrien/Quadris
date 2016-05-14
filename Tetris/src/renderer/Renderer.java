@@ -329,14 +329,15 @@ public class Renderer {
    * @param board the board to be drawn
    */
   private void drawToGameBoard(Tile[][] board) {
-    for (int i = 0; i < board.length; i++) {
+	  //the 3 should account for height accommodation
+    for (int i = 3; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
 
         Tile current = board[i][j];
         if (current.isFilled()) {
-          MAIN_BOARD_RECTS[i][j].setFill(current.getColor());
+          MAIN_BOARD_RECTS[i - 3][j].setFill(current.getColor());
         } else {
-          MAIN_BOARD_RECTS[i][j].setFill(Color.WHITE);
+          MAIN_BOARD_RECTS[i - 3][j].setFill(Color.WHITE);
         }
       }
     }
