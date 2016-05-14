@@ -3,6 +3,7 @@ package engine;
 import java.util.ArrayList;
 
 import blocks.Block;
+import blocks.BlockGenerator;
 import blocks.Tile;
 import cerulean.Cerulean;
 import mainGame.Move;
@@ -506,14 +507,20 @@ public class Engine {
 	 *            the block to add
 	 */
 	public void updateBoardWithNewBlock(Block b) {
-		int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
 		Tile[][] blockShape = b.getShape();
+		
+		//makes sure part of the block is visible at all times
+		int iOffset = 4 - blockShape.length;
+		
+		//makes sure the blocks come in to the screen at the center
+		int jOffset = (gameBoard[0].length - b.getShape()[0].length) / 2;
+		
 		for (int i = 0; i < blockShape.length; i++) {
 			for (int j = 0; j < blockShape[i].length; j++) {
-				if (tileAt(i, j + offset).isFilled()) {
+				if (tileAt(i + iOffset, j + jOffset).isFilled()) {
 					this.full = true;
 				} else {
-					updateTileLocation(i, j + offset, blockShape[i][j]);
+					updateTileLocation(i + iOffset, j + jOffset, blockShape[i][j]);
 				}
 			}
 		}
@@ -521,14 +528,14 @@ public class Engine {
 
 	// might need to be altered for when the stack gets very high
 	/**
-	 * sets the tiles in a board to the tiles in a block, to bu used when a tile
-	 * display is required
+	 * adds the next block to the "next Block" display
 	 * 
 	 * @param b
 	 *            the block to add
 	 */
 	public void addBlockToDisplay(Tile[][] board, Block b) {
 		// int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
+		
 		clearBoard(board);
 		Tile[][] blockShape = b.getShape();
 		for (int i = 0; i < blockShape.length; i++) {
@@ -631,11 +638,14 @@ public class Engine {
 	 * prints the board for debugging
 	 */
 	public void printBoard() {
-		for (Tile[] row : gameBoard) {
-			for (Tile t : row) {
-				System.out.print(t);
+		for (int i = 0; i < gameBoard.length; i++){
+			for (int j = 0; j < gameBoard[i].length; j++){
+				System.out.print(gameBoard[i][j]);
 			}
 			System.out.println();
+			if (i == 2){
+				System.out.println("- below is visible -");
+			}
 		}
 	}
 

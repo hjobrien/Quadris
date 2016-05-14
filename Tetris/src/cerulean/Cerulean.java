@@ -8,9 +8,9 @@ import java.util.Random;
 import java.util.stream.DoubleStream;
 
 import blocks.Block;
+import blocks.RandomizeBlocks;
 import blocks.Tile;
 import engine.Engine;
-import engine.RandomizeBlocks;
 import mainGame.Move;
 
 /**

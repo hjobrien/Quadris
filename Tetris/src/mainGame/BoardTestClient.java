@@ -1,9 +1,9 @@
 package mainGame;
 
+import blocks.BlockGenerator;
+import blocks.RandomizeBlocks;
 import blocks.Tile;
-import engine.BlockGenerator;
 import engine.GameMode;
-import engine.RandomizeBlocks;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;

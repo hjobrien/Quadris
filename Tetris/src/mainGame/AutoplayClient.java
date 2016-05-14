@@ -1,8 +1,8 @@
 package mainGame;
 
-import engine.BlockGenerator;
+import blocks.BlockGenerator;
+import blocks.RandomizeBlocks;
 import engine.GameMode;
-import engine.RandomizeBlocks;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

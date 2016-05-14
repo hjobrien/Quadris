@@ -10,11 +10,6 @@ public class LeftL extends Block {
 	//[change this index for rotations][row][column]
 	public static final Tile[][][] CONFIGURATIONS = new Tile[][][]{
 		new Tile [][]{
-			{new Tile(),new Tile(COLOR)},
-			{new Tile(),new Tile(COLOR)},
-			{new Tile(COLOR),new Tile(COLOR)},
-		},
-		new Tile [][]{
 			{new Tile(COLOR),new Tile(COLOR),new Tile(COLOR)},
 			{new Tile(),new Tile(),new Tile(COLOR)},
 		},
@@ -26,6 +21,11 @@ public class LeftL extends Block {
 		new Tile [][]{
 			{new Tile(COLOR),new Tile(),new Tile()},
 			{new Tile(COLOR),new Tile(COLOR),new Tile(COLOR)},
+		}, 
+		new Tile [][]{
+			{new Tile(),new Tile(COLOR)},
+			{new Tile(),new Tile(COLOR)},
+			{new Tile(COLOR),new Tile(COLOR)},
 		}
 	};
 	

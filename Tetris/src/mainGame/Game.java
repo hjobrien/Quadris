@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import blocks.BlockGenerator;
+import blocks.RandomizeBlocks;
 import blocks.Tile;
 import cerulean.Cerulean;
-import engine.BlockGenerator;
 import engine.Engine;
 import engine.GameMode;
-import engine.RandomizeBlocks;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -117,7 +117,8 @@ public class Game extends Application {
 //    this.randomizeBlocks = randomizeBlocks;
     this.playMultiple = playMultiple;
     this.autoplay = false;
-    this.gameBoard = new Tile[boardHeight][boardWidth];
+    this.gameBoard = new Tile[boardHeight + 3][boardWidth]; //so that the board can accommodate 
+    														//blocks at the top
     this.engine = new Engine(gameBoard, autoplay, generator, scoring);
     this.scoring = scoring;
   }
