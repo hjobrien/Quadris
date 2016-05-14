@@ -468,8 +468,8 @@ public class Renderer {
    * @param nextPieceBoard the nextBoard to draw
    */
   public void drawBoards(Tile[][] gameBoard, Tile[][] nextPieceBoard) {
-    this.drawToGameBoard(gameBoard);
-    this.drawToNextPieceBoard(nextPieceBoard);
+    drawToGameBoard(gameBoard);
+    drawToNextPieceBoard(nextPieceBoard);
   }
 
 
