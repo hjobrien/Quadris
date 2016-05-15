@@ -25,6 +25,7 @@ public class GameApp extends Application {
   public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;
   public static final BlockGenerator GENERATOR = new RandomizeBlocks();
 //  public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
+  public static final int MAX_GAMES_TO_PLAY = 5;
 
   public static void main(String args[]) throws Exception {
     launch();
@@ -32,7 +33,7 @@ public class GameApp extends Application {
 
   @Override
   public void start(Stage arg0) throws Exception {
-    Game userGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.DISTRO, USE_GRAPHICS,
+    Game userGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY, GameMode.DISTRO, USE_GRAPHICS,
         DEBUG, GENERATOR, PLAY_MULTIPLE, SCORE_MODE);
     userGame.run(arg0);
   }
