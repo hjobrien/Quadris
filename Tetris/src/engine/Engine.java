@@ -32,7 +32,6 @@ public class Engine {
 
 	// would indicate the game is over
 	boolean full = false;
-	
 
 	public static final String BLOCK_DATA = "Blocks to add"; // file name
 
