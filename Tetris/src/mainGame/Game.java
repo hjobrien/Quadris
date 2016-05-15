@@ -245,7 +245,7 @@ public class Game extends Application {
           if (engine.hasFullBoard()) {
             timer.stop();
             System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
-             engine.reset(); //causes game to freeze repeatably
+//            engine.reset(); //causes game to freeze repeatably
           }
           timePerTurn = updateTime(timePerTurn);
         }

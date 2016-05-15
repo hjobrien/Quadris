@@ -461,10 +461,10 @@ public class Engine {
     // long now = System.currentTimeMillis();
     if (autoplay) {
       solution = cerulean.submitBlock(nextBlock, gameBoard);
-      if (Arrays.toString(solution).equals(
-          "[ROT_RIGHT, ROT_RIGHT, LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, DROP, LEFT]")) {
-        System.out.println();
-      }
+//      if (Arrays.toString(solution).equals(
+//          "[ROT_RIGHT, ROT_RIGHT, LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, DROP, LEFT]")) {
+//        System.out.println();
+//      }
     }
     activeBlock = nextBlock;
 
@@ -474,7 +474,7 @@ public class Engine {
     // Renderer.pause();
     // Game.togglePause();
     if (autoplay) {
-      System.out.println(Arrays.toString(solution));
+//      System.out.println(Arrays.toString(solution));
       for (Move m : solution) {
         executeMove(m);
       }
@@ -930,14 +930,9 @@ public class Engine {
     this.numOfFullRows = 0;
     this.blockGenerator.reset();
     this.nextBlock = blockGenerator.generateBlock();
-    // if (randomizeBlocks) {
-    // this.nextBlock = getRandomBlock();
-    // } else {
-    // this.nextBlock = getNextBlock(blockCount);
-    // blockCount++;
-    // }
+    this.gameBoard = initBoard(gameBoard);
     this.full = false;
-    this.gameNum++; // keep for automated testing
+    this.gameNum++;
   }
 
   /**
