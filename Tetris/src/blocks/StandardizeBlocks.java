@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class StandardizeBlocks implements BlockGenerator {
 
-  public static final String BLOCK_FILE_PATH = "";
+  public static final String BLOCK_FILE_PATH = "Blocks to Add";
   
   private int gameNumber;
   private int numBlocksAdded;
