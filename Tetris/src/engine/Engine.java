@@ -509,8 +509,11 @@ public class Engine {
 	public void updateBoardWithNewBlock(Block b) {
 		Tile[][] blockShape = b.getShape();
 		
-		//makes sure part of the block is visible at all times
-		int iOffset = 4 - blockShape.length;
+	    //iOffset for if the whole block should show
+//		int iOffset = 4 - blockShape.length;
+		
+	    //iOffset for if only the bottom row of the block should show
+		int iOffset = 3;
 		
 		//makes sure the blocks come in to the screen at the center
 		int jOffset = (gameBoard[0].length - b.getShape()[0].length) / 2;

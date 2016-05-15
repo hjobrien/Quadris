@@ -57,8 +57,16 @@ public class Block {
       }
     }
     this.type = type;
+    
     // row, column of bottom right corner
-    int startingRowIndex = 3;
+    
+    //startingRowIndex for if the whole block should show
+    int startingRowIndex = 2 + configurations[rotationIndex].length;
+    
+    //startingRowIndex for if only the bottom row of the block should show
+//    int startingRowIndex = 3;
+
+    
     int startingColumnIndex = (Renderer.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2
             + configurations[rotationIndex][0].length - 1;
     locationInGrid = new int[] {startingRowIndex, startingColumnIndex};
