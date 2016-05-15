@@ -15,11 +15,15 @@ import blocks.TBlock;
 
 public class StandardizeBlocks implements BlockGenerator {
 
-  public static final String BLOCK_FILE_PATH = "";
+  public static final String BLOCK_FILE_PATH = "Blocks to add";
   
   private int gameNumber;
   private int numBlocksAdded;
   private int[][] blocksToAdd;
+  
+  public StandardizeBlocks(){
+    this(0);
+  }
   
   public StandardizeBlocks(int gameNumber){
     this.gameNumber = gameNumber;
