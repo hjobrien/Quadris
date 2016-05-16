@@ -21,9 +21,9 @@ public class AutoplayClient extends Application {
   public static final boolean PLAY_MULTIPLE = true;
   public static final double[] WEIGHTS = new double[] {-70, -97.85, 306.77, 5};
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-  public static final BlockGenerator GENERATOR = new StandardizeBlocks(10);
+  public static final BlockGenerator GENERATOR = new StandardizeBlocks(16);
 //  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
-  public  static final int MAX_GAMES_TO_PLAY = 5;
+  public  static final int MAX_GAMES_TO_PLAY = 3;
 
   public static void main(String[] args) {
     launch();

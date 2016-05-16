@@ -472,38 +472,52 @@ public class Engine {
     // board.getGrid().fireEvent(new BlockAddedEvent(nextBlock,
     // board.getBoardState()));
     // }
-    Move[] solution = null;
-    // long now = System.currentTimeMillis();
-    if (autoplay) {
-      solution = cerulean.submitBlock(nextBlock, gameBoard);
-      if (Arrays.toString(solution).equals(
-          "[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, DROP, LEFT]")) {
-        System.out.println();
+    full = testFull(gameBoard);
+    if (!full) {
+      Move[] solution = null;
+      // long now = System.currentTimeMillis();
+      if (autoplay) {
+        solution = cerulean.submitBlock(nextBlock, gameBoard);
+        if (Arrays.toString(solution).equals("[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, DROP, LEFT]")) {
+          System.out.println();
+        }
       }
-    }
-    activeBlock = nextBlock;
+      activeBlock = nextBlock;
 
-    updateBoardWithNewBlock(nextBlock);
-    // toggle for step by step block analysis
-    // Engine.togglePause();
-    // Renderer.pause();
-    // Game.togglePause();
-    if (autoplay) {
-       System.out.println(Arrays.toString(solution));
-      for (Move m : solution) {
-        executeMove(m);
+      updateBoardWithNewBlock(nextBlock);
+
+      // toggle for step by step block analysis
+      // Engine.togglePause();
+      // Renderer.pause();
+      // Game.togglePause();
+      if (autoplay) {
+        System.out.println(Arrays.toString(solution));
+        for (Move m : solution) {
+          executeMove(m);
+        }
+      }
+      // time for evaluation and movement of block
+      // System.out.println("\t\t" + (System.currentTimeMillis() -now));
+      nextBlock = blockGenerator.generateBlock();
+      clearBoard(nextPieceBoard);
+      addBlockToDisplay(nextPieceBoard, nextBlock);
+      // activeBlock = nextBlock;
+      // updateBoardWithNewBlock(nextBlock);
+      // setNotFalling();
+      blockCount++;
+    }
+  }
+
+  private boolean testFull(Tile[][] gameBoard) {
+    for (int i = 0; i < gameBoard[0].length; i++) {
+      if (gameBoard[3][i].isFilled()) {
+        return true;
       }
     }
-    // time for evaluation and movement of block
-    // System.out.println("\t\t" + (System.currentTimeMillis() -now));
-    nextBlock = blockGenerator.generateBlock();
-    clearBoard(nextPieceBoard);
-    addBlockToDisplay(nextPieceBoard, nextBlock);
-    // activeBlock = nextBlock;
-    // updateBoardWithNewBlock(nextBlock);
-    // setNotFalling();
-    blockCount++;
+    return false;
   }
+
+
 
   /**
    * adds a block to the engine as an active block
@@ -543,7 +557,7 @@ public class Engine {
       }
     }
   }
-  
+
   /**
    * adds the next block to the "next Block" display
    * 
