@@ -23,7 +23,7 @@ public enum ScoreMode {
    * Clear the board = 2000 TODO
    * Every piece = 10 points
    * 
-   * Top Score for Liam: 6130
+   * Top Score for Liam: 16610 at MIN_TIME_PER_TURN = 100000000 nanos
    */
   NINTENDO(1),
   

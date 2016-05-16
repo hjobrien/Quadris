@@ -1,4 +1,4 @@
-//package mainGame;
+package mainGame;
 //
 //import java.util.ArrayList;
 //
@@ -8,8 +8,8 @@
 //import javafx.scene.paint.Color;
 //import javafx.scene.shape.Rectangle;
 //
-//@Deprecated
-//public class Board {
+@Deprecated
+public class Board {
 //  private Tile[][] boardState;
 //  private Block fallingBlock;
 //  private GridPane grid;
@@ -59,7 +59,7 @@
 //      }
 //    }
 //    this.boardRects = tempBoardRects;
-//  }
+  }
 //
 //  public Board(Tile[][] t, Block nextBlock) {
 //    this.boardState = t;

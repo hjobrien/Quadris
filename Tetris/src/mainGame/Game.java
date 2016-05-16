@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import blocks.BlockGenerator;
+import blocks.RandomizeBlocks;
 import blocks.Tile;
 import cerulean.Cerulean;
-import engine.BlockGenerator;
 import engine.Engine;
 import engine.GameMode;
-import engine.RandomizeBlocks;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -38,7 +38,7 @@ public class Game extends Application {
   private boolean doDebug;
   // private static boolean doLog;
   private boolean autoplay;
-//  private boolean randomizeBlocks;
+  // private boolean randomizeBlocks;
   private boolean playMultiple; // play multiple games in a row
 
   // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
@@ -51,7 +51,7 @@ public class Game extends Application {
   public static final int DEFAULT_VERTICAL_TILES = 20;
   public static final int DEFAULT_HORIZONTAL_TILES = 10;
 
-  //can be Hank_Liam, Nintendo, or Simple
+  // can be Hank_Liam, Nintendo, or Simple
   public ScoreMode scoring;
 
   private static PrintStream printer;
@@ -64,6 +64,8 @@ public class Game extends Application {
   private Renderer renderer;
   private Cerulean cerulean;
   private boolean useGraphics;
+
+  private int maxGamesPerGeneration = 0;
 
   private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
@@ -92,7 +94,7 @@ public class Game extends Application {
    * convenience constructor that initializes the game to some suggested settings
    */
   public Game() {
-    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, GameMode.DISTRO, true, false,
+    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, 5, GameMode.DISTRO, true, false,
         new RandomizeBlocks(), false, ScoreMode.SIMPLE);
   }
 
@@ -108,20 +110,22 @@ public class Game extends Application {
    * @param randomizeBlocks whether blocks should be randomly generated or read from a file
    * @param playMultiple whether multiple games should be played consecutively
    */
-  public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple, ScoreMode scoring) {
-     this.minTimePerTurn = minTimePerTurn;
+  public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen,
+      GameMode mode, boolean useGraphics, boolean doDebug, BlockGenerator generator,
+      boolean playMultiple, ScoreMode scoring) {
+    this.minTimePerTurn = minTimePerTurn;
+    this.maxGamesPerGeneration = maxGamesPerGen;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-//    this.randomizeBlocks = randomizeBlocks;
     this.playMultiple = playMultiple;
     this.autoplay = false;
-    this.gameBoard = new Tile[boardHeight][boardWidth];
+    this.gameBoard = new Tile[boardHeight + 3][boardWidth]; // so that the board can accommodate
+                                                            // blocks at the top
     this.engine = new Engine(gameBoard, autoplay, generator, scoring);
     this.scoring = scoring;
   }
-  
+
   /**
    * comprehensive constructor that sets all parts of the games configuration
    * 
@@ -134,13 +138,14 @@ public class Game extends Application {
    * @param randomizeBlocks whether blocks should be randomly generated or read from a file
    * @param playMultiple whether multiple games should be played consecutively
    */
-  public Game(Tile[][] board, int minTimePerTurn, GameMode mode,
-      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple, ScoreMode scoring) {
-    // this.minTimePerTurn = minTimePerTurn;
+  public Game(Tile[][] board, int minTimePerTurn, int maxGamesPerGen, GameMode mode,
+      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple,
+      ScoreMode scoring) {
+    this.minTimePerTurn = minTimePerTurn;
+    this.maxGamesPerGeneration = maxGamesPerGen;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-//    this.randomizeBlocks = randomizeBlocks;
     this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = board;
@@ -163,10 +168,10 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    * @param weights the weights to be passed to the AI for its evaluation function
    */
-  public Game(int boardHeight, int boardWidth, int minTimePerTurn, GameMode mode,
+  public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen, GameMode mode,
       boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple,
       double[] weights, ScoreMode scoring) {
-    this(boardHeight, boardWidth, minTimePerTurn, mode, useGraphics, doDebug, generator,
+    this(boardHeight, boardWidth, minTimePerTurn, maxGamesPerGen, mode, useGraphics, doDebug, generator,
         playMultiple, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
@@ -232,13 +237,14 @@ public class Game extends Application {
   /**
    * simple method to run the game when not in graphics mode
    */
-  public ListenableFuture<Integer> run() {
-//    int score = 0;
+  public void run() {
+    // int score = 0;
     setup(useGraphics);
     engine.addBlock();
     // engine updates on separate thread every timePerTurn nanoseconds
-    ListenableFuture<Integer> gameScore = Util.exec.submit(() -> {
-//      while (true) { //controls number of max games, change from infinite games
+    Util.exec.submit(() -> {
+      while (engine.getGameNum() < maxGamesPerGeneration) { // controls number of max games, change from infinite
+                                               // games
         while (!engine.hasFullBoard()) {
           Util.sleep(timePerTurn);
           engine.update();
@@ -249,29 +255,30 @@ public class Game extends Application {
           }
           timePerTurn = updateTime(timePerTurn);
         }
-        return engine.getScore();
-//        resetGame(useGraphics);
-//      }
+        // return engine.getScore();
+        resetGame(useGraphics);
+      }
+      System.exit(0);
     });
-    return gameScore;
+    // return gameScore;
 
   }
-  
-  public static int runGame(int gameNum, ScoreMode scoring){
-    Game game = new Game(20, 10, 10000, GameMode.AUTOPLAY,
-        false, false, null, false, WEIGHTS, scoring);
+
+  public static int runGame(int gameNum, ScoreMode scoring) {
+    Game game =
+        new Game(20, 10, 10000, 0, GameMode.AUTOPLAY, false, false, null, false, WEIGHTS, scoring);
     game.engine.setGameNumber(gameNum);
-//    System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
+    // System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
     game.setup(game.useGraphics);
     game.engine.addBlock();
-    while(!game.engine.hasFullBoard()){
+    while (!game.engine.hasFullBoard()) {
       game.engine.update();
-      if(game.engine.hasFullBoard()){
+      if (game.engine.hasFullBoard()) {
         System.out.println("Done: " + gameNum + " " + game.getScore());
       }
     }
     return game.getScore();
-    
+
   }
 
   // /**
@@ -357,17 +364,9 @@ public class Game extends Application {
    * @return a new number of milliseconds for the next tick
    */
   private long updateTime(long turnTime) {
-    // if (NINTENDO_SCORING) {
-    // // probably not the best algorithm
-    // return maxTimePerTurn - (0.09 * getScore());
-    // } else {
-    // if (turnTime > minTimePerTurn) {
-    // return maxTimePerTurn - (0.09 * getScore());
-    // // return MAX_MILLIS_PER_TURN - (9 * Math.sqrt(getScore()));
-    // } else {
-    // return minTimePerTurn;
-    // }
-    // }
+
+    // could also be a function of score (getScore())
+
     if (autoplay) {
       return minTimePerTurn;
     } else if (turnTime - 2500000 > minTimePerTurn) {
@@ -462,6 +461,7 @@ public class Game extends Application {
 //            if (doDebug) {
               engine.executeMove(Move.UP);
 //            }
+            engine.executeMove(Move.UP);
             break;
           default:
             // key pressed wasn't an active key, do nothing
@@ -480,17 +480,19 @@ public class Game extends Application {
    * resets the game when called, typically after a loss
    */
   public void resetGame(boolean useGraphics) {
+    timer.stop();
     if (gameMode == GameMode.AI_TRAINING) {
       printer.flush();
       speciesAvgScore[currentSpecies] = getAvgScore();
     }
-    gameIsActive = true;
+    gameIsActive = false;
     if (useGraphics) // TODO: remove, switch to Logger class
       renderer.writeScores();
     engine.reset();
     engine.clearBoard(engine.getGameBoard());
     this.timeScore = 0;
     timePerTurn = maxTimePerTurn;
+    gameIsActive = true;
     timer.start();
     engine.addBlock();
 
@@ -503,15 +505,14 @@ public class Game extends Application {
    * @return the score based on the scoring system
    */
   public int getScore() {
-	if (scoring == ScoreMode.HANK_LIAM){
-		return (timeScore + engine.getScore());
-	} else if (scoring == ScoreMode.NINTENDO){
-		return engine.getScore();
-	} else if (scoring == ScoreMode.SIMPLE){
-		return engine.getScore();
-	}
-	//shouldn't happen
-	return -1;
+    if (scoring == ScoreMode.HANK_LIAM) {
+      return (timeScore + engine.getScore());
+    } else if (scoring == ScoreMode.NINTENDO) {
+      return engine.getScore();
+    } else if (scoring == ScoreMode.SIMPLE) {
+      return engine.getScore();
+    }
+    throw new RuntimeException("Invalid Score Mode");
   }
 
   /**
@@ -555,8 +556,8 @@ public class Game extends Application {
   public void togglePause() {
     paused = !paused;
   }
-  
-  public ScoreMode getScoringMode(){
-	  return this.scoring;
+
+  public ScoreMode getScoringMode() {
+    return this.scoring;
   }
 }

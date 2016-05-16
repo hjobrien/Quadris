@@ -21,6 +21,17 @@ public class DualPlayClient extends Application {
     launch();
   }
 
+  /*
+   * Every time a new block is added, the game timer on the AI pauses (no updates occur).
+   * When the next block is added to the user's game, the timer unpauses, the block is played, 
+   * and a new block is spawned, which again pauses the AI. This should be so quick that it will 
+   * seem instantaneous to the user, allowing them feel like they are playing against the AI without
+   * being told where the AI will move before they move themselves
+   * 
+   * Another possiblity could be starting the human game one block earlier so that the computer can
+   * addBlock whenever the user addBlocks without giving away the "best position"
+   */
+  
   @Override
   public void start(Stage stage) throws Exception {
 //    Game aiGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.AUTOPLAY,

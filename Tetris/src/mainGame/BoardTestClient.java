@@ -1,9 +1,9 @@
 package mainGame;
 
+import blocks.BlockGenerator;
+import blocks.RandomizeBlocks;
 import blocks.Tile;
-import engine.BlockGenerator;
 import engine.GameMode;
-import engine.RandomizeBlocks;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -18,6 +18,7 @@ public class BoardTestClient extends Application{
 	public static final boolean PLAY_MULTIPLE = false;
 	public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;
 	public static final BlockGenerator GENERATOR = new RandomizeBlocks();
+	public static final int MAX_GAMES_TO_PLAY = 0;
 	
 	public static final Color COLOR = Color.BLACK;
 	  
@@ -27,7 +28,7 @@ public class BoardTestClient extends Application{
 
 	  @Override
 	  public void start(Stage arg0) throws Exception {
-	    Game game = new Game(getBoard(), MIN_TIME_PER_TURN, GameMode.DISTRO, USE_GRAPHICS,
+	    Game game = new Game(getBoard(), MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY, GameMode.DISTRO, USE_GRAPHICS,
 	        DEBUG, GENERATOR, PLAY_MULTIPLE, SCORE_MODE);
 	    game.run(arg0);
 

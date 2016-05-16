@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import blocks.Block;
+import blocks.BlockGenerator;
 import blocks.Tile;
 import cerulean.Cerulean;
 import mainGame.Move;
@@ -76,6 +77,20 @@ public class Engine {
     }
     return copy;
   }
+	private Tile[][] gameBoard;
+	private Tile[][] nextPieceBoard;
+	private Block nextBlock;
+	private Block activeBlock;
+	private Cerulean cerulean;
+	private boolean isPaused = false;
+	private boolean autoplay = false;
+	private int blockCount = 0;
+	private int gameNum = 0;
+	private boolean rowsNotFalling = true;
+	private int score = 0;
+	private int numOfFullRows = 0;
+	private ScoreMode scoreMode;
+	private BlockGenerator blockGenerator;
 
   /**
    * Initialize a board with empty tiles
@@ -91,6 +106,8 @@ public class Engine {
     }
     return mainBoard;
   }
+	private boolean canPressUpToRotate = false;
+	private boolean debugMode;
 
   /**
    * is the general engine method coordinates dropping blocks, adding blocks, logging game state,
@@ -138,6 +155,8 @@ public class Engine {
    * @return true if the move is valid, false otherwise
    */
   public boolean checkDown() {
+	// would indicate the game is over
+	boolean full = false;
 
 
     // if (debugMode) {
@@ -169,7 +188,27 @@ public class Engine {
       }
       return false;
     }
-
+	/**
+	 * constructs an engine with a board and tells it if it should automatically
+	 * place blocks and if the blocks should be randomly generated
+	 * 
+	 * @param mainBoard
+	 *            the board the engine acts on
+	 * @param autoplay
+	 *            whether the engine should automatically place the blocks
+	 * @param randomizeBlocks
+	 *            whether blocks should be randomly generated or read from a file
+	 */
+	public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring) {
+		this.scoreMode = scoring;
+		this.autoplay = autoplay;
+		this.blockGenerator = generator;
+		this.gameBoard = deepCopy(mainBoard);
+		this.nextPieceBoard = initBoard(new Tile[4][4]);
+		nextBlock = blockGenerator.generateBlock();
+		if (autoplay) {
+			cerulean = new Cerulean();
+		}
 
 
     return true;
@@ -193,6 +232,39 @@ public class Engine {
     }
     return false;
   }
+	/**
+	 * is the general engine method coordinates dropping blocks, adding blocks,
+	 * logging game state, and line clearing
+	 */
+	public void update() {
+		if (!isPaused) { // little hacky, could be improved
+			if (activeBlock.isFalling()) {
+				if (checkDown()) {
+					blockDown();
+				} else {
+					ArrayList<Integer> linesToClear = getFullRows();
+					if (!linesToClear.isEmpty()) {
+						clearLines(linesToClear);
+					} else {
+						setNotFalling();
+						if (getScoreMode() == ScoreMode.NINTENDO){
+							score += 10;
+						} else if (getScoreMode() == ScoreMode.SIMPLE){
+							score += 1;
+						}
+						addBlock();
+					}
+				}
+			} else {
+				if (getScoreMode() == ScoreMode.NINTENDO){
+					score += 10;
+				} else if (getScoreMode() == ScoreMode.SIMPLE){
+					score += 1;
+				}
+				addBlock();
+			}
+		}
+	}
 
   /**
    * checks if there is an inactive tile (block that already fell) below
@@ -234,6 +306,20 @@ public class Engine {
     // System.out.println(activeBlock.getGridLocation()[1]);
     activeBlock.moveDown(); // adjusts internal coordinates
   }
+		// if (debugMode) {
+		// System.out
+		// .println(activeBlock.getGridLocation()[0] + " " +
+		// activeBlock.getGridLocation()[1]);
+		// }
+		
+		// this if is a hacky fix to stop the game from freezing under certain
+		// unknown conditions when it should be resetting instead
+		if (activeBlock.getGridLocation()[1] < -4) {
+			System.err.println("Freeze detected: resetting now...");
+			Util.sleep(10);
+			// printBoard();
+			System.exit(-10);
+		}
 
   /**
    * updates the board with the Tiles values for color, active, and filled
@@ -258,6 +344,8 @@ public class Engine {
   public Tile tileAt(int i, int j) {
     return this.gameBoard[i][j];
   }
+		return true;
+	}
 
   /**
    * gets the lowest row that is totally empty
@@ -565,6 +653,35 @@ public class Engine {
   // // System.out.println(gameNum + " " + blockNum + " " + b.getType());
   // return b;
   // }
+	// might need to be altered for when the stack gets very high
+	/**
+	 * adds block near the top of the screen
+	 * 
+	 * @param b
+	 *            the block to add
+	 */
+	public void updateBoardWithNewBlock(Block b) {
+		Tile[][] blockShape = b.getShape();
+		
+	    //iOffset for if the whole block should show
+//		int iOffset = 4 - blockShape.length;
+		
+	    //iOffset for if only the bottom row of the block should show
+		int iOffset = 3;
+		
+		//makes sure the blocks come in to the screen at the center
+		int jOffset = (gameBoard[0].length - b.getShape()[0].length) / 2;
+		
+		for (int i = 0; i < blockShape.length; i++) {
+			for (int j = 0; j < blockShape[i].length; j++) {
+				if (tileAt(i + iOffset, j + jOffset).isFilled()) {
+					this.full = true;
+				} else {
+					updateTileLocation(i + iOffset, j + jOffset, blockShape[i][j]);
+				}
+			}
+		}
+	}
 
   // /**
   // * translates an integer to a Block
@@ -595,6 +712,26 @@ public class Engine {
   // }
   // throw new RuntimeException("bad random num");
   // }
+	// might need to be altered for when the stack gets very high
+	/**
+	 * adds the next block to the "next Block" display
+	 * 
+	 * @param b
+	 *            the block to add
+	 */
+	public void addBlockToDisplay(Tile[][] board, Block b) {
+		// int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
+		
+		clearBoard(board);
+		Tile[][] blockShape = b.getShape();
+		for (int i = 0; i < blockShape.length; i++) {
+			for (int j = 0; j < blockShape[i].length; j++) {
+				if (blockShape[i][j].isFilled()) {
+					board[i][j] = new Tile(blockShape[i][j].getColor());
+				}
+			}
+		}
+	}
 
   /**
    * updates the falling block by moving it down one row
@@ -683,6 +820,54 @@ public class Engine {
     }
 
   }
+	/**
+	 * generalize way of getting user input into the engine
+	 * 
+	 * @param m
+	 *            the move that the user wants to execute
+	 */
+	public void executeMove(Move m) {
+		if (m == Move.RIGHT) {
+			if (checkRight()) {
+				moveRight();
+			}
+		} else if (m == Move.LEFT) {
+			if (checkLeft()) {
+				moveLeft();
+			}
+		} else if (m == Move.ROT_RIGHT) {
+			if (checkRotate(Move.ROT_RIGHT)) {
+				activeBlock.rotateRight();
+				lowerFallingBlock();
+			}
+		} else if (m == Move.ROT_LEFT) {
+			if (checkRotate(Move.ROT_LEFT)) {
+				activeBlock.rotateLeft();
+				lowerFallingBlock();
+			}
+		} else if (m == Move.DOWN) {
+			if (checkDown()) {
+				if (getScoreMode() == ScoreMode.HANK_LIAM) {
+					score += 2;
+				}
+				blockDown();
+			}
+		} else if (m == Move.DROP) {
+			while (checkDown()) {
+				if (getScoreMode() == ScoreMode.HANK_LIAM) {
+					score += 3;
+				}
+				// printBoard();
+				blockDown();
+			}
+		} else if (m == Move.UP) {
+			if (debugMode){
+				blockUp();
+			}
+			if (canPressUpToRotate){
+				 executeMove(Move.ROT_LEFT);
+			}
+		}
 
   /**
    * prints the board for debugging
@@ -703,6 +888,20 @@ public class Engine {
    */
   private boolean checkRight() {
     for (Tile[] a : gameBoard) {
+	/**
+	 * prints the board for debugging
+	 */
+	public void printBoard() {
+		for (int i = 0; i < gameBoard.length; i++){
+			for (int j = 0; j < gameBoard[i].length; j++){
+				System.out.print(gameBoard[i][j]);
+			}
+			System.out.println();
+			if (i == 2){
+				System.out.println("- below is visible -");
+			}
+		}
+	}
 
       // checks the far right column
       if (a[a.length - 1].isActive()) {
