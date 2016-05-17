@@ -86,8 +86,8 @@ public class Cerulean {
    * @param nextBlock the block just introduced to the board
    * @param boardState the board state without the block entered, all tiles are not active
    * @return an array of moves that positions the piece in to the optimal location
-   * @throws BoardFullException if the board placement algorithm would have to over-fill the board to
-   *         add a new block
+   * @throws BoardFullException if the board placement algorithm would have to over-fill the board
+   *         to add a new block
    */
   private Move[] computeBestPath(Block nextBlock, Tile[][] boardState) throws BoardFullException {
 
@@ -155,6 +155,16 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
+//    if (moveCount <= 6) {
+//      for (int i = 0; i < (6 - moveCount); i++) {
+//        path.add(Move.LEFT);
+//      }
+//    }
+//    else{
+//      for(int i = 0; i < moveCount - 6; i++){
+//        path.add(Move.RIGHT);
+//      }
+//    }
     for (int i = 0; i < 6; i++) { // puts the block into a constant, known position
       path.add(Move.LEFT);
     }
@@ -162,6 +172,13 @@ public class Cerulean {
       path.add(Move.RIGHT);
     }
     path.add(Move.DROP);
+//    if(slideCount == 0){
+//      path.add(Move.LEFT);
+//    }
+//    //dont need to handle == 1, that's just left then right
+//    else if(slideCount == 2){
+//      path.add(Move.RIGHT);
+//    }
     path.add(Move.LEFT);
     for (int i = 0; i < slideCount; i++) {
       path.add(Move.RIGHT);

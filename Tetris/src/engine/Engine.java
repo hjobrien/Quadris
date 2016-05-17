@@ -492,7 +492,7 @@ public class Engine {
       // Renderer.pause();
       // Game.togglePause();
       if (autoplay) {
-//        System.out.println(Arrays.toString(solution));
+        System.out.println(Arrays.toString(solution));
         for (Move m : solution) {
           executeMove(m);
         }
@@ -508,6 +508,8 @@ public class Engine {
       blockCount++;
     }
   }
+
+
 
   private boolean testFull(Tile[][] gameBoard) {
     for (int i = 0; i < gameBoard[0].length; i++) {

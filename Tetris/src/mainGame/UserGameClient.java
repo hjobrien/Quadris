@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  * @author Hank O'Brien
  *
  */
-public class GameApp extends Application {
+public class UserGameClient extends Application {
 
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
