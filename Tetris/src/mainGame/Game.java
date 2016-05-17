@@ -33,7 +33,9 @@ public class Game extends Application {
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
                                                     // ever and 1 is a mutation every time
 
-
+  //time it takes for the timeUpdate to activate (should stop exponential time growth)
+  private static int timeIncrease;
+  
   // don't change these
   private boolean doDebug;
   // private static boolean doLog;
@@ -46,7 +48,7 @@ public class Game extends Application {
 
 
   private int maxTimePerTurn = 1000000000; // nanoseconds
-  private int minTimePerTurn = 100000000; // nanoseconds
+  private int minTimePerTurn = 200000000; // nanoseconds
 
   public static final int DEFAULT_VERTICAL_TILES = 20;
   public static final int DEFAULT_HORIZONTAL_TILES = 10;
@@ -241,11 +243,13 @@ public class Game extends Application {
     // int score = 0;
     setup(useGraphics);
     engine.addBlock();
+	timeIncrease = (int) System.currentTimeMillis();
+
     // engine updates on separate thread every timePerTurn nanoseconds
     Util.exec.submit(() -> {
-      while (engine.getGameNum() < maxGamesPerGeneration) { // controls number of max games, change from infinite
-                                               // games
-        while (!engine.hasFullBoard()) {
+      while (engine.getGameNum() < maxGamesPerGeneration) { // controls number of max games, 
+    	  													//change from infinite games
+    	  while (!engine.hasFullBoard()) {
           Util.sleep(timePerTurn);
           engine.update();
           if (engine.hasFullBoard()) {
@@ -253,7 +257,12 @@ public class Game extends Application {
             System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
 //            engine.reset(); //causes game to freeze repeatably
           }
-          timePerTurn = updateTime(timePerTurn);
+          if (!paused){
+	          if ((int) System.currentTimeMillis() - timeIncrease > 500){
+	        	  timeIncrease = (int) System.currentTimeMillis();
+	              timePerTurn = updateTime(timePerTurn);
+	          }
+          }
         }
         // return engine.getScore();
         resetGame(useGraphics);

@@ -7,6 +7,7 @@ import blocks.Block;
 import blocks.BlockGenerator;
 import blocks.Tile;
 import cerulean.Cerulean;
+import event.GameplayEvent;
 import mainGame.Move;
 import mainGame.ScoreMode;
 import util.Util;
@@ -300,7 +301,7 @@ public class Engine {
     }
     return row;
   }
-
+  
   /**
    * checks to see if any filled tile exists below the parameter
    * 
