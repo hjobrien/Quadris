@@ -36,5 +36,6 @@ public class GameApp extends Application {
     Game userGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY, GameMode.DISTRO, USE_GRAPHICS,
         DEBUG, GENERATOR, PLAY_MULTIPLE, SCORE_MODE);
     userGame.run(arg0);
+
   }
 }
