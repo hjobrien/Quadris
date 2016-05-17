@@ -64,8 +64,9 @@ public class Cerulean {
    * 
    * @param nextBlockType the kind of block to be analyzed
    * @param boardState the current board state
+   * @throws BoardFullException if the AI cannot place a block without over-filling the board
    */
-  public Move[] submitBlock(Block nextBlock, Tile[][] boardState) {
+  public Move[] submitBlock(Block nextBlock, Tile[][] boardState) throws BoardFullException {
     // TODO:
     // ideal behavior: blocks drop normally but an array is generated each time a block is added to
     // the game
@@ -84,8 +85,10 @@ public class Cerulean {
    * @param nextBlock the block just introduced to the board
    * @param boardState the board state without the block entered, all tiles are not active
    * @return an array of moves that positions the piece in to the optimal location
+   * @throws BoardFullException if the board placement algorithm would have to over-fill the board to
+   *         add a new block
    */
-  private Move[] computeBestPath(Block nextBlock, Tile[][] boardState) {
+  private Move[] computeBestPath(Block nextBlock, Tile[][] boardState) throws BoardFullException {
 
     double maxWeight = Double.NEGATIVE_INFINITY;
     Block nextBlockCopy =
@@ -173,9 +176,11 @@ public class Cerulean {
    * @param moveCount the number of left/right moves in the test arrangement
    * @param rotCount the number of rotations in the test arrangement
    * @return the board with the block moved to a certain position
+   * @throws BoardFullException if by adding a block the board would become over-filled, it doesnt
+   *         know how to move in this situation
    */
   private Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount, int rotCount,
-      int slideCount) {
+      int slideCount) throws BoardFullException {
     // System.out.println(moveCount + " " + rotCount + " " + slideCount);
     // avoids reference issues
     Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
@@ -187,11 +192,17 @@ public class Cerulean {
     }
 
     if (boardAnalyzer == null) {
-    	//null refers to a lack of score mode
+      // null refers to a lack of score mode
       boardAnalyzer = new Engine(tileCopy, false, new RandomizeBlocks(), null);
     }
     boardAnalyzer.setGameBoard(tileCopy);
     boardAnalyzer.addBlock(nextBlock);
+
+    if (boardAnalyzer.hasFullBoard()) {
+      boardAnalyzer.reset();
+      throw new BoardFullException();
+    }
+
     for (int i = 0; i < rotCount; i++) {
       boardAnalyzer.executeMove(Move.ROT_RIGHT);
     }
@@ -245,8 +256,14 @@ public class Cerulean {
       }
 
       double voidCount = getNumVoids(colCopy);
-      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), 
-    		  VOID_POW)); // keeps the value from being 0 in Ternary
+      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
+                                                                                                     // the
+                                                                                                     // value
+                                                                                                     // from
+                                                                                                     // being
+                                                                                                     // 0
+                                                                                                     // in
+                                                                                                     // Ternary
 
 
       edges += weights[3] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);

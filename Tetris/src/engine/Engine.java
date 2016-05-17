@@ -6,6 +6,7 @@ import java.util.Arrays;
 import blocks.Block;
 import blocks.BlockGenerator;
 import blocks.Tile;
+import cerulean.BoardFullException;
 import cerulean.Cerulean;
 import event.GameplayEvent;
 import mainGame.Move;
@@ -301,7 +302,7 @@ public class Engine {
     }
     return row;
   }
-  
+
   /**
    * checks to see if any filled tile exists below the parameter
    * 
@@ -473,19 +474,27 @@ public class Engine {
     // board.getGrid().fireEvent(new BlockAddedEvent(nextBlock,
     // board.getBoardState()));
     // }
+
     full = testFull(gameBoard);
-    if (!full) {
-      Move[] solution = null;
-      // long now = System.currentTimeMillis();
-      if (autoplay) {
+    // if (!full) {
+    Move[] solution = null;
+    // long now = System.currentTimeMillis();
+    if (autoplay) {
+      try {
         solution = cerulean.submitBlock(nextBlock, gameBoard);
-        if (Arrays.toString(solution).equals("[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, DROP, LEFT, RIGHT]")) {
-          System.out.println();
-        }
+      } catch (BoardFullException e) {
+        full = true;
       }
+      if (Arrays.toString(solution)
+          .equals("[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, DROP, LEFT, RIGHT]")) {
+        System.out.println();
+      }
+    }
+    if (!full) {
       activeBlock = nextBlock;
 
       updateBoardWithNewBlock(nextBlock);
+
 
       // toggle for step by step block analysis
       // Engine.togglePause();

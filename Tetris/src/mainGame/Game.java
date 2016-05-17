@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 import blocks.BlockGenerator;
 import blocks.RandomizeBlocks;
 import blocks.Tile;
