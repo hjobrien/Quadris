@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 import blocks.BlockGenerator;
 import blocks.RandomizeBlocks;
 import blocks.Tile;
@@ -537,7 +539,8 @@ public class Game extends Application {
    */
   private AnimationTimer configureTimer(boolean useGraphics) {
     return new AnimationTimer() {
-
+    	
+      private int counter = 0;
       @Override
       public void start() {
         super.start();
@@ -548,6 +551,21 @@ public class Game extends Application {
       public void handle(long time) {
         renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         renderer.updateScore(getScore(), engine.getNumFullRows());
+        if (engine.hasQuadris()){
+        	System.out.println("quadris is true");
+        	counter++;
+        	engine.setQuadris(false);
+        }
+        
+        if (counter > 0){
+        	System.out.println(counter);
+        	counter++;
+        	renderer.displayQuadrisGraphic();
+        	if (counter > 200){
+        		counter = 0;
+        	}
+        }
+        
         if (engine.hasFullBoard()) {
           renderer.updateHighScores(getScore());
           timer.stop();
