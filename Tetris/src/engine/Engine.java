@@ -478,7 +478,7 @@ public class Engine {
       // long now = System.currentTimeMillis();
       if (autoplay) {
         solution = cerulean.submitBlock(nextBlock, gameBoard);
-        if (Arrays.toString(solution).equals("[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, DROP, LEFT]")) {
+        if (Arrays.toString(solution).equals("[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, DROP, LEFT, RIGHT]")) {
           System.out.println();
         }
       }
