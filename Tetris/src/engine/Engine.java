@@ -480,10 +480,6 @@ public class Engine {
       } catch (BoardFullException e) {
         full = true;
       }
-      if (Arrays.toString(solution)
-          .equals("[LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, DROP, LEFT, RIGHT]")) {
-        System.out.println();
-      }
     }
     if (!full) {
       activeBlock = nextBlock;
@@ -496,7 +492,7 @@ public class Engine {
       // Renderer.pause();
       // Game.togglePause();
       if (autoplay) {
-        System.out.println(Arrays.toString(solution));
+//        System.out.println(Arrays.toString(solution));
         for (Move m : solution) {
           executeMove(m);
         }
