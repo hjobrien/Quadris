@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Scanner;
 
 import blocks.Tile;
+import event.GameplayEvent;
+import event.QuadrisEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
@@ -66,6 +68,8 @@ public class Renderer {
   private TextArea scoreList = null;
   private StackPane pauseView;
   private StringProperty valueProperty;
+  private StackPane main;
+
   // private boolean autoplay = false;
 
   // private Engine engine;
@@ -127,7 +131,15 @@ public class Renderer {
     initializeScorePrinter();
     scoreList = new TextArea();
     scoreList.setText(getScoresForDisplay(highScores));
-    StackPane main = new StackPane();
+    main = new StackPane();
+    
+    main.addEventFilter(GameplayEvent.QUADRIS, e -> {
+    	System.out.println("Quadris filtered");
+    });
+    
+    main.addEventHandler(GameplayEvent.QUADRIS, e -> {
+    	System.out.println("Quadris handled");
+    });
 
     GridPane mainGame = new GridPane();
     mainGame.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
@@ -473,6 +485,8 @@ public class Renderer {
     drawToNextPieceBoard(nextPieceBoard);
   }
 
-
+  public void fireQuadris(){
+	  main.fireEvent(new QuadrisEvent());
+  }
 
 }

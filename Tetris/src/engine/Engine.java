@@ -6,6 +6,7 @@ import blocks.Block;
 import blocks.BlockGenerator;
 import blocks.Tile;
 import cerulean.Cerulean;
+import event.GameplayEvent;
 import mainGame.Move;
 import mainGame.ScoreMode;
 import util.Util;
@@ -356,7 +357,7 @@ public class Engine {
 		ScoreMode sm = getScoreMode();
 
 		if (linesToClear.size() == 4) {
-			//TODO display "Quadris" graphic
+//			GameplayEvent.QUADRIS;
 			if (sm == ScoreMode.NINTENDO) {
 				score += 1000;
 			} else if (sm == ScoreMode.HANK_LIAM) {
