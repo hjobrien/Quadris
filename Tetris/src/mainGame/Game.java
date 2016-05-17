@@ -39,7 +39,7 @@ public class Game extends Application {
   // private static boolean doLog;
   private boolean autoplay;
   // private boolean randomizeBlocks;
-  private boolean playMultiple; // play multiple games in a row
+//  private boolean playMultiple; // play multiple games in a row
 
   // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
@@ -95,7 +95,7 @@ public class Game extends Application {
    */
   public Game() {
     this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, 5, GameMode.DISTRO, true, false,
-        new RandomizeBlocks(), false, ScoreMode.SIMPLE);
+        new RandomizeBlocks(), ScoreMode.SIMPLE);
   }
 
   /**
@@ -112,13 +112,13 @@ public class Game extends Application {
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen,
       GameMode mode, boolean useGraphics, boolean doDebug, BlockGenerator generator,
-      boolean playMultiple, ScoreMode scoring) {
+      ScoreMode scoring) {
     this.minTimePerTurn = minTimePerTurn;
     this.maxGamesPerGeneration = maxGamesPerGen;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-    this.playMultiple = playMultiple;
+//    this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight + 3][boardWidth]; // so that the board can accommodate
                                                             // blocks at the top
@@ -139,14 +139,14 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    */
   public Game(Tile[][] board, int minTimePerTurn, int maxGamesPerGen, GameMode mode,
-      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple,
+      boolean useGraphics, boolean doDebug, BlockGenerator generator,
       ScoreMode scoring) {
     this.minTimePerTurn = minTimePerTurn;
     this.maxGamesPerGeneration = maxGamesPerGen;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-    this.playMultiple = playMultiple;
+//    this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = board;
     this.scoring = scoring;
@@ -169,10 +169,10 @@ public class Game extends Application {
    * @param weights the weights to be passed to the AI for its evaluation function
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen, GameMode mode,
-      boolean useGraphics, boolean doDebug, BlockGenerator generator, boolean playMultiple,
+      boolean useGraphics, boolean doDebug, BlockGenerator generator,
       double[] weights, ScoreMode scoring) {
     this(boardHeight, boardWidth, minTimePerTurn, maxGamesPerGen, mode, useGraphics, doDebug, generator,
-        playMultiple, scoring);
+         scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
     this.cerulean = new Cerulean();
@@ -273,7 +273,7 @@ public class Game extends Application {
 
   public static int runGame(int gameNum, ScoreMode scoring) {
     Game game =
-        new Game(20, 10, 10000, 0, GameMode.AUTOPLAY, false, false, null, false, WEIGHTS, scoring);
+        new Game(20, 10, 10000, 0, GameMode.AUTOPLAY, false, false, null, WEIGHTS, scoring);
     game.engine.setGameNumber(gameNum);
     // System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
     game.setup(game.useGraphics);

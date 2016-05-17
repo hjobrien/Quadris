@@ -10,6 +10,7 @@ import java.util.stream.DoubleStream;
 import blocks.Block;
 import blocks.RandomizeBlocks;
 import blocks.Tile;
+import engine.BoardFullException;
 import engine.Engine;
 import mainGame.Move;
 

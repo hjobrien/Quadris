@@ -1,4 +1,4 @@
-package cerulean;
+package engine;
 
 public class BoardFullException extends Exception {
 

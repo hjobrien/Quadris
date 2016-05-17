@@ -6,9 +6,7 @@ import java.util.Arrays;
 import blocks.Block;
 import blocks.BlockGenerator;
 import blocks.Tile;
-import cerulean.BoardFullException;
 import cerulean.Cerulean;
-import event.GameplayEvent;
 import mainGame.Move;
 import mainGame.ScoreMode;
 import util.Util;
@@ -144,9 +142,6 @@ public class Engine {
    * @return true if the move is valid, false otherwise
    */
   public boolean checkDown() {
-    // would indicate the game is over
-    boolean full = false;
-
 
     // if (debugMode) {
     // System.out
