@@ -551,6 +551,7 @@ public class Game extends Application {
       public void handle(long time) {
         renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         renderer.updateScore(getScore(), engine.getNumFullRows());
+       
         if (engine.hasQuadris()){
         	System.out.println("quadris is true");
         	counter++;
@@ -561,8 +562,16 @@ public class Game extends Application {
         	System.out.println(counter);
         	counter++;
         	renderer.displayQuadrisGraphic();
+        	if (counter > 50){
+        		renderer.removeQuadrisGraphic();
+        	} else if (counter > 100){
+        		renderer.displayQuadrisGraphic();
+        	} else if (counter > 150){
+        		renderer.removeQuadrisGraphic();
+        	}
         	if (counter > 200){
         		counter = 0;
+        		renderer.removeQuadrisGraphic();
         	}
         }
         

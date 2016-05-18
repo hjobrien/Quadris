@@ -65,6 +65,7 @@ public class Renderer {
 	private Scanner scoreReader;
 	private TextArea scoreList = null;
 	private StackPane pauseView;
+	private StackPane quadrisView;
 	private StringProperty valueProperty;
 	private StackPane main;
 
@@ -175,9 +176,15 @@ public class Renderer {
 		mainGame.add(nextBlockGrid, 2, 0);
 		mainGame.add(grid, 0, 0, 1, 4);
 		main.getChildren().add(mainGame);
+		
 		pauseView = constructPauseView(highScores);
 		pauseView.setVisible(false);
 		main.getChildren().add(pauseView);
+
+		quadrisView = makeQuadrisGraphic();
+		quadrisView.setVisible(false);
+		main.getChildren().add(quadrisView);
+		
 		makeBoardGrid(grid, VERTICAL_TILES, HORIZONTAL_TILES, MAIN_BOARD_RECTS);
 		return new Scene(main, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -522,8 +529,30 @@ public class Renderer {
 	}
 
 	public void displayQuadrisGraphic() {
-		// TODO Auto-generated method stub
+		quadrisView.setVisible(true);
+	}
+	
+	public void removeQuadrisGraphic(){
+		quadrisView.setVisible(false);
+	}
+	
+	public StackPane makeQuadrisGraphic(){
+		final Label nameLabel = new Label("Quadris Achieved");
+		nameLabel.setStyle(
+				"-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
+		GridPane quadrisGrid = new GridPane();
 
+		quadrisGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
+		quadrisGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
+		quadrisGrid.getRowConstraints().add(new RowConstraints(540));
+
+		
+
+		StackPane glass = new StackPane();
+		StackPane.setAlignment(nameLabel, Pos.CENTER);
+		glass.getChildren().addAll(nameLabel, quadrisGrid);
+		glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");
+		return glass;
 	}
 
 }
