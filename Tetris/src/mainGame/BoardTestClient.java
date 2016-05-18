@@ -8,12 +8,11 @@ import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class BoardTestClient extends Application{
+public class BoardTestClient extends Application implements Viewable{
 
 //	public static final int GAME_HEIGHT = 20;
 //	public static final int GAME_WIDTH = 10;
 	public static final int MIN_TIME_PER_TURN = 100;
-	public static final boolean USE_GRAPHICS = true;
 	public static final boolean DEBUG = false;
 //	public static final boolean PLAY_MULTIPLE = false;
 	public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;

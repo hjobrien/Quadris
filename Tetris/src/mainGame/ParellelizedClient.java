@@ -10,7 +10,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import util.Util;
 
-public class ParellelizedClient {
+public class ParellelizedClient implements Autoplayable{
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
   public static final int MIN_TIME_PER_TURN = 100000000;
