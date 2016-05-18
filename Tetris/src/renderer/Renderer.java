@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.Scanner;
 
 import blocks.Tile;
-import event.GameplayEvent;
-import event.QuadrisEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
@@ -145,14 +143,6 @@ public class Renderer {
 		scoreList = new TextArea();
 		scoreList.setText(getScoresForDisplay(highScores));
 		main = new StackPane();
-
-		main.addEventFilter(GameplayEvent.QUADRIS, e -> {
-			System.out.println("Quadris filtered");
-		});
-
-		main.addEventHandler(GameplayEvent.QUADRIS, e -> {
-			System.out.println("Quadris handled");
-		});
 
 		GridPane mainGame = new GridPane();
 		mainGame.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
@@ -537,6 +527,7 @@ public class Renderer {
 	}
 	
 	public StackPane makeQuadrisGraphic(){
+		System.out.println();
 		final Label nameLabel = new Label("Quadris Achieved");
 		nameLabel.setStyle(
 				"-fx-font: 90 Arial; -fx-text-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-style: italic; -fx-padding: -300 0 0 0;");
