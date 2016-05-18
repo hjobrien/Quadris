@@ -7,7 +7,7 @@ import engine.GameMode;
 public class NoGraphicsClient implements Autoplayable{
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
-  public static final int MIN_TIME_PER_TURN = 100000000;
+  public static final int MIN_TIME_PER_TURN = 10000000;
   public static final boolean USE_GRAPHICS = false;
   public static final boolean DO_DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = false;

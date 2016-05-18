@@ -33,15 +33,15 @@ public class Game extends Application {
   public static final double MUTATION_FACTOR = 0.5; // value between 0 and 1 where 0 is no mutations
                                                     // ever and 1 is a mutation every time
 
-  //time it takes for the timeUpdate to activate (should stop exponential time growth)
+  // time it takes for the timeUpdate to activate (should stop exponential time growth)
   private static int timeIncrease;
-  
+
   // don't change these
   private boolean doDebug;
   // private static boolean doLog;
   private boolean autoplay;
   // private boolean randomizeBlocks;
-//  private boolean playMultiple; // play multiple games in a row
+  // private boolean playMultiple; // play multiple games in a row
 
   // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
   public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
@@ -96,8 +96,8 @@ public class Game extends Application {
    * convenience constructor that initializes the game to some suggested settings
    */
   public Game() {
-    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, 5, GameMode.DISTRO, true, false,
-        new RandomizeBlocks(), ScoreMode.SIMPLE);
+    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, 5, GameMode.DISTRO, true,
+        false, new RandomizeBlocks(), ScoreMode.SIMPLE);
   }
 
   /**
@@ -120,7 +120,7 @@ public class Game extends Application {
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-//    this.playMultiple = playMultiple;
+    // this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight + 3][boardWidth]; // so that the board can accommodate
                                                             // blocks at the top
@@ -141,14 +141,13 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    */
   public Game(Tile[][] board, int minTimePerTurn, int maxGamesPerGen, GameMode mode,
-      boolean useGraphics, boolean doDebug, BlockGenerator generator,
-      ScoreMode scoring) {
+      boolean useGraphics, boolean doDebug, BlockGenerator generator, ScoreMode scoring) {
     this.minTimePerTurn = minTimePerTurn;
     this.maxGamesPerGeneration = maxGamesPerGen;
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-//    this.playMultiple = playMultiple;
+    // this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = board;
     this.scoring = scoring;
@@ -170,11 +169,11 @@ public class Game extends Application {
    * @param playMultiple whether multiple games should be played consecutively
    * @param weights the weights to be passed to the AI for its evaluation function
    */
-  public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen, GameMode mode,
-      boolean useGraphics, boolean doDebug, BlockGenerator generator,
+  public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen,
+      GameMode mode, boolean useGraphics, boolean doDebug, BlockGenerator generator,
       double[] weights, ScoreMode scoring) {
-    this(boardHeight, boardWidth, minTimePerTurn, maxGamesPerGen, mode, useGraphics, doDebug, generator,
-         scoring);
+    this(boardHeight, boardWidth, minTimePerTurn, maxGamesPerGen, mode, useGraphics, doDebug,
+        generator, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
     this.cerulean = new Cerulean();
@@ -243,25 +242,27 @@ public class Game extends Application {
     // int score = 0;
     setup(useGraphics);
     engine.addBlock();
-	timeIncrease = (int) System.currentTimeMillis();
+    timeIncrease = (int) System.currentTimeMillis();
 
     // engine updates on separate thread every timePerTurn nanoseconds
     Util.exec.submit(() -> {
-      while (engine.getGameNum() < maxGamesPerGeneration) { // controls number of max games, 
-    	  													//change from infinite games
-    	  while (!engine.hasFullBoard()) {
+      while (engine.getGameNum() < maxGamesPerGeneration) { // controls number of max games,
+                                                            // change from infinite games
+        while (!engine.hasFullBoard()) {
           Util.sleep(timePerTurn);
           engine.update();
           if (engine.hasFullBoard()) {
-            timer.stop();
+            if (useGraphics) {
+              timer.stop();
+            }
             System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
-//            engine.reset(); //causes game to freeze repeatably
+            // engine.reset(); //causes game to freeze repeatably
           }
-          if (!paused){
-	          if ((int) System.currentTimeMillis() - timeIncrease > 500){
-	        	  timeIncrease = (int) System.currentTimeMillis();
-	              timePerTurn = updateTime(timePerTurn);
-	          }
+          if (!paused) {
+            if ((int) System.currentTimeMillis() - timeIncrease > 500) {
+              timeIncrease = (int) System.currentTimeMillis();
+              timePerTurn = updateTime(timePerTurn);
+            }
           }
         }
         // return engine.getScore();
@@ -273,17 +274,14 @@ public class Game extends Application {
 
   }
 
-  public static int runGame(int gameNum, ScoreMode scoring) {
-    Game game =
-        new Game(20, 10, 10000, 0, GameMode.AUTOPLAY, false, false, null, WEIGHTS, scoring);
-    game.engine.setGameNumber(gameNum);
+  public static int runGame(Game game) {
     // System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
     game.setup(game.useGraphics);
     game.engine.addBlock();
     while (!game.engine.hasFullBoard()) {
       game.engine.update();
       if (game.engine.hasFullBoard()) {
-        System.out.println("Done: " + gameNum + " " + game.getScore());
+        System.out.println("Done: " + " " + game.getScore());
       }
     }
     return game.getScore();
@@ -467,9 +465,9 @@ public class Game extends Application {
               engine.update();
             break;
           case UP:
-//            if (doDebug) {
-              engine.executeMove(Move.UP);
-//            }
+            // if (doDebug) {
+            engine.executeMove(Move.UP);
+            // }
             engine.executeMove(Move.UP);
             break;
           default:
@@ -539,8 +537,9 @@ public class Game extends Application {
    */
   private AnimationTimer configureTimer(boolean useGraphics) {
     return new AnimationTimer() {
-    	
+
       private int counter = 0;
+
       @Override
       public void start() {
         super.start();
@@ -551,21 +550,21 @@ public class Game extends Application {
       public void handle(long time) {
         renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         renderer.updateScore(getScore(), engine.getNumFullRows());
-        if (engine.hasQuadris()){
-        	System.out.println("quadris is true");
-        	counter++;
-        	engine.setQuadris(false);
+        if (engine.hasQuadris()) {
+          System.out.println("quadris is true");
+          counter++;
+          engine.setQuadris(false);
         }
-        
-        if (counter > 0){
-        	System.out.println(counter);
-        	counter++;
-        	renderer.displayQuadrisGraphic();
-        	if (counter > 200){
-        		counter = 0;
-        	}
+
+        if (counter > 0) {
+          System.out.println(counter);
+          counter++;
+          renderer.displayQuadrisGraphic();
+          if (counter > 200) {
+            counter = 0;
+          }
         }
-        
+
         if (engine.hasFullBoard()) {
           renderer.updateHighScores(getScore());
           timer.stop();

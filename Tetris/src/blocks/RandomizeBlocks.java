@@ -29,8 +29,13 @@ public class RandomizeBlocks implements BlockGenerator {
 
   @Override
   public void reset() {
-    //don't need to do anything, resetting doesn't mean anything here
-    
+    //don't need to do anything, resetting doesn't mean anything here  
+  }
+
+  @Override
+  public void setGameNumber(int j) {
+    //don't need to do anything, game number doesn't matter to randomized blocks  
+
   }
 
 }
