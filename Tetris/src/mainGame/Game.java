@@ -548,13 +548,16 @@ public class Game extends Application {
        
         if (engine.hasQuadris()){
         	System.out.println("quadris is true");
-        	counter++;
+        	//resets in case two quadris' are achieved in quick succession
+        	counter = 1;
         	engine.setQuadris(false);
         }
         
         if (counter > 0){
         	System.out.println(counter);
         	counter++;
+        	
+        	//could have some kind of quadris toggle feature
         	if (counter < 50){
             	renderer.displayQuadrisGraphic();
         	} else if (counter < 100){
