@@ -155,34 +155,35 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
-//    if (moveCount <= 6) {
-//      for (int i = 0; i < (6 - moveCount); i++) {
-//        path.add(Move.LEFT);
-//      }
-//    }
-//    else{
-//      for(int i = 0; i < moveCount - 6; i++){
-//        path.add(Move.RIGHT);
-//      }
-//    }
+    // if (moveCount <= 6) {
+    // for (int i = 0; i < (6 - moveCount); i++) {
+    // path.add(Move.LEFT);
+    // }
+    // }
+    // else{
+    // for(int i = 0; i < moveCount - 6; i++){
+    // path.add(Move.RIGHT);
+    // }
+    // }
+    // if (moveCount < 0) {
     for (int i = 0; i < 6; i++) { // puts the block into a constant, known position
       path.add(Move.LEFT);
     }
+    // } else {
     for (int i = 0; i < moveCount; i++) {
       path.add(Move.RIGHT);
     }
+    // }
     path.add(Move.DROP);
-//    if(slideCount == 0){
-//      path.add(Move.LEFT);
-//    }
-//    //dont need to handle == 1, that's just left then right
-//    else if(slideCount == 2){
-//      path.add(Move.RIGHT);
-//    }
-    path.add(Move.LEFT);
-    for (int i = 0; i < slideCount; i++) {
+
+    if (slideCount == 0) {
+      path.add(Move.LEFT);
+    }
+    // dont need to handle == 1, that's just left then right
+    else if (slideCount == 2) {
       path.add(Move.RIGHT);
     }
+
     return path.toArray(new Move[] {});
   }
 

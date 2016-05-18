@@ -12,6 +12,10 @@ public class StandardizeBlocks implements BlockGenerator {
   private int numBlocksAdded;
   private int[][] blocksToAdd;
   
+  public StandardizeBlocks(){
+    this(0);
+  }
+  
   public StandardizeBlocks(int gameNumber){
     this.gameNumber = gameNumber;
     numBlocksAdded = 0;
@@ -79,6 +83,11 @@ public class StandardizeBlocks implements BlockGenerator {
   public void reset() {
     this.gameNumber++;
     this.numBlocksAdded = 0;
+    
+  }
+
+  public void setGameNumber(int j) {
+    this.gameNumber = j;
     
   }
 
