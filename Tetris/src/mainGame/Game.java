@@ -551,36 +551,24 @@ public class Game extends Application {
         	counter++;
         	engine.setQuadris(false);
         }
-        if (engine.hasQuadris()) {
-          System.out.println("quadris is true");
-          counter++;
-          engine.setQuadris(false);
-        }
         
         if (counter > 0){
         	System.out.println(counter);
         	counter++;
-        	renderer.displayQuadrisGraphic();
-        	if (counter > 50){
+        	if (counter < 50){
+            	renderer.displayQuadrisGraphic();
+        	} else if (counter < 100){
         		renderer.removeQuadrisGraphic();
-        	} else if (counter > 100){
+        	} else if (counter < 150){
         		renderer.displayQuadrisGraphic();
-        	} else if (counter > 150){
+        	} else if (counter < 200){
         		renderer.removeQuadrisGraphic();
-        	}
-        	if (counter > 200){
+        	} else if (counter < 250){
+        		renderer.displayQuadrisGraphic();
+        	} else {
         		counter = 0;
         		renderer.removeQuadrisGraphic();
         	}
-        }
-
-        if (counter > 0) {
-          System.out.println(counter);
-          counter++;
-          renderer.displayQuadrisGraphic();
-          if (counter > 200) {
-            counter = 0;
-          }
         }
 
         if (engine.hasFullBoard()) {
