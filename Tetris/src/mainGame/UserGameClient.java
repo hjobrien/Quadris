@@ -12,13 +12,12 @@ import javafx.stage.Stage;
  * @author Hank O'Brien
  *
  */
-public class UserGameClient extends Application {
+public class UserGameClient extends Application implements Viewable{
 
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
   //I think 90000000 nanos is a good minTime personally - Liam
   public static final int MIN_TIME_PER_TURN = 100000000;
-  public static final boolean USE_GRAPHICS = true;
   public static final boolean DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = false;
   public static final double[] WEIGHTS = new double[] {-70, -97.85, 306.77, 5};
