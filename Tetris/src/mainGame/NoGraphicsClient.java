@@ -17,7 +17,7 @@ public class NoGraphicsClient implements Autoplayable{
 
   public static void main(String args[]) throws Exception {
     Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY, GameMode.AUTOPLAY,
-        USE_GRAPHICS, DO_DEBUG, GENERATOR, WEIGHTS, SCORE_MODE);
+        USE_GRAPHICS, DO_DEBUG, GENERATOR, DEFAULT_WEIGHTS, SCORE_MODE);
     game.run();
   }
 

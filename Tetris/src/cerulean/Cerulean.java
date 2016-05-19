@@ -3,6 +3,7 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.DoubleStream;
@@ -32,7 +33,7 @@ public class Cerulean {
   private static final double LINE_WEIGHT = 306.77;
   private static final double EDGE_WEIGHT = 5;
 
-  private double[] weights = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT, EDGE_WEIGHT};
+  private double[] weights;// = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, LINE_WEIGHT, EDGE_WEIGHT};
 
 
   // change for how important multiple of an occurrence is
@@ -212,7 +213,7 @@ public class Cerulean {
 
     if (boardAnalyzer == null) {
       // null refers to a lack of score mode
-      boardAnalyzer = new Engine(tileCopy, false, new RandomizeBlocks(), null);
+      boardAnalyzer = new Engine(tileCopy, false, new RandomizeBlocks(), null, null);
     }
     boardAnalyzer.setGameBoard(tileCopy);
     boardAnalyzer.addBlock(nextBlock);
@@ -275,16 +276,8 @@ public class Cerulean {
       }
 
       double voidCount = getNumVoids(colCopy);
-      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW)); // keeps
-                                                                                                     // the
-                                                                                                     // value
-                                                                                                     // from
-                                                                                                     // being
-                                                                                                     // 0
-                                                                                                     // in
-                                                                                                     // Ternary
-
-
+      //keeps the value from being 0 in the Terniary
+      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW));
       edges += weights[3] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
     }
     height =

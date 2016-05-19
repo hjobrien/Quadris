@@ -3,14 +3,10 @@ package mainGame;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import blocks.BlockGenerator;
 import blocks.RandomizeBlocks;
 import blocks.Tile;
-import cerulean.Cerulean;
 import engine.Engine;
 import engine.GameMode;
 import javafx.animation.AnimationTimer;
@@ -44,7 +40,7 @@ public class Game extends Application {
   // private boolean playMultiple; // play multiple games in a row
 
   // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
-  public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
+//  public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
 
 
   private int maxTimePerTurn = 1000000000; // nanoseconds
@@ -64,28 +60,28 @@ public class Game extends Application {
   private Tile[][] gameBoard/* = new Tile[DEFAULT_VERTICAL_TILES][DEFAULT_HORIZONTAL_TILES] */;
   private Engine engine;
   private Renderer renderer;
-  private Cerulean cerulean;
+//  private Cerulean cerulean;
   private boolean useGraphics;
 
   private int maxGamesPerGeneration = 0;
 
-  private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
+//  private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
 
   // can be changed if not desired
   private boolean dropDownTerminatesBlock = true;
 
   // seeded possible solutions
-  public static double[][] species =
-      new double[][] {WEIGHTS, {-70, -70, 500, 5}, {-100, -50, 100, 2}, {-200, -70, 300, 7},
-          {-40, -100, 400, 1}, {-400, -300, 100, 1}, {-200, -100, 100, 3}, {-150, -70, 400, 0},
-          {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
+//  public static double[][] species =
+//      new double[][] {WEIGHTS, {-70, -70, 500, 5}, {-100, -50, 100, 2}, {-200, -70, 300, 7},
+//          {-40, -100, 400, 1}, {-400, -300, 100, 1}, {-200, -100, 100, 3}, {-150, -70, 400, 0},
+//          {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
   // public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10,
   // -10, 100, 5}};
 
-  private static int currentSpecies = 0;
-  private static int generationNum = 0;
+//  private static int currentSpecies = 0;
+//  private static int generationNum = 0;
 
-  private static double[] speciesAvgScore = new double[species.length];
+//  private static double[] speciesAvgScore = new double[species.length];
 
 
   private boolean paused = false;
@@ -124,7 +120,7 @@ public class Game extends Application {
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight + 3][boardWidth]; // so that the board can accommodate
                                                             // blocks at the top
-    this.engine = new Engine(gameBoard, autoplay, generator, scoring);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring, null);
     this.scoring = scoring;
   }
 
@@ -151,7 +147,7 @@ public class Game extends Application {
     this.autoplay = false;
     this.gameBoard = board;
     this.scoring = scoring;
-    this.engine = new Engine(gameBoard, autoplay, generator, scoring);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring, null);
   }
 
   /**
@@ -176,9 +172,9 @@ public class Game extends Application {
         generator, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
-    this.cerulean = new Cerulean();
-    cerulean.setWeights(weights);
-    this.engine = new Engine(gameBoard, autoplay, generator, scoring);
+//    this.cerulean = new Cerulean();
+//    cerulean.setWeights(weights);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring, weights);
   }
 
 
@@ -274,15 +270,13 @@ public class Game extends Application {
 
   }
 
-  public static int runGame(Game game) {
+  public static int runGame(Game game, int gameNum) {
     // System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
     game.setup(game.useGraphics);
-    game.engine.addBlock();
-    while (!game.engine.hasFullBoard()) {
-      game.engine.update();
-      if (game.engine.hasFullBoard()) {
-        System.out.println("Done: " + " " + game.getScore());
-      }
+    game.getEngine().addBlock();
+    
+    while (!game.getEngine().hasFullBoard()) {
+      game.getEngine().update();
     }
     return game.getScore();
 
@@ -364,6 +358,10 @@ public class Game extends Application {
   //
   // }
 
+  private Engine getEngine() {
+    return this.engine;
+  }
+
   /**
    * Aims to change the number of real-world seconds between each game tick without acceleration
    * 
@@ -384,18 +382,18 @@ public class Game extends Application {
 
   }
 
-  /**
-   * gets the average score over the current candidates history
-   * 
-   * @return the candidates average score
-   */
-  private double getAvgScore() {
-    double total = 0;
-    for (Integer i : scoreHistory) {
-      total += i;
-    }
-    return total / (scoreHistory.size());
-  }
+//  /**
+//   * gets the average score over the current candidates history
+//   * 
+//   * @return the candidates average score
+//   */
+//  private double getAvgScore() {
+//    double total = 0;
+//    for (Integer i : scoreHistory) {
+//      total += i;
+//    }
+//    return total / (scoreHistory.size());
+//  }
 
   /**
    * handles basic key input that needs to be constant across all run configurations
@@ -488,10 +486,10 @@ public class Game extends Application {
    */
   public void resetGame(boolean useGraphics) {
     timer.stop();
-    if (gameMode == GameMode.AI_TRAINING) {
-      printer.flush();
-      speciesAvgScore[currentSpecies] = getAvgScore();
-    }
+//    if (gameMode == GameMode.AI_TRAINING) {
+//      printer.flush();
+//      speciesAvgScore[currentSpecies] = getAvgScore();
+//    }
     gameIsActive = false;
     if (useGraphics) // TODO: remove, switch to Logger class
       renderer.writeScores();

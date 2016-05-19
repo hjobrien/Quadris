@@ -19,7 +19,7 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
   public static final boolean DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-  public static final BlockGenerator GENERATOR = new StandardizeBlocks(5);
+  public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
 //  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
   public  static final int MAX_GAMES_TO_PLAY = 1;
 
@@ -30,7 +30,7 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
   @Override
   public void start(Stage arg0) throws Exception {
     Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY, GameMode.AUTOPLAY,
-        USE_GRAPHICS, DEBUG, GENERATOR, WEIGHTS, SCORE_MODE);
+        USE_GRAPHICS, DEBUG, GENERATOR, DEFAULT_WEIGHTS, SCORE_MODE);
     game.run(arg0);
 
   }

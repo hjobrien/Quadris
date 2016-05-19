@@ -44,7 +44,7 @@ public class Engine {
    * @param autoplay whether the engine should automatically place the blocks
    * @param randomizeBlocks whether blocks should be randomly generated or read from a file
    */
-  public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring) {
+  public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring, double[] weights) {
     this.scoreMode = scoring;
     this.autoplay = autoplay;
     this.blockGenerator = generator;
@@ -53,6 +53,7 @@ public class Engine {
     nextBlock = blockGenerator.generateBlock();
     if (autoplay) {
       cerulean = new Cerulean();
+      cerulean.setWeights(weights);
     }
 
   }
@@ -962,6 +963,10 @@ public class Engine {
    */
   public void setGameBoard(Tile[][] newGameBoard) {
     this.gameBoard = newGameBoard;
+  }
+  
+  public Cerulean getCerulean() {
+    return this.cerulean;
   }
 
   public ScoreMode getScoreMode() {
