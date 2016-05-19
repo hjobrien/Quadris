@@ -9,8 +9,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import blocks.blockGeneration.BlockGenerator;
 import blocks.blockGeneration.StandardizeBlocks;
-import engine.GameMode;
 import mainGame.Game;
+import mainGame.GameMode;
 import mainGame.ScoreMode;
 import util.Util;
 

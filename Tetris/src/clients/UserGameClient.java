@@ -3,10 +3,10 @@ package clients;
 import blocks.blockGeneration.BlockGenerator;
 import blocks.blockGeneration.RandomizeBlocks;
 import clients.interfaces.Viewable;
-import engine.GameMode;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import mainGame.Game;
+import mainGame.GameMode;
 import mainGame.ScoreMode;
 
 /**

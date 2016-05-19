@@ -4,10 +4,10 @@ import blocks.blockGeneration.BlockGenerator;
 import blocks.blockGeneration.StandardizeBlocks;
 import clients.interfaces.Autoplayable;
 import clients.interfaces.Viewable;
-import engine.GameMode;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import mainGame.Game;
+import mainGame.GameMode;
 import mainGame.ScoreMode;
 
 /**
@@ -19,7 +19,7 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
 
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
-  public static final int MIN_TIME_PER_TURN = 100000000;
+  public static final int MIN_TIME_PER_TURN = 200000000;
   public static final boolean DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;

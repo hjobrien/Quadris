@@ -8,7 +8,6 @@ import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
 import blocks.blockGeneration.RandomizeBlocks;
 import engine.Engine;
-import engine.GameMode;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;

@@ -3,8 +3,8 @@ package clients;
 import blocks.blockGeneration.BlockGenerator;
 import blocks.blockGeneration.StandardizeBlocks;
 import clients.interfaces.Autoplayable;
-import engine.GameMode;
 import mainGame.Game;
+import mainGame.GameMode;
 import mainGame.ScoreMode;
 
 public class NoGraphicsClient implements Autoplayable{
