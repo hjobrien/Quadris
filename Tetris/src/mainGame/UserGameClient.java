@@ -19,7 +19,6 @@ public class UserGameClient extends Application implements Viewable{
   //I think 90000000 nanos is a good minTime personally - Liam
   public static final int MIN_TIME_PER_TURN = 100000000;
   public static final boolean DEBUG = false;
-//  public static final boolean PLAY_MULTIPLE = false;
   public static final double[] WEIGHTS = new double[] {-70, -97.85, 306.77, 5};
   public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;
   public static final BlockGenerator GENERATOR = new RandomizeBlocks();

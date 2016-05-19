@@ -358,7 +358,6 @@ public class Engine {
    * @param linesToClear the lines that need to be cleared
    */
   public void clearLines(ArrayList<Integer> linesToClear) {
-    // rewards a "quadris"
 
     ScoreMode sm = getScoreMode();
 

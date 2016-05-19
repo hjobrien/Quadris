@@ -463,9 +463,6 @@ public class Game extends Application {
               engine.update();
             break;
           case UP:
-            // if (doDebug) {
-            engine.executeMove(Move.UP);
-            // }
             engine.executeMove(Move.UP);
             break;
           default:
@@ -500,8 +497,6 @@ public class Game extends Application {
     gameIsActive = true;
     timer.start();
     engine.addBlock();
-
-
   }
 
 
@@ -548,19 +543,33 @@ public class Game extends Application {
       public void handle(long time) {
         renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         renderer.updateScore(getScore(), engine.getNumFullRows());
-        if (engine.hasQuadris()) {
-          System.out.println("quadris is true");
-          counter++;
-          engine.setQuadris(false);
+       
+        if (engine.hasQuadris()){
+        	System.out.println("quadris is true");
+        	//resets in case two quadris' are achieved in quick succession
+        	counter = 1;
+        	engine.setQuadris(false);
         }
-
-        if (counter > 0) {
-          System.out.println(counter);
-          counter++;
-          renderer.displayQuadrisGraphic();
-          if (counter > 200) {
-            counter = 0;
-          }
+        
+        if (counter > 0){
+        	System.out.println(counter);
+        	counter++;
+        	
+        	//could have some kind of quadris toggle feature
+        	if (counter == 2){
+            	renderer.displayQuadrisGraphic();
+        	} else if (counter == 50){
+        		renderer.removeQuadrisGraphic();
+        	} else if (counter == 100){
+        		renderer.displayQuadrisGraphic();
+        	} else if (counter == 150){
+        		renderer.removeQuadrisGraphic();
+        	} else if (counter == 200){
+        		renderer.displayQuadrisGraphic();
+        	} else if (counter == 250){
+        		counter = 0;
+        		renderer.removeQuadrisGraphic();
+        	}
         }
 
         if (engine.hasFullBoard()) {
