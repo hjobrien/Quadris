@@ -2,6 +2,7 @@ package clients;
 
 import java.util.Arrays;
 
+import cerulean.Cerulean;
 import clients.interfaces.Autoplayable;
 import mainGame.ScoreMode;
 
@@ -15,24 +16,42 @@ public class WeightTrainingClient implements Autoplayable {
   // should be 1, if a game finishes the thread should be allowed to take a new thread from the pool
   public static final int MAX_CONSEC_GAMES_PER_THREAD = 1;
   public static final int MAX_GAMES_PER_GEN = 10;
-  public static final int MAX_GENERATIONS = 1;
+  public static final int MAX_GENERATIONS = 10;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
+  public static final double MUTATION_FACTOR = 0.5;
 
-  public static double[][] species = new double[][] {{-200, -50, 100, 1.68}, {-70, -70, 500, 5}};//,
-//      {-100, -50, 100, 2}, {-200, -70, 300, 7}, {-40, -100, 400, 1}, {-400, -300, 100, 1},
-//      {-200, -100, 100, 3}, {-150, -70, 400, 0}, {-70, -150, 500, -5}, {-200, -35.4, 100, 8},
-//      {-294.75, -34.44, 101.72, 5}};
+
+  public static double[][] species =
+      new double[][] {{-200, -50, 1.68, 100, 100 * 3, 100 * 7, 100 * 20},
+        {-70, -70, 5, 500, 500 * 3, 500 * 7, 500 * 20},
+        {-100, -50, 2, 100, 100 * 3, 100 * 7, 100 * 20},
+        {-200, -70, 7, 300, 300 * 3, 300 * 7, 300 * 20},
+        {-40, -100, 1, 400, 400 * 3, 400 * 7, 400 * 20},
+        {-400, -300, 1, 100, 100 * 3, 100 * 7, 100 * 20},
+        {-200, -100, 3, 100, 100 * 3, 100 * 7, 100 * 20},
+        {-150, -70, 0, 400, 400 * 3, 400 * 7, 400 * 20},
+        {-70, -150, -5, 500, 500 * 3, 500 * 7, 500 * 20},
+        {-200, -35.4, 8, 100, 100 * 3, 100 * 7, 100 * 20},
+        {-294.75, -34.44, 5, 101.72, 101.72 * 3, 101.72 * 7, 101.72 * 20}
+      };
 
   public static void main(String[] args) {
     ParellelizedCore runner = new ParellelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
         MAX_CONSEC_GAMES_PER_THREAD, MAX_GAMES_PER_GEN, USE_GRAPHICS, DO_DEBUG, SCORE_MODE);
+
+    double[] speciesAvgScore = new double[species.length];
     for (int genNumber = 0; genNumber < MAX_GENERATIONS; genNumber++) {
-      for (double[] currentSpecies : species) {
-        System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over " + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE
-            + " scoring is " + runner.run(currentSpecies));
+      for (int i = 0; i < species.length; i++) {
+        double[] currentSpecies = species[i];
+        double avgScore = runner.run(currentSpecies);
+        System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
+            + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
+        speciesAvgScore[i] = avgScore;
       }
+      System.out.println();
+      species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
     }
-    
+
     System.exit(0);
   }
 
