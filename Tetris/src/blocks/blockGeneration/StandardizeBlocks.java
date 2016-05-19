@@ -1,8 +1,17 @@
-package blocks;
+package blocks.blockGeneration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import blocks.Block;
+import blocks.LeftL;
+import blocks.LeftS;
+import blocks.RightL;
+import blocks.RightS;
+import blocks.Square;
+import blocks.StraightLine;
+import blocks.TBlock;
 
 public class StandardizeBlocks implements BlockGenerator {
 

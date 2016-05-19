@@ -1,4 +1,4 @@
-package clients;
+package clients.testClients;
 
 import java.util.stream.DoubleStream;
 

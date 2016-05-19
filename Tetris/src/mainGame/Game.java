@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import blocks.BlockGenerator;
-import blocks.RandomizeBlocks;
 import blocks.Tile;
+import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.RandomizeBlocks;
 import engine.Engine;
 import engine.GameMode;
 import javafx.animation.AnimationTimer;

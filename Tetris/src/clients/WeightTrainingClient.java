@@ -2,8 +2,7 @@ package clients;
 
 import java.util.Arrays;
 
-import mainGame.Autoplayable;
-import mainGame.ParellelizedRunner;
+import clients.interfaces.Autoplayable;
 import mainGame.ScoreMode;
 
 public class WeightTrainingClient implements Autoplayable {
@@ -25,7 +24,7 @@ public class WeightTrainingClient implements Autoplayable {
 //      {-294.75, -34.44, 101.72, 5}};
 
   public static void main(String[] args) {
-    ParellelizedRunner runner = new ParellelizedRunner(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
+    ParellelizedCore runner = new ParellelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
         MAX_CONSEC_GAMES_PER_THREAD, MAX_GAMES_PER_GEN, USE_GRAPHICS, DO_DEBUG, SCORE_MODE);
     for (int genNumber = 0; genNumber < MAX_GENERATIONS; genNumber++) {
       for (double[] currentSpecies : species) {

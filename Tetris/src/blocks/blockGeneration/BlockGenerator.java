@@ -1,4 +1,6 @@
-package blocks;
+package blocks.blockGeneration;
+
+import blocks.Block;
 
 public interface BlockGenerator {
 

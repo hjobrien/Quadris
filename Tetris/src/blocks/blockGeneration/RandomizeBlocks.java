@@ -1,6 +1,15 @@
-package blocks;
+package blocks.blockGeneration;
 
 import java.util.Random;
+
+import blocks.Block;
+import blocks.LeftL;
+import blocks.LeftS;
+import blocks.RightL;
+import blocks.RightS;
+import blocks.Square;
+import blocks.StraightLine;
+import blocks.TBlock;
 
 public class RandomizeBlocks implements BlockGenerator {
   public static final Random RANDOM = new Random();

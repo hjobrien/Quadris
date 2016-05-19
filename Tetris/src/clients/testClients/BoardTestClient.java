@@ -1,15 +1,15 @@
-package clients;
+package clients.testClients;
 
-import blocks.BlockGenerator;
-import blocks.RandomizeBlocks;
 import blocks.Tile;
+import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.RandomizeBlocks;
+import clients.interfaces.Viewable;
 import engine.GameMode;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import mainGame.Game;
 import mainGame.ScoreMode;
-import mainGame.Viewable;
 
 public class BoardTestClient extends Application implements Viewable{
 

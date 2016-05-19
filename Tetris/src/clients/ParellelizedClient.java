@@ -2,8 +2,7 @@ package clients;
 
 import java.io.IOException;
 
-import mainGame.Autoplayable;
-import mainGame.ParellelizedRunner;
+import clients.interfaces.Autoplayable;
 import mainGame.ScoreMode;
 
 public class ParellelizedClient implements Autoplayable {
@@ -19,7 +18,7 @@ public class ParellelizedClient implements Autoplayable {
   private static final int NUM_GAMES_TO_PLAY = 10;
 
   public static void main(String args[]) throws IOException {
-    ParellelizedRunner runner = new ParellelizedRunner(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
+    ParellelizedCore runner = new ParellelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
         MAX_GAMES_PER_THREAD, NUM_GAMES_TO_PLAY, USE_GRAPHICS, DO_DEBUG, SCORE_MODE);
     System.out.println(
         "Average Score over " + NUM_GAMES_TO_PLAY + " Games using " + SCORE_MODE + " scoring is " + runner.run(DEFAULT_WEIGHTS));

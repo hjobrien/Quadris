@@ -1,9 +1,9 @@
 package clients;
 
-import blocks.BlockGenerator;
-import blocks.StandardizeBlocks;
+import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.StandardizeBlocks;
+import clients.interfaces.Autoplayable;
 import engine.GameMode;
-import mainGame.Autoplayable;
 import mainGame.Game;
 import mainGame.ScoreMode;
 

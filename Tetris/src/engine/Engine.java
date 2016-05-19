@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import blocks.Block;
-import blocks.BlockGenerator;
 import blocks.Tile;
+import blocks.blockGeneration.BlockGenerator;
 import cerulean.Cerulean;
 import mainGame.Move;
 import mainGame.ScoreMode;

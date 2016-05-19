@@ -1,4 +1,4 @@
-package mainGame;
+package clients;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +7,14 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import blocks.BlockGenerator;
-import blocks.StandardizeBlocks;
+import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.StandardizeBlocks;
 import engine.GameMode;
+import mainGame.Game;
+import mainGame.ScoreMode;
 import util.Util;
 
-public class ParellelizedRunner {
+public class ParellelizedCore {
 
   private int gameHeight;
   private int gameWidth;
@@ -24,7 +26,7 @@ public class ParellelizedRunner {
   private ScoreMode scoreMode = ScoreMode.SIMPLE;
 
 
-  public ParellelizedRunner(int gameHeight, int gameWidth, int minTimePerTurn, int maxGamesPerThread,
+  public ParellelizedCore(int gameHeight, int gameWidth, int minTimePerTurn, int maxGamesPerThread,
       int maxGamesPerGen, boolean useGraphics, boolean doDebug, ScoreMode scoreMode) {
     this.gameHeight = gameHeight;
     this.gameWidth = gameWidth;

@@ -1,14 +1,14 @@
 package clients;
 
-import blocks.BlockGenerator;
-import blocks.StandardizeBlocks;
+import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.StandardizeBlocks;
+import clients.interfaces.Autoplayable;
+import clients.interfaces.Viewable;
 import engine.GameMode;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import mainGame.Autoplayable;
 import mainGame.Game;
 import mainGame.ScoreMode;
-import mainGame.Viewable;
 
 /**
  * basic client that runs a game in autoplay mode
