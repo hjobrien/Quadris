@@ -3,7 +3,6 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.DoubleStream;
@@ -24,17 +23,8 @@ import mainGame.Move;
 
 public class Cerulean {
 
-	// Board Weight constants
-	// negative means its a bad thing being weighted (overall board height)
-	// positive means its a good thing (full lines);
-
-	private static final double HEIGHT_WEIGHT = -70;
-	private static final double VOID_WEIGHT = -97.85;
-	private static final double LINE_WEIGHT = 306.77;
-	private static final double EDGE_WEIGHT = 5;
-
-	private double[] weights;// = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT,
-								// LINE_WEIGHT, EDGE_WEIGHT};
+	private double[] weights;// = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT, 
+						//ONE_LINE_WEIGHT, TWO_LINES_WEIGHT, THREE_LINES_WEIGHT, FOUR_LINES_WEIGHT
 
 	// change for how important multiple of an occurrence is
 	// negative numbers mean as the quantity gets higher, it gets less important
@@ -45,6 +35,8 @@ public class Cerulean {
 	// importance more quickly
 	private static final double HEIGHT_POW = 1;
 	private static final double VOID_POW = 1;
+	
+	//seems irrelevant if we are giving parameters for different line numbers
 	private static final double LINE_POW = 1;
 
 	// TODO: add a positive weight for how full each row is?
@@ -324,20 +316,30 @@ public class Cerulean {
 			double voidCount = getNumVoids(colCopy);
 			// keeps the value from being 0 in the Terniary
 			voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW));
-			edges += weights[3] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
+			edges += weights[2] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
 		}
 		height = weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
 
-		double lines = 0;
-		for (int i = 0; i < boardCopy[0].length; i++) {
-			double lineCount = getNumLines(boardCopy);
-			lines += (weights[2] * Math.pow((lineCount == 0 ? 0.00000000000000001 : lineCount), LINE_POW));
+		
+		//gets the composite lineScore, which will be entered in weight[3]
+		//alternatively, we could make weight[] bigger and enter in each line weight for its corresponding
+		//weights[] spot, but that seems excessive and only relevant if we choose to add way more weights
+		int lineCount = getNumLines(boardCopy);
+		double lineScore = 0;
+		
+		//returns the value of the line clearance based on how many lines were cleared
+		if (lineCount > 0){
+			System.out.println("lines = " + lineCount + ", score = " + weights[2 + lineCount]);
+			lineScore += weights[2 + lineCount];
 		}
+		
 		if (!full) {
 			weight[0] = voids;
 			weight[1] = height;
-			weight[2] = lines;
-			weight[3] = edges;
+			weight[2] = edges;
+			
+			//the sum score of the lines cleared; corresponds to weights[3] - weights[6]
+			weight[3] = lineScore;
 		} else {
 			weight[0] = -10000000;
 			weight[1] = -10000000;
@@ -395,16 +397,12 @@ public class Cerulean {
 		int numLines = 0;
 		for (int i = 0; i < boardCopy.length; i++) {
 			boolean isFull = true;
-			boolean isEmpty = true;
 			for (int j = 0; j < boardCopy[0].length; j++) {
-				if (boardCopy[i][j].isFilled()) {
-					isEmpty = false;
-				}
 				if (!boardCopy[i][j].isFilled()) {
 					isFull = false;
 				}
 			}
-			if (isFull && !isEmpty) {
+			if (isFull) {
 				numLines++;
 			}
 		}
