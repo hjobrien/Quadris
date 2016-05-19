@@ -1,8 +1,11 @@
-package mainGame;
+package clients;
 
 import blocks.BlockGenerator;
 import blocks.StandardizeBlocks;
 import engine.GameMode;
+import mainGame.Autoplayable;
+import mainGame.Game;
+import mainGame.ScoreMode;
 
 public class NoGraphicsClient implements Autoplayable{
   public static final int GAME_HEIGHT = 20;

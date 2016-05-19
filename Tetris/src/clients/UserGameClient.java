@@ -1,10 +1,13 @@
-package mainGame;
+package clients;
 
 import blocks.BlockGenerator;
 import blocks.RandomizeBlocks;
 import engine.GameMode;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import mainGame.Game;
+import mainGame.ScoreMode;
+import mainGame.Viewable;
 
 /**
  * Class that runs a graphical version of the game that allows the user to play normally

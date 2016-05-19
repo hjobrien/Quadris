@@ -1,4 +1,4 @@
-package mainGame;
+package clients;
 
 import java.util.stream.DoubleStream;
 

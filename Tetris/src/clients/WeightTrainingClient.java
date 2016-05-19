@@ -1,6 +1,10 @@
-package mainGame;
+package clients;
 
 import java.util.Arrays;
+
+import mainGame.Autoplayable;
+import mainGame.ParellelizedRunner;
+import mainGame.ScoreMode;
 
 public class WeightTrainingClient implements Autoplayable {
 

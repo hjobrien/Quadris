@@ -1,6 +1,10 @@
-package mainGame;
+package clients;
 
 import java.io.IOException;
+
+import mainGame.Autoplayable;
+import mainGame.ParellelizedRunner;
+import mainGame.ScoreMode;
 
 public class ParellelizedClient implements Autoplayable {
   public static final int GAME_HEIGHT = 20;
