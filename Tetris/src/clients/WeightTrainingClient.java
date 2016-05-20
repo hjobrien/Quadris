@@ -1,5 +1,7 @@
 package clients;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
@@ -9,6 +11,8 @@ import mainGame.ScoreMode;
 
 public class WeightTrainingClient implements Autoplayable {
 
+  public static final String LOGFILE_PATH = "src/gameLogs/AI Output";
+  
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
   public static final int MIN_TIME_PER_TURN = 100000000;
@@ -37,9 +41,13 @@ public class WeightTrainingClient implements Autoplayable {
         {-72.15, -37.37, 5.0, 818.84, 1683.85, 2963.27, 11916.65}
       };
 
-  public static void main(String[] args) {
-//    File file = new File()
-//    PrintStream gamePrinter = new PrintStream(file);
+  public static void main(String[] args) throws IOException {
+    File file = new File(LOGFILE_PATH);
+    if(!file.exists()){
+      file.createNewFile();
+    }
+    PrintStream aiPrinter = new PrintStream(file);
+    
     ParellelizedCore runner = new ParellelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
         MAX_CONSEC_GAMES_PER_THREAD, MAX_GAMES_PER_GEN, USE_GRAPHICS, DO_DEBUG, SCORE_MODE);
 
@@ -50,12 +58,14 @@ public class WeightTrainingClient implements Autoplayable {
         double avgScore = runner.run(currentSpecies);
         System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
             + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
+        aiPrinter.println(avgScore);
         speciesAvgScore[i] = avgScore;
       }
+      aiPrinter.println();
       System.out.println();
       species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
     }
-
+    aiPrinter.close();
     System.exit(0);
   }
 
