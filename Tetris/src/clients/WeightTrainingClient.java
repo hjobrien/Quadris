@@ -15,8 +15,8 @@ public class WeightTrainingClient implements Autoplayable {
   public static final boolean DO_DEBUG = false;
   // should be 1, if a game finishes the thread should be allowed to take a new thread from the pool
   public static final int MAX_CONSEC_GAMES_PER_THREAD = 1;
-  public static final int MAX_GAMES_PER_GEN = 10;
-  public static final int MAX_GENERATIONS = 10;
+  public static final int MAX_GAMES_PER_GEN = 50;
+  public static final int MAX_GENERATIONS = 30;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   public static final double MUTATION_FACTOR = 0.5;
 
@@ -33,6 +33,7 @@ public class WeightTrainingClient implements Autoplayable {
         {-70, -150, -5, 500, 500 * 3, 500 * 7, 500 * 20},
         {-200, -35.4, 8, 100, 100 * 3, 100 * 7, 100 * 20},
         {-294.75, -34.44, 5, 101.72, 101.72 * 3, 101.72 * 7, 101.72 * 20}
+//        {-72.15, -37.37, 5.0, 818.84, 1683.85, 2963.27, 11916.65}
       };
 
   public static void main(String[] args) {

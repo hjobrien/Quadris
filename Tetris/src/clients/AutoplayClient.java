@@ -1,7 +1,7 @@
 package clients;
 
 import blocks.blockGeneration.BlockGenerator;
-import blocks.blockGeneration.StandardizeBlocks;
+import blocks.blockGeneration.RandomizeBlocks;
 import clients.interfaces.Autoplayable;
 import clients.interfaces.Viewable;
 import javafx.application.Application;
@@ -23,9 +23,9 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
   public static final boolean DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-  public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
-//  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
-  public  static final int MAX_GAMES_TO_PLAY = 1;
+//  public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
+  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
+  public  static final int MAX_GAMES_TO_PLAY = 4;
 
   public static void main(String[] args) {
     launch();

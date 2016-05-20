@@ -3,7 +3,6 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import java.util.stream.DoubleStream;
 
@@ -37,15 +36,16 @@ public class Cerulean {
   private static final double VOID_POW = 1;
 
   // seems irrelevant if we are giving parameters for different line numbers
-  private static final double LINE_POW = 1;
+//  private static final double LINE_POW = 1;
 
   // TODO: add a positive weight for how full each row is?
 
-  private Move[] solutionPath = new Move[] {Move.RIGHT}; // partially filled
-                                                         // to prevent
-                                                         // errors later
-                                                         // on
+  // partially filled to prevent errors later on
+  private Move[] solutionPath = new Move[] {Move.RIGHT};
   private Engine boardAnalyzer;
+
+  // keeps species that are too similar from breeding together, keeps GA from converging prematurely
+  public static final double MAX_SIMILARITY_RATIO = 0.95;
 
   /**
    * called when a solution is needed for a given block
@@ -65,20 +65,11 @@ public class Cerulean {
    * @throws BoardFullException if the AI cannot place a block without over-filling the board
    */
   public Move[] submitBlock(Block nextBlock, Tile[][] boardState) throws BoardFullException {
-    // TODO:
-    // ideal behavior: blocks drop normally but an array is generated each
-    // time a block is added to
-    // the game
     // long t1 = System.currentTimeMillis();
     return computeBestPath(nextBlock, boardState);
     // System.out.println("x Weight analysis took " +
     // (System.currentTimeMillis() - t1) + "
     // Milli(s)");
-    // using grid from engine as event target, should change to something
-    // else
-    // TODO: make board extend GridPane? it'd be a node then
-    // Event.fireEvent(Engine.getBoard().getGrid(), new
-    // ComputationDoneEvent(solutionPath));
   }
 
   /**
@@ -101,7 +92,7 @@ public class Cerulean {
     for (int moveCount = 0; moveCount < 10; moveCount++) {
       // 10 possible worst case left/right options
       for (int rotCount = 0; rotCount < nextBlockCopy.getNumRotations(); rotCount++) {
-        //from slide one to left, no slide, and one to right
+        // from slide one to left, no slide, and one to right
         for (int slideCount = 0; slideCount < 3; slideCount++) {
           // positions
           // System.out.println(moveCount + " " + rotCount + " " +
@@ -240,10 +231,10 @@ public class Cerulean {
 
     boardAnalyzer.executeMove(Move.DROP);
 
-    // slide parts after block is at bottom, shouldn't work if drop
-    // terminates block
-    boardAnalyzer.executeMove(Move.LEFT);
-    for (int i = 0; i < slideCount; i++) {
+    // don't need to handle slideCount = 1 because that would be moving the block left than right
+    if (slideCount == 0) {
+      boardAnalyzer.executeMove(Move.LEFT);
+    } else if (slideCount == 2) {
       boardAnalyzer.executeMove(Move.RIGHT);
     }
 
@@ -305,7 +296,7 @@ public class Cerulean {
 
     // returns the value of the line clearance based on how many lines were cleared
     if (lineCount > 0) {
-//      System.out.println("lines = " + lineCount + ", score = " + weights[2 + lineCount]);
+      // System.out.println("lines = " + lineCount + ", score = " + weights[2 + lineCount]);
       lineScore += weights[2 + lineCount];
     }
 
@@ -467,16 +458,33 @@ public class Cerulean {
    */
   public static double[][] breed(double[][] species, double[] speciesAvgScore,
       double mutationFactor) {
-    ArrayList<Double> avgScores = new ArrayList<Double>();
-    for (double d : speciesAvgScore) {
-      avgScores.add(d);
+    double bestVal = Double.NEGATIVE_INFINITY;
+    int bestIndex = 0;
+    for (int i = 0; i < speciesAvgScore.length; i++) {
+      if (speciesAvgScore[i] > bestVal) {
+        bestIndex = i;
+        bestVal = speciesAvgScore[i];
+      }
     }
-    int bestIndex = avgScores.indexOf(Collections.max(avgScores));
-    avgScores.remove(bestIndex);
-    int secondIndex = avgScores.indexOf(Collections.max(avgScores));
-    if (secondIndex >= bestIndex) {
-      secondIndex++;
+    int secondIndex = 0;
+    double secondVal = Double.NEGATIVE_INFINITY;
+    for (int i = 0; i < speciesAvgScore.length; i++) {
+      if (speciesAvgScore[i] > secondVal
+          && speciesAvgScore[i] < MAX_SIMILARITY_RATIO * speciesAvgScore[bestIndex]) {
+        secondIndex = i;
+        secondVal = speciesAvgScore[i];
+      }
     }
+    // ArrayList<Double> avgScores = new ArrayList<Double>();
+    // for (double d : speciesAvgScore) {
+    // avgScores.add(d);
+    // }
+    // int bestIndex = avgScores.indexOf(Collections.max(avgScores));
+    // avgScores.remove(bestIndex);
+    // int secondIndex = avgScores.indexOf(Collections.max(avgScores));
+    // if (secondIndex >= bestIndex) {
+    // secondIndex++;
+    // }
     double[] bestCandidate = species[bestIndex];
     double[] secondCandidate = species[secondIndex];
     int numSpecies = species.length;
