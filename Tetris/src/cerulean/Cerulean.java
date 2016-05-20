@@ -36,7 +36,7 @@ public class Cerulean {
   private static final double VOID_POW = 1;
 
   // seems irrelevant if we are giving parameters for different line numbers
-//  private static final double LINE_POW = 1;
+  // private static final double LINE_POW = 1;
 
   // TODO: add a positive weight for how full each row is?
 
@@ -46,7 +46,7 @@ public class Cerulean {
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
-
+  public static final double MAX_SIMILAR_WEIGHTS = 4; //~= half the weights
   /**
    * called when a solution is needed for a given block
    * 
@@ -470,7 +470,7 @@ public class Cerulean {
     double secondVal = Double.NEGATIVE_INFINITY;
     for (int i = 0; i < speciesAvgScore.length; i++) {
       if (speciesAvgScore[i] > secondVal
-          && speciesAvgScore[i] < MAX_SIMILARITY_RATIO * speciesAvgScore[bestIndex]) {
+          && areSufficientlyDifferent(species[i], species[bestIndex])) {
         secondIndex = i;
         secondVal = speciesAvgScore[i];
       }
@@ -528,6 +528,21 @@ public class Cerulean {
     }
 
     return newSpecies;
+  }
+
+  //attempts to prevent in-breeding
+  private static boolean areSufficientlyDifferent(double[] species1, double[] species2) {
+    int numWithinSimilarityThreshold = 0;
+    for(int i = 0; i < species1.length; i++){
+      if((species1[i] - species2[i])  < ((1 - MAX_SIMILARITY_RATIO) * species1[i])){
+        numWithinSimilarityThreshold++;
+      }
+    }
+    if(numWithinSimilarityThreshold < MAX_SIMILAR_WEIGHTS){
+      return true;
+    }else{
+      return false;
+    }
   }
 
 }

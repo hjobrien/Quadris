@@ -1,5 +1,6 @@
 package clients;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 
 import cerulean.Cerulean;
@@ -21,7 +22,7 @@ public class WeightTrainingClient implements Autoplayable {
   public static final double MUTATION_FACTOR = 0.5;
 
 
-  public static double[][] species =
+  private static double[][] species =
       new double[][] {{-200, -50, 1.68, 100, 100 * 3, 100 * 7, 100 * 20},
         {-70, -70, 5, 500, 500 * 3, 500 * 7, 500 * 20},
         {-100, -50, 2, 100, 100 * 3, 100 * 7, 100 * 20},
@@ -32,11 +33,13 @@ public class WeightTrainingClient implements Autoplayable {
         {-150, -70, 0, 400, 400 * 3, 400 * 7, 400 * 20},
         {-70, -150, -5, 500, 500 * 3, 500 * 7, 500 * 20},
         {-200, -35.4, 8, 100, 100 * 3, 100 * 7, 100 * 20},
-        {-294.75, -34.44, 5, 101.72, 101.72 * 3, 101.72 * 7, 101.72 * 20}
-//        {-72.15, -37.37, 5.0, 818.84, 1683.85, 2963.27, 11916.65}
+        {-294.75, -34.44, 5, 101.72, 101.72 * 3, 101.72 * 7, 101.72 * 20},
+        {-72.15, -37.37, 5.0, 818.84, 1683.85, 2963.27, 11916.65}
       };
 
   public static void main(String[] args) {
+//    File file = new File()
+//    PrintStream gamePrinter = new PrintStream(file);
     ParellelizedCore runner = new ParellelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
         MAX_CONSEC_GAMES_PER_THREAD, MAX_GAMES_PER_GEN, USE_GRAPHICS, DO_DEBUG, SCORE_MODE);
 
