@@ -1,8 +1,9 @@
 package clients.testClients;
 
+import blocks.BlockType;
 import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
-import blocks.blockGeneration.RandomizeBlocks;
+import blocks.blockGeneration.SingleBlockGenerator;
 import clients.interfaces.Viewable;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
@@ -16,7 +17,7 @@ public class BoardTestClient extends Application implements Viewable{
 	public static final int MIN_TIME_PER_TURN = 100;
 	public static final boolean DEBUG = false;
 	public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;
-	public static final BlockGenerator GENERATOR = new RandomizeBlocks();
+	public static final BlockGenerator GENERATOR = new SingleBlockGenerator(BlockType.LINE);
 	public static final int MAX_GAMES_TO_PLAY = 1;
 	
 	public static final Color COLOR = Color.BLACK;

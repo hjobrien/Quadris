@@ -553,22 +553,31 @@ public class Game extends Application {
         if (counter > 0){
         	System.out.println(counter);
         	counter++;
-        	
-        	//could have some kind of quadris toggle feature
-        	if (counter == 2){
-            	renderer.displayQuadrisGraphic();
-        	} else if (counter == 50){
-        		renderer.removeQuadrisGraphic();
-        	} else if (counter == 100){
-        		renderer.displayQuadrisGraphic();
-        	} else if (counter == 150){
-        		renderer.removeQuadrisGraphic();
-        	} else if (counter == 200){
-        		renderer.displayQuadrisGraphic();
-        	} else if (counter == 250){
-        		counter = 0;
-        		renderer.removeQuadrisGraphic();
+        	renderer.displayQuadrisGraphic();
+        	if(counter % 7 <= 3){
+        	  renderer.removeQuadrisGraphic();
+        	}else{
+        	  renderer.displayQuadrisGraphic();
         	}
+        	if(counter == 50){
+        	  renderer.removeQuadrisGraphic();
+        	  counter = 0;
+        	}
+//        	//could have some kind of quadris toggle feature
+//        	if (counter == 2){
+//            	renderer.displayQuadrisGraphic();
+//        	} else if (counter == 50){
+//        		renderer.removeQuadrisGraphic();
+//        	} else if (counter == 100){
+//        		renderer.displayQuadrisGraphic();
+//        	} else if (counter == 150){
+//        		renderer.removeQuadrisGraphic();
+//        	} else if (counter == 200){
+//        		renderer.displayQuadrisGraphic();
+//        	} else if (counter == 250){
+//        		counter = 0;
+//        		renderer.removeQuadrisGraphic();
+//        	}
         }
 
         if (engine.hasFullBoard()) {
