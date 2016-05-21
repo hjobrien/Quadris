@@ -64,6 +64,7 @@ public class Renderer {
   private TextArea scoreList = null;
   private StackPane pauseView;
   private StackPane quadrisView;
+  private StackPane endgameView;
   private StringProperty valueProperty;
   private StackPane main;
 
@@ -164,6 +165,10 @@ public class Renderer {
     quadrisView = makeQuadrisGraphic();
     quadrisView.setVisible(false);
     main.getChildren().add(quadrisView);
+    
+    endgameView = makeEndgameGraphic();
+    endgameView.setVisible(false);
+    main.getChildren().add(endgameView);
 
     makeBoardGrid(grid, VERTICAL_TILES, HORIZONTAL_TILES, MAIN_BOARD_RECTS);
     return new Scene(main, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -498,6 +503,34 @@ public class Renderer {
     System.out.println();
     final Label nameLabel = new Label("Quadris!");
     nameLabel.setStyle(
+        "-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold; -fx-font-style: italic; -fx-effect: dropshadow(three-pass-box, palegreen, 10, 5, 0, 0)");
+    GridPane quadrisGrid = new GridPane();
+
+    quadrisGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
+    quadrisGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
+    quadrisGrid.getRowConstraints().add(new RowConstraints(540));
+
+
+
+    StackPane glass = new StackPane();
+    StackPane.setAlignment(nameLabel, Pos.CENTER);
+    glass.getChildren().addAll(nameLabel, quadrisGrid);
+    glass.setStyle("-fx-background-color: rgba(255, 255, 255, 0.0);");
+    return glass;
+  }
+
+  public void displayEndGameGraphic() {
+    System.out.println("-----");
+    endgameView.setVisible(true);
+  }
+  
+  public void removeEndGameGraphic() {
+    endgameView.setVisible(false);
+  }
+  
+  public StackPane makeEndgameGraphic(){
+    final Label nameLabel = new Label("Quadris!");
+    nameLabel.setStyle(
         "-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold; -fx-font-style: italic;");
     GridPane quadrisGrid = new GridPane();
 
@@ -510,8 +543,24 @@ public class Renderer {
     StackPane glass = new StackPane();
     StackPane.setAlignment(nameLabel, Pos.CENTER);
     glass.getChildren().addAll(nameLabel, quadrisGrid);
-    glass.setStyle("-fx-background-color: rgba(100, 220, 150, 0.8);");
+    glass.setStyle("-fx-background-color: rgba(100, 200, 130, 0.8);");
     return glass;
+//    final Label text = new Label("Game Over!");
+//    text.setStyle(
+//        "-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold; -fx-font-style: italic;");
+//    GridPane endgameGraphic = new GridPane();
+//
+//    endgameGraphic.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
+//    endgameGraphic.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
+//    endgameGraphic.getRowConstraints().add(new RowConstraints(540));
+//
+//
+//
+//    StackPane glass = new StackPane();
+//    StackPane.setAlignment(text, Pos.CENTER);
+//    glass.getChildren().addAll(text, endgameGraphic);
+//    glass.setStyle("-fx-background-color: rgba(200, 50, 50, 0.8);");
+//    return glass;
   }
 
 }

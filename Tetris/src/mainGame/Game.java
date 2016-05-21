@@ -251,7 +251,6 @@ public class Game extends Application {
               timer.stop();
             }
             System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
-            // engine.reset(); //causes game to freeze repeatably
           }
           if (!paused) {
             if ((int) System.currentTimeMillis() - timeIncrease > 500) {
@@ -271,7 +270,7 @@ public class Game extends Application {
 
   public static int runGame(Game game, int gameNum) {
     // System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
-    game.setup(game.useGraphics);
+     game.setup(game.useGraphics);
     game.getEngine().addBlock();
     
     while (!game.getEngine().hasFullBoard()) {
@@ -280,82 +279,6 @@ public class Game extends Application {
     return game.getScore();
 
   }
-
-  // /**
-  // * method called for each game update
-  // *
-  // * @param useGraphics whether the game is using a graphical output
-  // */
-  // private void update(boolean useGraphics) {
-  //// engine.update();
-  // if (engine.hasFullBoard()) {
-  // int score = getScore();
-  // System.out.println("Game " + (engine.getGameNum() + 1) + ": " + score);
-  //// if (useGraphics)
-  //// renderer.updateHighScores(score);
-  // gameIsActive = false;
-  // // timer.stop();
-  //
-  //// if (gameMode == GameMode.AI_TRAINING) {
-  ////
-  //// printer.print("Species " + (currentSpecies + 1) + " ");
-  //// printer.print("Game " + (engine.getGameNum() + 1) + " score: " + score + " ");
-  //// printer.println("weights: " + cerulean.getWeights());
-  //// scoreHistory.add(getScore());
-  //// if (currentSpecies < species.length) {
-  //// if (playMultiple && engine.getGameNum() == MAX_GAMES - 1) {
-  //// speciesAvgScore[currentSpecies] = this.getAvgScore();
-  //// currentSpecies++;
-  //// if (currentSpecies < species.length) {
-  //// cerulean.setWeights(species[currentSpecies]);
-  //// scoreHistory.clear();
-  //// resetGame(useGraphics);
-  //// engine.resetGameNum();
-  //// }
-  ////
-  //// } else if (playMultiple && engine.getGameNum() < MAX_GAMES - 1) {
-  //// resetGame(useGraphics);
-  //// }
-  //// }
-  //// if (currentSpecies == species.length) {
-  //// printer.println("--------------------");
-  //// for (double speciesScore : speciesAvgScore) {
-  //// printer.println("Average: " + speciesScore);
-  //// }
-  //// printer.println("--------------------");
-  ////
-  //// generationNum++;
-  //// if (generationNum < MAX_GENERATIONS) {
-  //// printer.println("Generation " + generationNum + " over, Breeding...");
-  //// speciesAvgScore[speciesAvgScore.length - 1] = this.getAvgScore();
-  //// species = cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
-  //// currentSpecies = 0;
-  //// resetGame(useGraphics);
-  //// engine.resetGameNum();
-  //// cerulean.setWeights(species[currentSpecies]);
-  //// }
-  //// }
-  //// }
-  // /*else*/{
-  // resetGame(useGraphics);
-  // }
-  // }
-  // if (useGraphics) {
-  // renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
-  // }
-  //
-  // if (!paused) {
-  // if (SCORING == ScoreMode.HANK_LIAM) {
-  // timeScore++;
-  // }
-  // }
-  // if (autoplay) {
-  // timePerTurn = minTimePerTurn;
-  // } else {
-  // timePerTurn = updateTime(timePerTurn);
-  // }
-  //
-  // }
 
   private Engine getEngine() {
     return this.engine;
@@ -487,8 +410,10 @@ public class Game extends Application {
 //      speciesAvgScore[currentSpecies] = getAvgScore();
 //    }
     gameIsActive = false;
-    if (useGraphics) // TODO: remove, switch to Logger class
+    if (useGraphics){ // TODO: remove, switch to Logger class
       renderer.writeScores();
+    renderer.displayEndGameGraphic();
+    }
     engine.reset();
     engine.clearBoard(engine.getGameBoard());
     this.timeScore = 0;
@@ -543,6 +468,10 @@ public class Game extends Application {
         renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         renderer.updateScore(getScore(), engine.getNumFullRows());
        
+        if(engine.hasFullBoard()){
+          renderer.displayEndGameGraphic();
+        }
+        
         if (engine.hasQuadris()){
         	System.out.println("quadris is true");
         	//resets in case two quadris' are achieved in quick succession
@@ -551,7 +480,7 @@ public class Game extends Application {
         }
         
         if (counter > 0){
-        	System.out.println(counter);
+//        	System.out.println(counter);
         	counter++;
         	renderer.displayQuadrisGraphic();
         	if(counter % 7 <= 3){

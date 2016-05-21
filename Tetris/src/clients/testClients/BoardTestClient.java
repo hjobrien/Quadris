@@ -18,7 +18,7 @@ public class BoardTestClient extends Application implements Viewable{
 	public static final boolean DEBUG = false;
 	public static final ScoreMode SCORE_MODE = ScoreMode.NINTENDO;
 	public static final BlockGenerator GENERATOR = new SingleBlockGenerator(BlockType.LINE);
-	public static final int MAX_GAMES_TO_PLAY = 1;
+	public static final int MAX_GAMES_TO_PLAY = 2;
 	
 	public static final Color COLOR = Color.BLACK;
 	  
