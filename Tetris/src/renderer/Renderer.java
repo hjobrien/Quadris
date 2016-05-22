@@ -165,7 +165,7 @@ public class Renderer {
     quadrisView = makeQuadrisGraphic();
     quadrisView.setVisible(false);
     main.getChildren().add(quadrisView);
-    
+
     endgameView = makeEndgameGraphic();
     endgameView.setVisible(false);
     main.getChildren().add(endgameView);
@@ -312,7 +312,8 @@ public class Renderer {
     String a = "";
     for (int i = 0; i < highScores.size(); i++) {
       a = i + 1 + ".";
-      a += String.format("%" + (36 - (2 * Math.log10(highScores.get(i)))) + "s", "");
+      // switch to for loop, cause of format exception
+      // a += String.format("%" + (36 - (2 * Math.log10(highScores.get(i)))) + "s", "");
       scores = scores + a + highScores.get(i) + "\n";
       // scores = scores + (i+1) + ".\t\t\t\t\t\t" + highScores.get(i) +
       // "\n";
@@ -502,8 +503,8 @@ public class Renderer {
   public StackPane makeQuadrisGraphic() {
     System.out.println();
     final Label nameLabel = new Label("Quadris!");
-    nameLabel.setStyle(
-        "-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold; -fx-font-style: italic; -fx-effect: dropshadow(three-pass-box, palegreen, 10, 5, 0, 0)");
+    nameLabel.setStyle("-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold;"
+        + " -fx-font-style: italic; -fx-effect: dropshadow(three-pass-box, palegreen, 10, 5, 0, 0)");
     GridPane quadrisGrid = new GridPane();
 
     quadrisGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
@@ -515,23 +516,24 @@ public class Renderer {
     StackPane glass = new StackPane();
     StackPane.setAlignment(nameLabel, Pos.CENTER);
     glass.getChildren().addAll(nameLabel, quadrisGrid);
-    glass.setStyle("-fx-background-color: rgba(255, 255, 255, 0.0);");
     return glass;
   }
 
   public void displayEndGameGraphic() {
-    System.out.println("-----");
+//    System.out.println("showing");
     endgameView.setVisible(true);
   }
-  
+
   public void removeEndGameGraphic() {
+//    System.out.println("hiding");
     endgameView.setVisible(false);
   }
-  
-  public StackPane makeEndgameGraphic(){
-    final Label nameLabel = new Label("Quadris!");
+
+  public StackPane makeEndgameGraphic() {
+    final Label nameLabel = new Label("Game  \n  Over!");
     nameLabel.setStyle(
-        "-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold; -fx-font-style: italic;");
+        "-fx-font: 90 Arial; -fx-text-fill: rgb(50,50,50); -fx-font-weight: bold; -fx-font-style: italic;"
+        + " -fx-effect: dropshadow(three-pass-box, rgb(199, 81, 80), 10, 5, 0, 0)");
     GridPane quadrisGrid = new GridPane();
 
     quadrisGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
@@ -543,24 +545,8 @@ public class Renderer {
     StackPane glass = new StackPane();
     StackPane.setAlignment(nameLabel, Pos.CENTER);
     glass.getChildren().addAll(nameLabel, quadrisGrid);
-    glass.setStyle("-fx-background-color: rgba(100, 200, 130, 0.8);");
+//    glass.setStyle("-fx-background-color: rgba(100, 200, 130, 0.8);");
     return glass;
-//    final Label text = new Label("Game Over!");
-//    text.setStyle(
-//        "-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold; -fx-font-style: italic;");
-//    GridPane endgameGraphic = new GridPane();
-//
-//    endgameGraphic.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
-//    endgameGraphic.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
-//    endgameGraphic.getRowConstraints().add(new RowConstraints(540));
-//
-//
-//
-//    StackPane glass = new StackPane();
-//    StackPane.setAlignment(text, Pos.CENTER);
-//    glass.getChildren().addAll(text, endgameGraphic);
-//    glass.setStyle("-fx-background-color: rgba(200, 50, 50, 0.8);");
-//    return glass;
   }
 
 }

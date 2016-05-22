@@ -149,14 +149,14 @@ public class Engine {
     // this if is a hacky fix to stop the game from freezing under certain
     // unknown conditions when
     // it should be resetting instead
-    if (activeBlock.getGridLocation()[1] < -4) {
-      System.err.println("Freeze detected: resetting now...");
-      Util.sleep(100);
-      printBoard();
-      System.out.println(Arrays.toString(activeBlock.getGridLocation()));
-      System.out.println(new Throwable().getStackTrace());
-      System.exit(-10);
-    }
+//    if (activeBlock.getGridLocation()[1] < -4) {
+//      System.err.println("Freeze detected: resetting now...");
+//      Util.sleep(100);
+//      printBoard();
+//      System.out.println(Arrays.toString(activeBlock.getGridLocation()));
+//      System.out.println(new Throwable().getStackTrace());
+//      System.exit(-10);
+//    }
 
     if (checkBlockAtBottom() || checkUnderneath()) {
       if (!rowsNotFalling) {

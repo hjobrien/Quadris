@@ -85,7 +85,7 @@ public class Game extends Application {
 
   private boolean paused = false;
 
-  private boolean gameIsActive = true;
+  private volatile boolean gameIsActive = true;
 
   /**
    * convenience constructor that initializes the game to some suggested settings
@@ -247,9 +247,9 @@ public class Game extends Application {
           Util.sleep(timePerTurn);
           engine.update();
           if (engine.hasFullBoard()) {
-            if (useGraphics) {
-              timer.stop();
-            }
+//            if (useGraphics) {
+//              timer.stop();
+//            }
             System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
           }
           if (!paused) {
@@ -259,8 +259,9 @@ public class Game extends Application {
             }
           }
         }
+        gameIsActive = false;
         // return engine.getScore();
-        resetGame(useGraphics);
+//        resetGame(useGraphics);
       }
       System.exit(0);
     });
@@ -303,19 +304,6 @@ public class Game extends Application {
     }
 
   }
-
-//  /**
-//   * gets the average score over the current candidates history
-//   * 
-//   * @return the candidates average score
-//   */
-//  private double getAvgScore() {
-//    double total = 0;
-//    for (Integer i : scoreHistory) {
-//      total += i;
-//    }
-//    return total / (scoreHistory.size());
-//  }
 
   /**
    * handles basic key input that needs to be constant across all run configurations
@@ -404,22 +392,17 @@ public class Game extends Application {
    * resets the game when called, typically after a loss
    */
   public void resetGame(boolean useGraphics) {
-    timer.stop();
-//    if (gameMode == GameMode.AI_TRAINING) {
-//      printer.flush();
-//      speciesAvgScore[currentSpecies] = getAvgScore();
-//    }
-    gameIsActive = false;
+    gameIsActive = true;
     if (useGraphics){ // TODO: remove, switch to Logger class
+      renderer.removeEndGameGraphic();
       renderer.writeScores();
-    renderer.displayEndGameGraphic();
     }
     engine.reset();
     engine.clearBoard(engine.getGameBoard());
     this.timeScore = 0;
     timePerTurn = maxTimePerTurn;
-    gameIsActive = true;
-    timer.start();
+//    timer.stop();
+//    timer.start();
     engine.addBlock();
   }
 
@@ -467,10 +450,6 @@ public class Game extends Application {
       public void handle(long time) {
         renderer.drawBoards(engine.getGameBoard(), engine.getNextPieceBoard());
         renderer.updateScore(getScore(), engine.getNumFullRows());
-       
-        if(engine.hasFullBoard()){
-          renderer.displayEndGameGraphic();
-        }
         
         if (engine.hasQuadris()){
         	System.out.println("quadris is true");
@@ -509,9 +488,12 @@ public class Game extends Application {
 //        	}
         }
 
-        if (engine.hasFullBoard()) {
+        if (!gameIsActive) {
+          renderer.displayEndGameGraphic();
           renderer.updateHighScores(getScore());
-          timer.stop();
+//          timer.stop();
+        }else{
+          renderer.removeEndGameGraphic();
         }
 
       }
