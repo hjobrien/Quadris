@@ -534,15 +534,21 @@ public class Renderer {
         "-fx-font: 90 Arial; -fx-text-fill: rgb(50,50,50); -fx-font-weight: bold; -fx-font-style: italic;"
         + " -fx-effect: dropshadow(three-pass-box, rgb(199, 81, 80), 10, 5, 0, 0)");
     GridPane endGameGrid = new GridPane();
+    
+    endGameGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH-150));
+//    endGameGrid.getColumnConstraints().add(new ColumnConstraints(100));
+    endGameGrid.getRowConstraints().add(new RowConstraints(550));
 
-    endGameGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
-    endGameGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
-    endGameGrid.getRowConstraints().add(new RowConstraints(540));
+    
+    final Label restartLabel = new Label("Press 'r' to restart");
+    restartLabel.setStyle("-fx-font: 12 Arial; -fx-text-fill: rgb(50,50,50); -fx-font-weight: bold; -fx-font-style: italic;"
+        + " -fx-effect: dropshadow(three-pass-box, rgb(199, 81, 80), 7, 0, 0, 0)");
 
-
-
+    endGameGrid.add(nameLabel, 0, 0);
+    endGameGrid.add(restartLabel, 1, 1);
     StackPane glass = new StackPane();
-    StackPane.setAlignment(nameLabel, Pos.CENTER);
+    StackPane.setAlignment(endGameGrid, Pos.CENTER);
+//    StackPane.setAlignment(restartLabel, Pos.BOTTOM_RIGHT);
     glass.getChildren().addAll(nameLabel, endGameGrid);
 //    glass.setStyle("-fx-background-color: rgba(100, 200, 130, 0.8);");
     return glass;
