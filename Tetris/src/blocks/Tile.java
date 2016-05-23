@@ -60,6 +60,12 @@ public class Tile {
 		this.color = c;
 	}
 	
+	public void clear(){
+		this.isActive = false;
+		this.isFilled = false;
+		this.color = Color.WHITE;
+	}
+	
 	public String toString(){
 	  if(isActive){
 	    return "X ";

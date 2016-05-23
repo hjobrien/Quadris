@@ -501,7 +501,6 @@ public class Renderer {
   }
 
   public StackPane makeQuadrisGraphic() {
-    System.out.println();
     final Label nameLabel = new Label("Quadris!");
     nameLabel.setStyle("-fx-font: 90 Arial; -fx-text-fill: rgb(100,100,100); -fx-font-weight: bold;"
         + " -fx-font-style: italic; -fx-effect: dropshadow(three-pass-box, palegreen, 10, 5, 0, 0)");
@@ -534,17 +533,17 @@ public class Renderer {
     nameLabel.setStyle(
         "-fx-font: 90 Arial; -fx-text-fill: rgb(50,50,50); -fx-font-weight: bold; -fx-font-style: italic;"
         + " -fx-effect: dropshadow(three-pass-box, rgb(199, 81, 80), 10, 5, 0, 0)");
-    GridPane quadrisGrid = new GridPane();
+    GridPane endGameGrid = new GridPane();
 
-    quadrisGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
-    quadrisGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
-    quadrisGrid.getRowConstraints().add(new RowConstraints(540));
+    endGameGrid.getColumnConstraints().add(new ColumnConstraints(GAME_WIDTH));
+    endGameGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH - GAME_WIDTH));
+    endGameGrid.getRowConstraints().add(new RowConstraints(540));
 
 
 
     StackPane glass = new StackPane();
     StackPane.setAlignment(nameLabel, Pos.CENTER);
-    glass.getChildren().addAll(nameLabel, quadrisGrid);
+    glass.getChildren().addAll(nameLabel, endGameGrid);
 //    glass.setStyle("-fx-background-color: rgba(100, 200, 130, 0.8);");
     return glass;
   }

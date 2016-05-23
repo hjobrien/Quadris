@@ -259,9 +259,9 @@ public class Game extends Application {
             }
           }
         }
+        
         gameIsActive = false;
-        // return engine.getScore();
-//        resetGame(useGraphics);
+        
       }
       System.exit(0);
     });
@@ -392,17 +392,18 @@ public class Game extends Application {
    * resets the game when called, typically after a loss
    */
   public void resetGame(boolean useGraphics) {
-    gameIsActive = true;
+	
+	engine.reset();
+	
+    this.gameIsActive = true;
+    this.timeScore = 0;
+    
     if (useGraphics){ // TODO: remove, switch to Logger class
-      renderer.removeEndGameGraphic();
       renderer.writeScores();
     }
-    engine.reset();
-    engine.clearBoard(engine.getGameBoard());
-    this.timeScore = 0;
+    
     timePerTurn = maxTimePerTurn;
-//    timer.stop();
-//    timer.start();
+    
     engine.addBlock();
   }
 
@@ -462,37 +463,24 @@ public class Game extends Application {
 //        	System.out.println(counter);
         	counter++;
         	renderer.displayQuadrisGraphic();
-        	if(counter % 7 <= 3){
+        	
+        	if (counter % 7 <= 3){
         	  renderer.removeQuadrisGraphic();
-        	}else{
+        	} else {
         	  renderer.displayQuadrisGraphic();
         	}
-        	if(counter == 50){
+        	
+        	if (counter == 50){
         	  renderer.removeQuadrisGraphic();
         	  counter = 0;
         	}
-//        	//could have some kind of quadris toggle feature
-//        	if (counter == 2){
-//            	renderer.displayQuadrisGraphic();
-//        	} else if (counter == 50){
-//        		renderer.removeQuadrisGraphic();
-//        	} else if (counter == 100){
-//        		renderer.displayQuadrisGraphic();
-//        	} else if (counter == 150){
-//        		renderer.removeQuadrisGraphic();
-//        	} else if (counter == 200){
-//        		renderer.displayQuadrisGraphic();
-//        	} else if (counter == 250){
-//        		counter = 0;
-//        		renderer.removeQuadrisGraphic();
-//        	}
         }
-
+        
         if (!gameIsActive) {
           renderer.displayEndGameGraphic();
           renderer.updateHighScores(getScore());
 //          timer.stop();
-        }else{
+        } else {
           renderer.removeEndGameGraphic();
         }
 

@@ -141,23 +141,6 @@ public class Engine {
    */
   public boolean checkDown() {
 
-    // if (debugMode) {
-    // System.out
-    // .println(activeBlock.getGridLocation()[0] + " " +
-    // activeBlock.getGridLocation()[1]);
-    // }
-    // this if is a hacky fix to stop the game from freezing under certain
-    // unknown conditions when
-    // it should be resetting instead
-//    if (activeBlock.getGridLocation()[1] < -4) {
-//      System.err.println("Freeze detected: resetting now...");
-//      Util.sleep(100);
-//      printBoard();
-//      System.out.println(Arrays.toString(activeBlock.getGridLocation()));
-//      System.out.println(new Throwable().getStackTrace());
-//      System.exit(-10);
-//    }
-
     if (checkBlockAtBottom() || checkUnderneath()) {
       if (!rowsNotFalling) {
         int lowestEmptyRow = getLowestEmptyRow();
@@ -218,12 +201,12 @@ public class Engine {
   public void blockDown() {
     // this if is a hacky fix to stop the game from freezing under certain
     // unknown conditions when it should be resetting instead
-    if (activeBlock.getGridLocation()[1] < -4) {
-      System.err.println("Freeze detected: resetting now...");
-      Util.sleep(10);
-      // printBoard();
-      System.exit(-10);
-    }
+//    if (activeBlock.getGridLocation()[1] < -4) {
+//      System.err.println("Freeze detected: resetting now...");
+//      Util.sleep(10);
+//      // printBoard();
+//      System.exit(-10);
+//    }
     for (int i = gameBoard.length - 1; i >= 0; i--) {
       for (int j = gameBoard[i].length - 1; j >= 0; j--) {
         if (tileAt(i, j).isActive()) {
@@ -237,11 +220,6 @@ public class Engine {
     // System.out.println(activeBlock.getGridLocation()[1]);
     activeBlock.moveDown(); // adjusts internal coordinates
   }
-  // if (debugMode) {
-  // System.out
-  // .println(activeBlock.getGridLocation()[0] + " " +
-  // activeBlock.getGridLocation()[1]);
-  // }
 
   /**
    * updates the board with the Tiles values for color, active, and filled
@@ -362,7 +340,6 @@ public class Engine {
     ScoreMode sm = getScoreMode();
 
     if (linesToClear.size() == 4) {
-      // TODO display "Quadris" graphic
       quadris = true;
       if (sm == ScoreMode.NINTENDO) {
         score += 1000;
@@ -459,13 +436,7 @@ public class Engine {
    * a new random one added to the nextBlockBoard
    */
   public void addBlock() {
-    // //needed to access Node.fireEvent, the GridPane was an accessible
-    // Node
-    // if (autoplay){
-    // board.getGrid().fireEvent(new BlockAddedEvent(nextBlock,
-    // board.getBoardState()));
-    // }
-
+	  
     full = testFull(gameBoard);
     // if (!full) {
     Move[] solution = null;
@@ -499,7 +470,7 @@ public class Engine {
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
       nextBlock = blockGenerator.generateBlock();
-      clearBoard(nextPieceBoard);
+      clearNextPieceBoard();
       addBlockToDisplay(nextPieceBoard, nextBlock);
       // activeBlock = nextBlock;
       // updateBoardWithNewBlock(nextBlock);
@@ -860,12 +831,12 @@ public class Engine {
    * reset the state of the engine (used between every game)
    */
   public void reset() {
+	this.clearGameBoard();
     this.blockCount = 0;
     this.score = 0;
     this.numOfFullRows = 0;
     this.blockGenerator.reset();
     this.nextBlock = blockGenerator.generateBlock();
-    this.gameBoard = initBoard(gameBoard);
     this.full = false;
     this.gameNum++;
   }
@@ -882,6 +853,9 @@ public class Engine {
   }
 
   /**
+   * Dangerous because it doesn't necessarily update the board reference. 
+   * I recommend using the two special board clearing methods underneath -Liam
+   * 
    * sets all tiles in the passed board to inactive, unfilled tiles
    * 
    * @param board the board to reset
@@ -889,9 +863,31 @@ public class Engine {
   public void clearBoard(Tile[][] board) {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
-        board[i][j] = new Tile();
+        board[i][j].clear();
       }
     }
+  }
+  
+  /**
+   * clears the next piece board 
+   */
+  public void clearNextPieceBoard(){
+	  for (int i = 0; i < nextPieceBoard.length; i++){
+		  for (int j = 0; j < nextPieceBoard[i].length; j++){
+			  nextPieceBoard[i][j].clear();
+		  }
+	  }
+  }
+  
+  /**
+   * clears the game board
+   */
+  public void clearGameBoard(){
+	  for (int i = 0; i < gameBoard.length; i++){
+		  for (int j = 0; j < gameBoard[i].length; j++){
+			  gameBoard[i][j].clear();
+		  }
+	  }
   }
 
   /**
@@ -918,7 +914,7 @@ public class Engine {
   public boolean hasFullBoard() {
     return full;
   }
-
+ 
   /**
    * gets the score of the current game
    * 
