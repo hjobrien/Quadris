@@ -278,7 +278,6 @@ public class Game extends Application {
       game.getEngine().update();
     }
     return game.getScore();
-
   }
 
   private Engine getEngine() {
