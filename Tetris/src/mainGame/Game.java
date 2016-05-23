@@ -259,6 +259,9 @@ public class Game extends Application {
         }
         
         gameIsActive = false;
+        if(!useGraphics){
+          resetGame(useGraphics);
+        }
         
       }
       System.exit(0);

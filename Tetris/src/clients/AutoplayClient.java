@@ -11,7 +11,7 @@ import mainGame.GameMode;
 import mainGame.ScoreMode;
 
 /**
- * basic client that runs a game in autoplay mode
+ * basic client that runsr a game in autoplay mode
  * @author Hank O'Brien
  *
  */
