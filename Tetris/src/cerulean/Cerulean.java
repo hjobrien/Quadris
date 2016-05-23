@@ -91,36 +91,17 @@ public class Cerulean {
         new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
-    // TODO: reduce number of loops reps
-    for (int moveCount = 0; moveCount < 10; moveCount++) {
-      // 10 possible worst case left/right options
-      for (int rotCount = 0; rotCount < nextBlockCopy.getNumRotations(); rotCount++) {
-        // from slide one to left, no slide, and one to right
-        for (int slideCount = 0; slideCount < 3; slideCount++) {
-          // positions
-          // System.out.println(moveCount + " " + rotCount + " " +
-          // slideCount);
-          Tile[][] testState =
-              positionBlock(nextBlockCopy, boardState, moveCount, rotCount, slideCount);
-          double[] testWeights = evaluateWeight(testState);
-          double testWeight = DoubleStream.of(testWeights).sum();
-          // System.out.print(moveCount + " " + rotCount);
-          if (testWeight > maxWeight) {
-            // printBoard(testState);
-            // System.out.println(testWeights[0] + " " +
-            // testWeights[1] + " " + testWeights[2]);
-            maxWeight = testWeight;
-            bestPath = getPath(moveCount, rotCount, slideCount);
-          }
-          nextBlockCopy.setGridLocation(new int[] {0, 0});
-
-        }
-
-        // nextBlockCopy.setGridLocation(new int[] {startingRowIndex,
-        // startingColumnIndex});
-        nextBlockCopy.rotateRight();
+//    Tile[][] testState;
+    double[] testWeights;
+    double testWeight;
+    for(Map.Entry<Tile[][], int[]> entry : getBoardStates(boardState, nextBlockCopy).entrySet()){
+//      testState = positionBlock(nextBlockCopy, boardState, entry.getValue()[0], entry.getValue()[1], entry.getValue()[2]);
+      testWeights = evaluateWeight(entry.getKey());
+      testWeight = DoubleStream.of(testWeights).sum();
+      if (testWeight > maxWeight) {
+        maxWeight = testWeight;
+        bestPath = getPath(entry.getValue()[0], entry.getValue()[1], entry.getValue()[2]);
       }
-
     }
     return bestPath;
   }
@@ -134,7 +115,9 @@ public class Cerulean {
           boardStates.put(
               positionBlock(blockToAdd, startingBoardState, moveCount, rotCount, slideCount),
               new int[] {moveCount, rotCount, slideCount});
+          blockToAdd.setGridLocation(new int[] {0, 0});
         }
+        blockToAdd.rotateRight();
       }
     }
     return boardStates;

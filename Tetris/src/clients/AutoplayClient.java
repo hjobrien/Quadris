@@ -19,7 +19,7 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
 
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
-  public static final int MIN_TIME_PER_TURN = 200000000;
+  public static final int MIN_TIME_PER_TURN = 80000000;
   public static final boolean DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
