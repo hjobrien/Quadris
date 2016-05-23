@@ -3,7 +3,6 @@ package mainGame;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
 import blocks.blockGeneration.RandomizeBlocks;
@@ -234,7 +233,6 @@ public class Game extends Application {
    * simple method to run the game when not in graphics mode
    */
   public void run() {
-    // int score = 0;
     setup(useGraphics);
     engine.addBlock();
     timeIncrease = (int) System.currentTimeMillis();
@@ -265,7 +263,6 @@ public class Game extends Application {
       }
       System.exit(0);
     });
-    // return gameScore;
 
   }
 
@@ -460,7 +457,6 @@ public class Game extends Application {
         }
         
         if (counter > 0){
-//        	System.out.println(counter);
         	counter++;
         	renderer.displayQuadrisGraphic();
         	
