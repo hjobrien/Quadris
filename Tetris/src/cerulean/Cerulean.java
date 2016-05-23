@@ -3,6 +3,8 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.DoubleStream;
 
@@ -46,7 +48,8 @@ public class Cerulean {
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
-  public static final double MAX_SIMILAR_WEIGHTS = 4; //~= half the weights
+  public static final double MAX_SIMILAR_WEIGHTS = 4; // ~= half the weights
+
   /**
    * called when a solution is needed for a given block
    * 
@@ -120,6 +123,21 @@ public class Cerulean {
 
     }
     return bestPath;
+  }
+
+  public Map<Tile[][], int[]> getBoardStates(Tile[][] startingBoardState, Block blockToAdd)
+      throws BoardFullException {
+    Map<Tile[][], int[]> boardStates = new HashMap<Tile[][], int[]>();
+    for (int moveCount = 0; moveCount < 10; moveCount++) {
+      for (int rotCount = 0; rotCount < blockToAdd.getNumRotations(); rotCount++) {
+        for (int slideCount = 0; slideCount < 3; slideCount++) {
+          boardStates.put(
+              positionBlock(blockToAdd, startingBoardState, moveCount, rotCount, slideCount),
+              new int[] {moveCount, rotCount, slideCount});
+        }
+      }
+    }
+    return boardStates;
   }
 
   // private static void printBoard(Tile[][] testState) {
@@ -530,17 +548,17 @@ public class Cerulean {
     return newSpecies;
   }
 
-  //attempts to prevent in-breeding
+  // attempts to prevent in-breeding
   private static boolean areSufficientlyDifferent(double[] species1, double[] species2) {
     int numWithinSimilarityThreshold = 0;
-    for(int i = 0; i < species1.length; i++){
-      if((species1[i] - species2[i])  < ((1 - MAX_SIMILARITY_RATIO) * species1[i])){
+    for (int i = 0; i < species1.length; i++) {
+      if ((species1[i] - species2[i]) < ((1 - MAX_SIMILARITY_RATIO) * species1[i])) {
         numWithinSimilarityThreshold++;
       }
     }
-    if(numWithinSimilarityThreshold < MAX_SIMILAR_WEIGHTS){
+    if (numWithinSimilarityThreshold < MAX_SIMILAR_WEIGHTS) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
