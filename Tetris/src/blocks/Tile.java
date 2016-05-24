@@ -66,6 +66,7 @@ public class Tile {
 		this.color = Color.WHITE;
 	}
 	
+	@Override
 	public String toString(){
 	  if(isActive){
 	    return "X ";
