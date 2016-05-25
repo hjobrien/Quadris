@@ -14,7 +14,7 @@ public class Engine {
   private Tile[][] gameBoard;
   private Tile[][] nextPieceBoard;
   private Block nextBlock;
-  private Block activeBlock;
+  private Block currentBlock;
   private Cerulean cerulean;
   private boolean isPaused = false;
   private boolean autoplay = false;
@@ -48,6 +48,7 @@ public class Engine {
     this.blockGenerator = generator;
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
+    currentBlock = blockGenerator.generateBlock();
     nextBlock = blockGenerator.generateBlock();
     if (autoplay) {
       cerulean = new Cerulean();
@@ -100,7 +101,7 @@ public class Engine {
     // printBoard();
     // System.out.println();
     if (!isPaused) { // little hacky, could be improved
-      if (activeBlock.isFalling()) {
+      if (currentBlock.isFalling()) {
         if (checkDown()) {
           blockDown();
         } else {
@@ -216,7 +217,7 @@ public class Engine {
       }
     }
     // System.out.println(activeBlock.getGridLocation()[1]);
-    activeBlock.moveDown(); // adjusts internal coordinates
+    currentBlock.moveDown(); // adjusts internal coordinates
   }
 
   /**
@@ -403,7 +404,7 @@ public class Engine {
     }
 
     if (!tileAboveLine) {
-      activeBlock.stoppedFalling();
+      currentBlock.stoppedFalling();
       rowsNotFalling = true;
     }
   }
@@ -441,7 +442,7 @@ public class Engine {
     // long now = System.currentTimeMillis();
     if (autoplay) {
       try {
-        solution = cerulean.submitBlock(nextBlock, gameBoard);
+        solution = cerulean.submitBlock(currentBlock, nextBlock, gameBoard);
       } catch (BoardFullException e) {
         full = true;
       }
@@ -451,7 +452,7 @@ public class Engine {
 //      System.out.println();
 //    }
     if (!full) {
-      activeBlock = nextBlock;
+      currentBlock = nextBlock;
 
       updateBoardWithNewBlock(nextBlock);
 
@@ -492,7 +493,7 @@ public class Engine {
    * @param b the block to add
    */
   public void addBlock(Block b) {
-    activeBlock = b;
+    currentBlock = b;
     updateBoardWithNewBlock(b);
 
   }
@@ -549,8 +550,8 @@ public class Engine {
    */
   private void lowerFallingBlock() {
     removeFallingBlock();
-    Tile[][] fallingBlockShape = activeBlock.getShape();
-    int[] fallingBlockLocation = activeBlock.getGridLocation();
+    Tile[][] fallingBlockShape = currentBlock.getShape();
+    int[] fallingBlockLocation = currentBlock.getGridLocation();
 
     for (int i = fallingBlockShape.length - 1; i >= 0; i--) {
       for (int j = fallingBlockShape[i].length - 1; j >= 0; j--) {
@@ -596,12 +597,12 @@ public class Engine {
       }
     } else if (m == Move.ROT_RIGHT) {
       if (checkRotate(Move.ROT_RIGHT)) {
-        activeBlock.rotateRight();
+        currentBlock.rotateRight();
         lowerFallingBlock();
       }
     } else if (m == Move.ROT_LEFT) {
       if (checkRotate(Move.ROT_LEFT)) {
-        activeBlock.rotateLeft();
+        currentBlock.rotateLeft();
         lowerFallingBlock();
       }
     } else if (m == Move.DOWN) {
@@ -695,7 +696,7 @@ public class Engine {
         }
       }
     }
-    activeBlock.moveRight();
+    currentBlock.moveRight();
   }
 
   /**
@@ -738,7 +739,7 @@ public class Engine {
         }
       }
     }
-    activeBlock.moveLeft();
+    currentBlock.moveLeft();
   }
 
   /**
@@ -748,8 +749,8 @@ public class Engine {
    * @return true if the rotation is valid, false otherwise
    */
   private boolean checkRotate(Move m) {
-    Block tempB = new Block(activeBlock.getType(), activeBlock.getGridLocation(),
-        activeBlock.getRotationIndex());
+    Block tempB = new Block(currentBlock.getType(), currentBlock.getGridLocation(),
+        currentBlock.getRotationIndex());
     if (m == Move.ROT_LEFT) {
       tempB.rotateLeft();
     } else if (m == Move.ROT_RIGHT) {
@@ -803,7 +804,7 @@ public class Engine {
         }
       }
     }
-    activeBlock.moveUp();
+    currentBlock.moveUp();
   }
 
   /**

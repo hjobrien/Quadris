@@ -67,9 +67,9 @@ public class Cerulean {
    * @param boardState the current board state
    * @throws BoardFullException if the AI cannot place a block without over-filling the board
    */
-  public Move[] submitBlock(Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
     // long t1 = System.currentTimeMillis();
-    return computeBestPath(nextBlock, boardState);
+    return computeBestPath(currentBlock, nextBlock, boardState);
     // System.out.println("x Weight analysis took " +
     // (System.currentTimeMillis() - t1) + "
     // Milli(s)");
@@ -77,51 +77,74 @@ public class Cerulean {
 
   /**
    * Generalized move optimization method
-   * 
+   * @param currentBlock TODO
    * @param nextBlock the block just introduced to the board
    * @param boardState the board state without the block entered, all tiles are not active
+   * 
    * @return an array of moves that positions the piece in to the optimal location
    * @throws BoardFullException if the board placement algorithm would have to over-fill the board
    *         to add a new block
    */
-  private Move[] computeBestPath(Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  private Move[] computeBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
 
-    double maxWeight = Double.NEGATIVE_INFINITY;
+//    double maxWeight = Double.NEGATIVE_INFINITY;
+    Block currentBlockCopy =
+        new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
     Block nextBlockCopy =
         new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
-//    Tile[][] testState;
-    double[] testWeights;
-    double testWeight;
-    for(Map.Entry<Tile[][], int[]> entry : getBoardStates(boardState, nextBlockCopy).entrySet()){
-//      testState = positionBlock(nextBlockCopy, boardState, entry.getValue()[0], entry.getValue()[1], entry.getValue()[2]);
-      testWeights = evaluateWeight(entry.getKey());
-      testWeight = DoubleStream.of(testWeights).sum();
-      if (testWeight > maxWeight) {
-        maxWeight = testWeight;
-        bestPath = getPath(entry.getValue()[0], entry.getValue()[1], entry.getValue()[2]);
-      }
-    }
+    
+    bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlockCopy, boardState));
+//    // Tile[][] testState;
+//    double[] testWeights;
+//    double testWeight;
+//    for (Map.Entry<Tile[][], int[]> entry : getBoardStates(boardState, nextBlockCopy).entrySet()) {
+//      // testState = positionBlock(nextBlockCopy, boardState, entry.getValue()[0],
+//      // entry.getValue()[1], entry.getValue()[2]);
+//      testWeights = evaluateWeight(entry.getKey());
+//      testWeight = DoubleStream.of(testWeights).sum();
+//      if (testWeight > maxWeight) {
+//        maxWeight = testWeight;
+//        bestPath = getPath(entry.getValue()[0], entry.getValue()[1], entry.getValue()[2]);
+//      }
+//    }
     return bestPath;
   }
 
-  public Map<Tile[][], int[]> getBoardStates(Tile[][] startingBoardState, Block blockToAdd)
-      throws BoardFullException {
-    Map<Tile[][], int[]> boardStates = new HashMap<Tile[][], int[]>();
-    for (int moveCount = 0; moveCount < 10; moveCount++) {
-      for (int rotCount = 0; rotCount < blockToAdd.getNumRotations(); rotCount++) {
-        for (int slideCount = 0; slideCount < 3; slideCount++) {
-          boardStates.put(
-              positionBlock(blockToAdd, startingBoardState, moveCount, rotCount, slideCount),
-              new int[] {moveCount, rotCount, slideCount});
-          blockToAdd.setGridLocation(new int[] {0, 0});
+  public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+    Map<int[], Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+    double bestWeight = Double.NEGATIVE_INFINITY;
+    int[] bestMovePath = new int[]{};
+    for(Map.Entry<int[], Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()){
+      Map<int[], Tile[][]> boardStatesWithTwoBlocks = getAllStates(nextBlock, possibleBoardState.getValue());
+      for(Map.Entry<int[], Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()){
+        double boardWeight = DoubleStream.of(evaluateWeight(futureBoardStates.getValue())).sum();
+        if(boardWeight > bestWeight){
+          bestWeight = boardWeight;
+          bestMovePath = possibleBoardState.getKey();   //only sets move to how the first block was moved
         }
-        blockToAdd.rotateRight();
+      }
+    }
+    return bestMovePath;
+  }
+
+  private Map<int[], Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
+      throws BoardFullException {
+    Map<int[], Tile[][]> boardStates = new HashMap<int[], Tile[][]>();
+    for (int moveCount = 0; moveCount < 10; moveCount++) {
+      for (int rotCount = 0; rotCount < currentBlock.getNumRotations(); rotCount++) {
+        for (int slideCount = 0; slideCount < 3; slideCount++) {
+          boardStates.put(new int[] {moveCount, rotCount, slideCount},
+              positionBlock(currentBlock, boardState, moveCount, rotCount, slideCount));
+          currentBlock.setGridLocation(new int[] {0, 0});
+        }
+        currentBlock.rotateRight();
       }
     }
     return boardStates;
   }
+
 
   // private static void printBoard(Tile[][] testState) {
   // for (int i = 0; i < testState.length; i++) {
@@ -135,6 +158,10 @@ public class Cerulean {
   // System.out.println();
   //
   // }
+
+  private Move[] convertToMovePath(int[] bestPath) {
+    return getPath(bestPath[0], bestPath[1], bestPath[2]);
+  }
 
   /**
    * converts integer representations of moves into array of individual moves

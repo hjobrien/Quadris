@@ -9,5 +9,5 @@ public interface BlockGenerator {
   public void reset();
 
   public void setGameNumber(int j);
-  
+    
 }
