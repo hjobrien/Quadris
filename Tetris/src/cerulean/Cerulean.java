@@ -67,9 +67,9 @@ public class Cerulean {
    * @param boardState the current board state
    * @throws BoardFullException if the AI cannot place a block without over-filling the board
    */
-  public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  public Move[] submitBlock(Block currentBlock, Tile[][] boardState) throws BoardFullException {
     // long t1 = System.currentTimeMillis();
-    return computeBestPath(currentBlock, nextBlock, boardState);
+    return computeBestPath(currentBlock, boardState);
     // System.out.println("x Weight analysis took " +
     // (System.currentTimeMillis() - t1) + "
     // Milli(s)");
@@ -85,19 +85,19 @@ public class Cerulean {
    * @throws BoardFullException if the board placement algorithm would have to over-fill the board
    *         to add a new block
    */
-  private Move[] computeBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  private Move[] computeBestPath(Block currentBlock, Tile[][] boardState) throws BoardFullException {
     System.out.println(currentBlock.getType());
 
 //    double maxWeight = Double.NEGATIVE_INFINITY;
     //TODO: change to clone (also 0,0 is wrong);
     Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
-    Block nextBlockCopy =
-        new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
+//    Block nextBlockCopy =
+//        new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
     
-    bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlockCopy, boardState));
+    bestPath = convertToMovePath(getBestPath(currentBlockCopy, boardState));
 //    // Tile[][] testState;
 //    double[] testWeights;
 //    double testWeight;
@@ -114,7 +114,7 @@ public class Cerulean {
     return bestPath;
   }
 
-  public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  public int[] getBestPath(Block currentBlock, Tile[][] boardState) throws BoardFullException {
     Map<int[], Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[]{};
@@ -149,6 +149,7 @@ public class Cerulean {
         for (int slideCount = 0; slideCount < 3; slideCount++) {
           boardStates.put(new int[] {moveCount, rotCount, slideCount},
               positionBlock(currentBlock, boardState, moveCount, rotCount, slideCount));
+          //TODO: change
           currentBlock.setGridLocation(new int[] {0, 0});
         }
         currentBlock.rotateRight();
@@ -226,15 +227,15 @@ public class Cerulean {
   /**
    * positions a block in a copy of the board based on translation and rotation parameters
    * 
-   * @param nextBlock the active block
+   * @param blockToPosition the active block
    * @param boardState the state of non active tiles
-   * @param moveCount the number of left/right moves in the test arrangement
+   * @param moveRightCount the number of left/right moves in the test arrangement
    * @param rotCount the number of rotations in the test arrangement
    * @return the board with the block moved to a certain position
    * @throws BoardFullException if by adding a block the board would become over-filled, it doesnt
    *         know how to move in this situation
    */
-  private Tile[][] positionBlock(Block nextBlock, Tile[][] boardState, int moveCount, int rotCount,
+  private Tile[][] positionBlock(Block blockToPosition, Tile[][] boardState, int moveRightCount, int rotCount,
       int slideCount) throws BoardFullException {
     // System.out.println(moveCount + " " + rotCount + " " + slideCount);
     // avoids reference issues
@@ -247,11 +248,14 @@ public class Cerulean {
     }
 
     if (boardAnalyzer == null) {
-      // null refers to a lack of score mode
-      boardAnalyzer = new Engine(tileCopy, false, new RandomizeBlocks(), null, null);
+      //TODO prune the comments if no problems are encountered with the new Engine constructor
+      // nulls refer to a lack of generator, score mode, and weights
+//      boardAnalyzer = new Engine(tileCopy, false, null, null, null);
+      boardAnalyzer = new Engine(tileCopy);
+    } else {
+      boardAnalyzer.setGameBoard(tileCopy);
     }
-    boardAnalyzer.setGameBoard(tileCopy);
-    boardAnalyzer.addBlock(nextBlock);
+    boardAnalyzer.addBlock(blockToPosition);
 
     if (boardAnalyzer.hasFullBoard()) {
       boardAnalyzer.reset();
@@ -261,17 +265,19 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       boardAnalyzer.executeMove(Move.ROT_RIGHT);
     }
+    
+    //TODO make not 10, just what is necessary
     for (int i = 0; i < 10; i++) {
       boardAnalyzer.executeMove(Move.LEFT);
     }
 
-    for (int i = 0; i < moveCount; i++) {
+    for (int i = 0; i < moveRightCount; i++) {
       boardAnalyzer.executeMove(Move.RIGHT);
     }
 
     boardAnalyzer.executeMove(Move.DROP);
 
-    // don't need to handle slideCount = 1 because that would be moving the block left than right
+    // don't need to handle slideCount = 1 because that would be moving the block left then right (not moving at all)
     if (slideCount == 0) {
       boardAnalyzer.executeMove(Move.LEFT);
     } else if (slideCount == 2) {

@@ -13,7 +13,7 @@ public class Engine {
 
   private Tile[][] gameBoard;
   private Tile[][] nextPieceBoard;
-  private Block nextBlock;
+//  private Block nextBlock;
   private Block currentBlock;
   private Cerulean cerulean;
   private boolean isPaused = false;
@@ -49,12 +49,25 @@ public class Engine {
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
     currentBlock = blockGenerator.generateBlock();
-    nextBlock = blockGenerator.generateBlock();
+//    nextBlock = blockGenerator.generateBlock();
     if (autoplay) {
       cerulean = new Cerulean();
       cerulean.setWeights(weights);
     }
 
+  }
+  
+  /**
+   * the constructor for engine built in the Cerulean class
+   * Doesn't need a generator because the next blocks are already known
+   * Doesn't need a scoring mode or weights because the score isn't relevant to the cerulean
+   * Doesn't need a boolean autoplay because autoplay is false when cerulean is making its own engine
+   *    (if autoplay was true, there would be an infinite loop of ceruleans being created)
+   * @param mainBoard
+   */
+  public Engine(Tile[][] mainBoard){
+    this.gameBoard = deepCopy(mainBoard);
+    autoplay = false;
   }
 
   /**
@@ -381,7 +394,8 @@ public class Engine {
 
     for (int i = 0; i < linesToClear.size(); i++) {
       for (int j = 0; j < gameBoard[i].length; j++) {
-        updateTileLocation(linesToClear.get(i), j, new Tile());
+//        updateTileLocation(linesToClear.get(i), j, new Tile());
+        gameBoard[linesToClear.get(i)][j].clear();
       }
     }
 
@@ -442,7 +456,7 @@ public class Engine {
     // long now = System.currentTimeMillis();
     if (autoplay) {
       try {
-        solution = cerulean.submitBlock(currentBlock, nextBlock, gameBoard);
+        solution = cerulean.submitBlock(currentBlock, gameBoard);
       } catch (BoardFullException e) {
         full = true;
       }
@@ -452,11 +466,10 @@ public class Engine {
 //      System.out.println();
 //    }
     if (!full) {
-//      currentBlock = nextBlock;
-//      nextBlock = blockGenerator.generateBlock();
-      System.out.print(currentBlock.getType() + " ");
+      System.out.println(currentBlock.getType() + " ");
       updateBoardWithNewBlock(currentBlock);
       currentBlock = blockGenerator.generateBlock();
+
 
 
       // toggle for step by step block analysis
@@ -472,7 +485,7 @@ public class Engine {
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
       clearNextPieceBoard();
-      addBlockToDisplay(nextPieceBoard, nextBlock);
+      addBlockToDisplay(nextPieceBoard, currentBlock);
       // activeBlock = nextBlock;
       // updateBoardWithNewBlock(nextBlock);
       // setNotFalling();
@@ -495,7 +508,8 @@ public class Engine {
    * @param b the block to add
    */
   public void addBlock(Block b) {
-    currentBlock = b;
+//    System.out.println("Flag");
+    this.currentBlock = b;
     updateBoardWithNewBlock(b);
 
   }
@@ -838,7 +852,7 @@ public class Engine {
     this.score = 0;
     this.numOfFullRows = 0;
     this.blockGenerator.reset();
-    this.nextBlock = blockGenerator.generateBlock();
+//    this.nextBlock = blockGenerator.generateBlock();
     this.full = false;
     this.gameNum++;
   }
