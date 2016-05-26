@@ -466,11 +466,10 @@ public class Engine {
 //      System.out.println();
 //    }
     if (!full) {
-      System.out.println(currentBlock.getType() + " ");
+      System.out.println("board updated with block of type : " + currentBlock.getType());
       updateBoardWithNewBlock(currentBlock);
+      //TODO FIGURE OUT WHERE THIS GOES AND HOW WE NEED TO FIX OUR PROBLEMS
       currentBlock = blockGenerator.generateBlock();
-
-
 
       // toggle for step by step block analysis
       // Engine.togglePause();
@@ -486,9 +485,6 @@ public class Engine {
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
       clearNextPieceBoard();
       addBlockToDisplay(nextPieceBoard, currentBlock);
-      // activeBlock = nextBlock;
-      // updateBoardWithNewBlock(nextBlock);
-      // setNotFalling();
       blockCount++;
     }
   }
@@ -520,6 +516,7 @@ public class Engine {
    * @param b the block to add
    */
   public void updateBoardWithNewBlock(Block b) {
+    System.out.println("In updateBoard method, block has type " + b.getType());
     
     Tile[][] blockShape = b.getShape();
 

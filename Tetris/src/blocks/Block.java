@@ -111,6 +111,10 @@ public class Block {
     this.locationInGrid = location.clone();
     this.rotationIndex = rotationIndex;
   }
+  
+  public Block clone(){
+    return new Block(this.type, this.locationInGrid, this.rotationIndex);
+  }
 
   /**
    * gets the shape of the block for its current rotation index

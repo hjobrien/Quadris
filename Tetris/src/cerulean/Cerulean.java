@@ -86,10 +86,12 @@ public class Cerulean {
    *         to add a new block
    */
   private Move[] computeBestPath(Block currentBlock, Tile[][] boardState) throws BoardFullException {
-    System.out.println(currentBlock.getType());
-
 //    double maxWeight = Double.NEGATIVE_INFINITY;
     //TODO: change to clone (also 0,0 is wrong);
+    
+    //TODO not working
+//    Block currentBlockCopy = currentBlock.clone();
+    
     Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
 //    Block nextBlockCopy =
@@ -147,12 +149,14 @@ public class Cerulean {
     for (int moveCount = 0; moveCount < 10; moveCount++) {
       for (int rotCount = 0; rotCount < currentBlock.getNumRotations(); rotCount++) {
         for (int slideCount = 0; slideCount < 3; slideCount++) {
+          //TODO make sure this  clone method works in all cases. If so, the comments below can be removed
+          Block tempBlock = currentBlock.clone();
           boardStates.put(new int[] {moveCount, rotCount, slideCount},
-              positionBlock(currentBlock, boardState, moveCount, rotCount, slideCount));
+              positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
           //TODO: change
-          currentBlock.setGridLocation(new int[] {0, 0});
+//          currentBlock.setGridLocation(new int[] {0, 0});
         }
-        currentBlock.rotateRight();
+//        currentBlock.rotateRight();
       }
     }
     return boardStates;
@@ -248,13 +252,11 @@ public class Cerulean {
     }
 
     if (boardAnalyzer == null) {
-      //TODO prune the comments if no problems are encountered with the new Engine constructor
-      // nulls refer to a lack of generator, score mode, and weights
-//      boardAnalyzer = new Engine(tileCopy, false, null, null, null);
       boardAnalyzer = new Engine(tileCopy);
     } else {
       boardAnalyzer.setGameBoard(tileCopy);
     }
+
     boardAnalyzer.addBlock(blockToPosition);
 
     if (boardAnalyzer.hasFullBoard()) {
