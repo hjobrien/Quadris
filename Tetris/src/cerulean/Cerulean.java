@@ -43,22 +43,22 @@ public class Cerulean {
   // TODO: add a positive weight for how full each row is?
 
   // partially filled to prevent errors later on
-  private Move[] solutionPath = new Move[] {Move.RIGHT};
+//  private Move[] solutionPath = new Move[] {Move.RIGHT};
   private Engine boardAnalyzer;
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
   public static final double MAX_SIMILAR_WEIGHTS = 4; // ~= half the weights
 
-  /**
-   * called when a solution is needed for a given block
-   * 
-   * @return an array of moves needed to get piece to the optimal location, should be some form of
-   *         left/right, rotate, drop
-   */
-  public Move[] getSolution() {
-    return solutionPath;
-  }
+//  /**
+//   * called when a solution is needed for a given block
+//   * 
+//   * @return an array of moves needed to get piece to the optimal location, should be some form of
+//   *         left/right, rotate, drop
+//   */
+//  public Move[] getSolution() {
+//    return solutionPath;
+//  }
 
   /**
    * gives AI data for what block is active and the board state it is to be placed in
@@ -86,8 +86,10 @@ public class Cerulean {
    *         to add a new block
    */
   private Move[] computeBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+    System.out.println(currentBlock.getType());
 
 //    double maxWeight = Double.NEGATIVE_INFINITY;
+    //TODO: change to clone (also 0,0 is wrong);
     Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
     Block nextBlockCopy =
@@ -117,21 +119,31 @@ public class Cerulean {
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[]{};
     for(Map.Entry<int[], Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()){
-      Map<int[], Tile[][]> boardStatesWithTwoBlocks = getAllStates(nextBlock, possibleBoardState.getValue());
-      for(Map.Entry<int[], Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()){
-        double boardWeight = DoubleStream.of(evaluateWeight(futureBoardStates.getValue())).sum();
+//      cleanBoard(boardState);
+//      Map<int[], Tile[][]> boardStatesWithTwoBlocks = getAllStates(nextBlock, possibleBoardState.getValue());
+//      for(Map.Entry<int[], Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()){
+        double boardWeight = evaluateWeight(possibleBoardState.getValue());
         if(boardWeight > bestWeight){
           bestWeight = boardWeight;
           bestMovePath = possibleBoardState.getKey();   //only sets move to how the first block was moved
         }
-      }
+//      }
     }
     return bestMovePath;
   }
 
+//  private void cleanBoard(Tile[][] boardState) {
+//    for(Tile[] row : boardState){
+//      
+//    }
+//    
+//  }
+
   private Map<int[], Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
     Map<int[], Tile[][]> boardStates = new HashMap<int[], Tile[][]>();
+    //reduce loop reps TODO
+    //TODO: create variable for blocks grid location so block can be reset to good (non 0) value
     for (int moveCount = 0; moveCount < 10; moveCount++) {
       for (int rotCount = 0; rotCount < currentBlock.getNumRotations(); rotCount++) {
         for (int slideCount = 0; slideCount < 3; slideCount++) {
@@ -277,6 +289,10 @@ public class Cerulean {
     return boardAnalyzer.getGameBoard();
 
   }
+  
+  public double evaluateWeight(Tile[][] boardCopy){
+    return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
+  }
 
   /**
    * evaluates the relative value of the board "fitness function" for machine learning
@@ -284,7 +300,7 @@ public class Cerulean {
    * @param boardCopy the board to be analyzed
    * @return the value of the board
    */
-  public double[] evaluateWeight(Tile[][] boardCopy) {
+  public double[] evaluateEachWeight(Tile[][] boardCopy) {
     double[] weight = new double[4];
     boolean full = false;
     double voids = 0;
@@ -296,10 +312,11 @@ public class Cerulean {
       for (int j = 0; j < boardCopy.length; j++) {
         colCopy[j] = boardCopy[j][i];
       }
+      //TODO: this is a differing end-game condition than rest of game
       if (colCopy[0].isFilled()) {
         full = true;
       }
-
+      //TODO: make sure this works
       double tempHeightScore = getHeightScore(colCopy) + getExtraHeightScore(boardCopy);
       if (tempHeightScore > heightScore) {
         heightScore = tempHeightScore;
@@ -415,6 +432,8 @@ public class Cerulean {
       if (hasFoundBlock && !tiles[i].isFilled()) {
         voidCount++;
       }
+      //TODO: maybe change to isActive
+      //TODO: possibly only consider voids that this block made
       if (tiles[i].isFilled()) {
         hasFoundBlock = true;
       }

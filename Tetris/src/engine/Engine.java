@@ -452,9 +452,12 @@ public class Engine {
 //      System.out.println();
 //    }
     if (!full) {
-      currentBlock = nextBlock;
+//      currentBlock = nextBlock;
+//      nextBlock = blockGenerator.generateBlock();
+      System.out.print(currentBlock.getType() + " ");
+      updateBoardWithNewBlock(currentBlock);
+      currentBlock = blockGenerator.generateBlock();
 
-      updateBoardWithNewBlock(nextBlock);
 
       // toggle for step by step block analysis
       // Engine.togglePause();
@@ -468,7 +471,6 @@ public class Engine {
       }
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
-      nextBlock = blockGenerator.generateBlock();
       clearNextPieceBoard();
       addBlockToDisplay(nextPieceBoard, nextBlock);
       // activeBlock = nextBlock;
@@ -504,6 +506,7 @@ public class Engine {
    * @param b the block to add
    */
   public void updateBoardWithNewBlock(Block b) {
+    
     Tile[][] blockShape = b.getShape();
 
     // iOffset for if the whole block should show
