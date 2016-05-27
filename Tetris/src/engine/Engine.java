@@ -13,7 +13,7 @@ public class Engine {
 
   private Tile[][] gameBoard;
   private Tile[][] nextPieceBoard;
-//  private Block nextBlock;
+  private Block nextBlock;
   private Block currentBlock;
   private Cerulean cerulean;
   private boolean isPaused = false;
@@ -48,8 +48,8 @@ public class Engine {
     this.blockGenerator = generator;
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
-    currentBlock = blockGenerator.generateBlock();
-//    nextBlock = blockGenerator.generateBlock();
+//    currentBlock = blockGenerator.generateBlock();
+    nextBlock = blockGenerator.generateBlock();
     if (autoplay) {
       cerulean = new Cerulean();
       cerulean.setWeights(weights);
@@ -449,7 +449,7 @@ public class Engine {
    * a new random one added to the nextBlockBoard
    */
   public void addBlock() {
-	  
+    currentBlock = nextBlock;
     full = testFull(gameBoard);
     // if (!full) {
     Move[] solution = null;
@@ -469,7 +469,6 @@ public class Engine {
       System.out.println("board updated with block of type : " + currentBlock.getType());
       updateBoardWithNewBlock(currentBlock);
       //TODO FIGURE OUT WHERE THIS GOES AND HOW WE NEED TO FIX OUR PROBLEMS
-      currentBlock = blockGenerator.generateBlock();
 
       // toggle for step by step block analysis
       // Engine.togglePause();
@@ -483,8 +482,9 @@ public class Engine {
       }
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
+      nextBlock = blockGenerator.generateBlock();
       clearNextPieceBoard();
-      addBlockToDisplay(nextPieceBoard, currentBlock);
+      addBlockToDisplay(nextPieceBoard, nextBlock);
       blockCount++;
     }
   }
