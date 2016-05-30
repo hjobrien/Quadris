@@ -29,7 +29,7 @@ public class BoardPlaceTestClient {
     Tile[][] testBoard = getBoard();
     testBoard = getBestPosition(blockToPlace, nextBlock, testBoard);
     cleanBoard(testBoard);
-    getBestPosition(blockToPlace, new Square(), testBoard);
+    getBestPosition(nextBlock, new Square(), testBoard);
 
   }
   

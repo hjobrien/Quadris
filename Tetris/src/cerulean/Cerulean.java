@@ -78,8 +78,9 @@ public class Cerulean {
   /**
    * Generalized move optimization method
    * 
-   * @param currentBlock TODO
-   * @param nextBlock the block just introduced to the board
+   * @param currentBlock the block just introduced to the board
+   * @param nextBlock the block that will be introduced after currentBlock, it is visible in the
+   *        upper right corner of the application
    * @param boardState the board state without the block entered, all tiles are not active
    * 
    * @return an array of moves that positions the piece in to the optimal location
@@ -96,12 +97,12 @@ public class Cerulean {
     // System.out.println("Ceruelan is analyzing block of type " + currentBlock.getType());
     Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
-    // Block nextBlockCopy =
-    // new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
+    Block nextBlockCopy =
+        new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
 
-    bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlock, boardState));
+    bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlockCopy, boardState));
     // // Tile[][] testState;
     // double[] testWeights;
     // double testWeight;
@@ -139,7 +140,7 @@ public class Cerulean {
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
     for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
-      cleanBoard(boardState);
+      cleanBoard(possibleBoardState.getValue());
       Map<Path, Tile[][]> boardStatesWithTwoBlocks =
           getAllStates(nextBlock, possibleBoardState.getValue());
       for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
@@ -229,25 +230,22 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
-    if (moveCount <= 6) {
-      for (int i = 0; i < (6 - moveCount); i++) {
-        path.add(Move.LEFT);
-      }
-    } else {
-      for (int i = 0; i < moveCount - 6; i++) {
-        path.add(Move.RIGHT);
-      }
+    // if (moveCount <= 6) {
+    // for (int i = 0; i < (6 - moveCount); i++) {
+    // path.add(Move.LEFT);
+    // }
+    // } else {
+    // for (int i = 0; i < moveCount - 6; i++) {
+    // path.add(Move.RIGHT);
+    // }
+    // }
+    // puts the block into a constant known position
+    for (int i = 0; i < 6; i++) {
+      path.add(Move.LEFT);
     }
-//    if (moveCount < 0) {
-//      for (int i = 0; i < 6; i++) { // puts the block into a constant, known
-//                                    // position
-//        path.add(Move.LEFT);
-//      }
-//    } else {
-//      for (int i = 0; i < moveCount; i++) {
-//        path.add(Move.RIGHT);
-//      }
-//    }
+    for (int i = 0; i < moveCount; i++) {
+      path.add(Move.RIGHT);
+    }
     path.add(Move.DROP);
 
     if (slideCount == 0) {
