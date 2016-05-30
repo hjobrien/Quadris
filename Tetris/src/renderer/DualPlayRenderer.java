@@ -24,7 +24,8 @@ public class DualPlayRenderer extends Renderer {
     super.setUpRects(GAME2_RECTS);
   }
 
-  public Scene makeGame() throws IOException {
+  @Override
+public Scene makeGame() throws IOException {
     StackPane main = new StackPane();
 
     GridPane mainGameGrid = new GridPane();
