@@ -33,8 +33,8 @@ public class Cerulean {
   // slowly
   // numbers > |1| mean as the quantity gets higher, it increases in
   // importance more quickly
-//  private static final double HEIGHT_POW = 1;
-//  private static final double VOID_POW = 1;
+  // private static final double HEIGHT_POW = 1;
+  // private static final double VOID_POW = 1;
 
   // seems irrelevant if we are giving parameters for different line numbers
   // private static final double LINE_POW = 1;
@@ -66,9 +66,9 @@ public class Cerulean {
    * @param boardState the current board state
    * @throws BoardFullException if the AI cannot place a block without over-filling the board
    */
-  public Move[] submitBlock(Block currentBlock, Tile[][] boardState) throws BoardFullException {
+  public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
     // long t1 = System.currentTimeMillis();
-    return computeBestPath(currentBlock, boardState);
+    return computeBestPath(currentBlock, nextBlock, boardState);
     // System.out.println("x Weight analysis took " +
     // (System.currentTimeMillis() - t1) + "
     // Milli(s)");
@@ -85,7 +85,7 @@ public class Cerulean {
    * @throws BoardFullException if the board placement algorithm would have to over-fill the board
    *         to add a new block
    */
-  private Move[] computeBestPath(Block currentBlock, Tile[][] boardState)
+  private Move[] computeBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
     // double maxWeight = Double.NEGATIVE_INFINITY;
     // TODO: change to clone (also 0,0 is wrong);
@@ -100,7 +100,7 @@ public class Cerulean {
 
     Move[] bestPath = new Move[] {};
 
-    bestPath = convertToMovePath(getBestPath(currentBlockCopy, boardState));
+    bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlock, boardState));
     // // Tile[][] testState;
     // double[] testWeights;
     // double testWeight;
@@ -118,23 +118,23 @@ public class Cerulean {
     return bestPath;
   }
 
-  public int[] getBestPath(Block currentBlock, Tile[][] boardState) throws BoardFullException {
+  public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
     Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
     for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
       // cleanBoard(boardState);
-      // Map<Path, Tile[][]> boardStatesWithTwoBlocks = getAllStates(nextBlock,
-      // possibleBoardState.getValue());
-      // for(Map.Entry<Path, Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()){
-      double boardWeight = evaluateWeight(possibleBoardState.getValue());
-      if (boardWeight > bestWeight) {
-        bestWeight = boardWeight;
-        bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
-                                                              // block was moved
+      Map<Path, Tile[][]> boardStatesWithTwoBlocks =
+          getAllStates(nextBlock, possibleBoardState.getValue());
+      for (Map.Entry<Path, Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()) {
+        double boardWeight = evaluateWeight(possibleBoardState.getValue());
+        if (boardWeight > bestWeight) {
+          bestWeight = boardWeight;
+          bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
+                                                                // block was moved
+        }
       }
-      // }
     }
     return bestMovePath;
   }

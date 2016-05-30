@@ -19,13 +19,13 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
 
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
-  public static final int MIN_TIME_PER_TURN = 100000000;
+  public static final int MIN_TIME_PER_TURN = 50000000;
   public static final boolean DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
 //  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
-  public  static final int MAX_GAMES_TO_PLAY = 4;
+  public  static final int MAX_GAMES_TO_PLAY = 50;
 
   public static void main(String[] args) {
     launch();

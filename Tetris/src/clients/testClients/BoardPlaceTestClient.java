@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import blocks.Block;
 import blocks.LeftL;
+import blocks.StraightLine;
 import blocks.Tile;
 import cerulean.Cerulean;
 import clients.interfaces.Autoplayable;
@@ -30,7 +31,7 @@ public class BoardPlaceTestClient {
     System.out.println(blockToPlace);
     e.addBlock(blockToPlace);
     e.updateBoardWithNewBlock(blockToPlace);
-    Move[] solution = c.submitBlock(blockToPlace, testBoard);
+    Move[] solution = c.submitBlock(blockToPlace, new StraightLine(), testBoard);
     System.out.println(Arrays.toString(solution));
     for(Move m : solution){
       Engine.printBoard(e.getGameBoard());

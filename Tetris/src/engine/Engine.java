@@ -450,13 +450,16 @@ public class Engine {
    */
   public void addBlock() {
     currentBlock = nextBlock;
+    nextBlock = blockGenerator.generateBlock();
+    clearNextPieceBoard();
+    addBlockToDisplay(nextPieceBoard, nextBlock);
     full = testFull(gameBoard);
     // if (!full) {
     Move[] solution = null;
     // long now = System.currentTimeMillis();
     if (autoplay) {
       try {
-        solution = cerulean.submitBlock(currentBlock, gameBoard);
+        solution = cerulean.submitBlock(currentBlock, nextBlock, gameBoard);
       } catch (BoardFullException e) {
         full = true;
       }
@@ -476,7 +479,7 @@ public class Engine {
       // Renderer.pause();
       // Game.togglePause();
       if (autoplay) {
-//        System.out.println(Arrays.toString(solution));
+        System.out.println(Arrays.toString(solution));
         for (Move m : solution) {
           executeMove(m);
         }
@@ -484,9 +487,7 @@ public class Engine {
 //      printBoard(gameBoard);
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
-      nextBlock = blockGenerator.generateBlock();
-      clearNextPieceBoard();
-      addBlockToDisplay(nextPieceBoard, nextBlock);
+      
       blockCount++;
     }
   }
