@@ -169,17 +169,17 @@ public class Cerulean {
   }
 
 
-  private static void printBoard(Tile[][] testState) {
-    for (int i = 0; i < testState.length; i++) {
-      for (int j = 0; j < testState[i].length; j++) {
-        //Terniary Operator, basically an if statement
-        System.out.print((testState[i][j].isFilled() ? "x " : "o "));
-      }
-      System.out.println();
-    }
-    System.out.println();
-
-  }
+//  private static void printBoard(Tile[][] testState) {
+//    for (int i = 0; i < testState.length; i++) {
+//      for (int j = 0; j < testState[i].length; j++) {
+//        //Terniary Operator, basically an if statement
+//        System.out.print((testState[i][j].isFilled() ? "x " : "o "));
+//      }
+//      System.out.println();
+//    }
+//    System.out.println();
+//
+//  }
 
   private Move[] convertToMovePath(int[] bestPath) {
     return getPath(bestPath[0], bestPath[1], bestPath[2]);
@@ -337,13 +337,14 @@ public class Cerulean {
       }
 
       double voidCount = getNumVoids(colCopy);
+      voids += weights[1] * voidCount;
       // keeps the value from being 0 in the Terniary
-      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW));
+//      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW));
       edges += weights[2] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
     }
-    height =
-        weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
-
+//    height =
+//        weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
+    height = weights[0] * heightScore;
 
     // gets the composite lineScore, which will be entered in weight[3]
     // alternatively, we could make weight[] bigger and enter in each line weight for its

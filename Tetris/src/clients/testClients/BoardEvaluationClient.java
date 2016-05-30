@@ -26,7 +26,7 @@ public class BoardEvaluationClient {
     cerulean.setWeights(new double[]{-200, -50, 100, 1.68});
     double[] weights = cerulean.evaluateEachWeight(testBoard);
     return "net: " + DoubleStream.of(weights).sum() + " voids: " + weights[0] +
-        " heights: " + weights[1] + " lines: " + weights[2] + " edges: " + weights[3];
+        " heights: " + weights[1] + " edges: " + weights[2] + " lines: " + weights[3];
   }
   
   public static Tile[][] getBoard(){
@@ -52,8 +52,8 @@ public class BoardEvaluationClient {
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
-      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()}
+      new Tile[]{new Tile(COLOR), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(COLOR), new Tile(COLOR), new Tile(COLOR), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()}
 
     };
   }
