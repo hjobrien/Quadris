@@ -1,10 +1,12 @@
 package engine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import blocks.Block;
 import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.RandomizeBlocks;
 import cerulean.Cerulean;
 import mainGame.Move;
 import mainGame.ScoreMode;
@@ -69,7 +71,6 @@ public class Engine {
     this.gameBoard = deepCopy(mainBoard);
     autoplay = false;
   }
-
   /**
    * copies a board by value
    * 
@@ -461,6 +462,7 @@ public class Engine {
         full = true;
       }
     }
+    System.out.println(Arrays.toString(solution));
 //    if (Arrays.toString(solution).equals(
 //        "[ROT_RIGHT, LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, RIGHT, DROP, LEFT]")) {
 //      System.out.println();
@@ -480,6 +482,7 @@ public class Engine {
           executeMove(m);
         }
       }
+      printBoard(gameBoard);
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
       nextBlock = blockGenerator.generateBlock();
@@ -516,7 +519,6 @@ public class Engine {
    * @param b the block to add
    */
   public void updateBoardWithNewBlock(Block b) {
-    System.out.println("In updateBoard method, block has type " + b.getType());
     
     Tile[][] blockShape = b.getShape();
 
@@ -685,7 +687,7 @@ public class Engine {
   /**
    * prints the board for debugging
    */
-  public void printBoard() {
+  public static void printBoard(Tile[][] gameBoard) {
     for (int i = 0; i < gameBoard.length; i++) {
       for (int j = 0; j < gameBoard[i].length; j++) {
         System.out.print(gameBoard[i][j]);
@@ -848,7 +850,9 @@ public class Engine {
     this.blockCount = 0;
     this.score = 0;
     this.numOfFullRows = 0;
-    this.blockGenerator.reset();
+    if(this.blockGenerator != null){
+      this.blockGenerator.reset();
+    }
 //    this.nextBlock = blockGenerator.generateBlock();
     this.full = false;
     this.gameNum++;
