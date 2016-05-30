@@ -7,6 +7,9 @@ import org.junit.Test;
 public class JUnitPathTest {
 
   @Test
+  /**
+   * tests if the equals method is correct
+   */
   public void testEquals() {
     Path path1 = new Path(new int[]{1,1,1});
     Path path2 = new Path(new int[]{1,1,1});
@@ -14,6 +17,9 @@ public class JUnitPathTest {
   }
   
   @Test
+  /**
+   * tests if the HashCode method is working correctly
+   */
   public void testHashCode() {
     Path path1 = new Path(new int[]{1,1,1});
     Path path2 = new Path(new int[]{1,1,1});

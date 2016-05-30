@@ -2,30 +2,38 @@ package cerulean;
 
 import java.util.Arrays;
 
+/**
+ * wrapper class for int[] that allows one to be used in a HashMap by changing the hashCode() method
+ * 
+ * @author Hank O'Brien
+ *
+ */
 public class Path {
   private int[] path;
-  
-  public Path(int[] path){
+
+  public Path(int[] path) {
     this.path = path;
   }
-  
-  public int[] getPath(){
+
+  public int[] getPath() {
     return path;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
+  /**
+   * uses the hashcode implementation found in List
    */
   @Override
   public int hashCode() {
     int hashCode = 1;
-    for(Integer i : path){
+    for (Integer i : path) {
       hashCode = hashCode * 31 + (i == null ? 0 : i.hashCode());
     }
     return hashCode;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -41,7 +49,7 @@ public class Path {
       return false;
     return true;
   }
-  
-  
-  
+
+
+
 }

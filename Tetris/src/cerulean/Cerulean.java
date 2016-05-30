@@ -66,7 +66,8 @@ public class Cerulean {
    * @param boardState the current board state
    * @throws BoardFullException if the AI cannot place a block without over-filling the board
    */
-  public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState)
+      throws BoardFullException {
     // long t1 = System.currentTimeMillis();
     return computeBestPath(currentBlock, nextBlock, boardState);
     // System.out.println("x Weight analysis took " +
@@ -118,7 +119,20 @@ public class Cerulean {
     return bestPath;
   }
 
-  public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState) throws BoardFullException {
+  /**
+   * 
+   * @param currentBlock the active, falling block the AI is to manipulate
+   * @param nextBlock a block taken into account for further move analysis so the AI can look two
+   *        moves in advance
+   * @param boardState the shape of the Board before the currentBlock is added
+   * @return the best path the currentBlock can take as a composition of moves (left/right
+   *         translations), rotations (executed before the translations), and slideCount
+   *         (translations after the block had been fully dropped)
+   * @throws BoardFullException if the board state that is produced by the addition of the block
+   *         produces a filled board
+   */
+  public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
+      throws BoardFullException {
     Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
     double bestWeight = Double.NEGATIVE_INFINITY;
@@ -146,6 +160,12 @@ public class Cerulean {
   //
   // }
 
+  /**
+   * @param currentBlock the block to be added
+   * @param boardState the shape of the inactive tiles before the currentBlock is added
+   * @return All the possible board states that could exist given some block and some board state
+   * @throws BoardFullException if any possible board state is a full board
+   */
   private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
     Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
@@ -181,6 +201,13 @@ public class Cerulean {
   //
   // }
 
+  /**
+   * wrapper for same method that takes multiple integers, this converts an array of ints into
+   * single integers converts a path composed of integers into one of moves
+   * 
+   * @param bestPath the best path as an array of movement instructions
+   * @return the best path as individual moves
+   */
   private Move[] convertToMovePath(int[] bestPath) {
     return getPath(bestPath[0], bestPath[1], bestPath[2]);
   }
@@ -304,6 +331,12 @@ public class Cerulean {
 
   }
 
+  /**
+   * wrapper for method that returns an array of weights representing each sub-weight
+   * 
+   * @param boardCopy the board to be analyzed
+   * @return the value of the boardState given the weights the AI is currently using
+   */
   public double evaluateWeight(Tile[][] boardCopy) {
     return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
   }
@@ -593,7 +626,15 @@ public class Cerulean {
     return newSpecies;
   }
 
-  // attempts to prevent in-breeding
+  /**
+   * tries to test if two candidate species are too similar to allow for successful breeding, it
+   * attempts to prevent in-breading. This is based on how many of each species weights are 
+   * within some threshold of similarity
+   * 
+   * @param species1 the first species to compare
+   * @param species2 the second species to compare
+   * @return true if they are different enough for successful breeding, false otherwise
+   */
   private static boolean areSufficientlyDifferent(double[] species1, double[] species2) {
     int numWithinSimilarityThreshold = 0;
     for (int i = 0; i < species1.length; i++) {

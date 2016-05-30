@@ -423,6 +423,10 @@ public class Engine {
     }
   }
 
+  /**
+   * checks to see if the board is empty
+   * @return true if it is empty, false otherwise
+   */
   private boolean boardIsEmpty() {
     for (Tile[] row : gameBoard) {
       for (Tile t : row) {
@@ -492,6 +496,11 @@ public class Engine {
     }
   }
 
+  /**
+   * tests if the board is full using the end condition that no block can be on the 20th row
+   * @param gameBoard the gameBoard to check
+   * @return true if the board is full, false otherwise
+   */
   private boolean testFull(Tile[][] gameBoard) {
     for (int i = 0; i < gameBoard[0].length; i++) {
       if (gameBoard[3][i].isFilled()) {

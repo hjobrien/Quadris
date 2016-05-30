@@ -13,6 +13,13 @@ import blocks.Square;
 import blocks.StraightLine;
 import blocks.TBlock;
 
+/**
+ * Object dedicated to producing repeatable streams of blocks using pre-written lines of numbers in
+ * a text file that the object converts to Blocks
+ * 
+ * @author Hank O'Brien
+ *
+ */
 public class StandardizeBlocks implements BlockGenerator {
 
   public static final String BLOCK_FILE_PATH = "Blocks to Add";
@@ -21,11 +28,22 @@ public class StandardizeBlocks implements BlockGenerator {
   private int numBlocksAdded;
   private int[][] blocksToAdd;
 
+  /**
+   * convenience constructor that creates a new instance of the object with gameNumber 0
+   */
   public StandardizeBlocks() {
     this(0);
   }
 
+  /**
+   * constructor that lets the caller pick which game they want to start at (up to 50 supported)
+   * 
+   * @param gameNumber
+   */
   public StandardizeBlocks(int gameNumber) {
+    if (gameNumber > 50) {
+      throw new IllegalArgumentException("Game Number is unsupported");
+    }
     this.gameNumber = gameNumber;
     numBlocksAdded = 0;
     if (blocksToAdd == null) {
@@ -34,6 +52,9 @@ public class StandardizeBlocks implements BlockGenerator {
   }
 
   @Override
+  /**
+   * generates a new Block by converting the number from the file to a Block Object
+   */
   public Block generateBlock() {
     int i = blocksToAdd[gameNumber][numBlocksAdded];
     numBlocksAdded++;
@@ -56,6 +77,14 @@ public class StandardizeBlocks implements BlockGenerator {
     throw new RuntimeException("bad file num");
   }
 
+  /**
+   * reads in the lists of numbers from the file when an instance of this object is first
+   * constructed As this method is only called once, it keeps slow file I/O to a minimum and before
+   * the game starts to play
+   * 
+   * @return an array whose rows are unique games composed of lists of number that will if necessary
+   *         be converted to Blocks
+   */
   private int[][] readInBlocks() {
     Scanner fileReader = null;
     try {
@@ -89,12 +118,19 @@ public class StandardizeBlocks implements BlockGenerator {
   }
 
   @Override
+  /**
+   * updates the gameNumber and blockNumbers so blocks will be pulled from the right part of the
+   * int[][] if more blocks are requested
+   */
   public void reset() {
     this.gameNumber++;
     this.numBlocksAdded = 0;
 
   }
 
+  /**
+   * sets the game number of the object
+   */
   public void setGameNumber(int j) {
     this.gameNumber = j;
 

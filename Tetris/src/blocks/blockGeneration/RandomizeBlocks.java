@@ -11,10 +11,19 @@ import blocks.Square;
 import blocks.StraightLine;
 import blocks.TBlock;
 
+/**
+ * This class is a specification of BlockGenerator that generates new blocks based on a random number
+ * This produces the effect of random blocks being generated
+ * @author Hank O'Brien
+ * 
+ */
 public class RandomizeBlocks implements BlockGenerator {
   public static final Random RANDOM = new Random();
 
   @Override
+  /**
+   * generates a new block using a random number
+   */
   public Block generateBlock() {
     int i = RANDOM.nextInt(7);
     switch (i) {
@@ -37,11 +46,15 @@ public class RandomizeBlocks implements BlockGenerator {
   }
 
   @Override
-  public void reset() {
-    //don't need to do anything, resetting doesn't mean anything here  
-  }
+  /**
+   * resets the game, but doesn't need to do anything in this implementation
+   */
+  public void reset() {}
 
   @Override
+  /**
+   * sets the game number of the generator, but this is also irrelevant to this particular object
+   */
   public void setGameNumber(int j) {
     //don't need to do anything, game number doesn't matter to randomized blocks  
 

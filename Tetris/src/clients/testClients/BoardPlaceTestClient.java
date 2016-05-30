@@ -13,6 +13,11 @@ import engine.Engine;
 import javafx.scene.paint.Color;
 import mainGame.Move;
 
+/**
+ * places and positions a particular block into a particular board state to check if the AI is working correctly
+ * @author Hank O'Brien
+ *
+ */
 public class BoardPlaceTestClient {
   
   public static final Color COLOR = Color.BLACK;
@@ -24,6 +29,13 @@ public class BoardPlaceTestClient {
 
   }
   
+  /**
+   * gets the best board state given a block and a board state
+   * @param blockToPlace the block to be added
+   * @param testBoard the board where the block is to be added
+   * @return the shape of the board after the block has been placed
+   * @throws BoardFullException if the block causes the board to fill
+   */
   private static Tile[][] getBestPosition(Block blockToPlace, Tile[][] testBoard) throws BoardFullException {
     Cerulean c = new Cerulean();
     c.setWeights(Autoplayable.DEFAULT_WEIGHTS);
@@ -42,6 +54,9 @@ public class BoardPlaceTestClient {
     
   }
 
+  /**
+   * @return the board in to be used under testing
+   */
   public static Tile[][] getBoard(){
     return new Tile[][]{
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},               
