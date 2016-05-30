@@ -6,7 +6,6 @@ import java.util.Arrays;
 import blocks.Block;
 import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
-import blocks.blockGeneration.RandomizeBlocks;
 import cerulean.Cerulean;
 import mainGame.Move;
 import mainGame.ScoreMode;
@@ -482,7 +481,7 @@ public class Engine {
           executeMove(m);
         }
       }
-      printBoard(gameBoard);
+//      printBoard(gameBoard);
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
       nextBlock = blockGenerator.generateBlock();

@@ -10,7 +10,6 @@ import java.util.stream.DoubleStream;
 
 import blocks.Block;
 import blocks.Tile;
-import blocks.blockGeneration.RandomizeBlocks;
 import engine.BoardFullException;
 import engine.Engine;
 import mainGame.Move;
@@ -34,8 +33,8 @@ public class Cerulean {
   // slowly
   // numbers > |1| mean as the quantity gets higher, it increases in
   // importance more quickly
-  private static final double HEIGHT_POW = 1;
-  private static final double VOID_POW = 1;
+//  private static final double HEIGHT_POW = 1;
+//  private static final double VOID_POW = 1;
 
   // seems irrelevant if we are giving parameters for different line numbers
   // private static final double LINE_POW = 1;
@@ -120,19 +119,20 @@ public class Cerulean {
   }
 
   public int[] getBestPath(Block currentBlock, Tile[][] boardState) throws BoardFullException {
-    Map<int[], Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+    Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+    System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
-    for (Map.Entry<int[], Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
+    for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
       // cleanBoard(boardState);
-      // Map<int[], Tile[][]> boardStatesWithTwoBlocks = getAllStates(nextBlock,
+      // Map<Path, Tile[][]> boardStatesWithTwoBlocks = getAllStates(nextBlock,
       // possibleBoardState.getValue());
-      // for(Map.Entry<int[], Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()){
+      // for(Map.Entry<Path, Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()){
       double boardWeight = evaluateWeight(possibleBoardState.getValue());
       if (boardWeight > bestWeight) {
         bestWeight = boardWeight;
-        bestMovePath = possibleBoardState.getKey(); // only sets move to how the first block was
-                                                    // moved
+        bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
+                                                              // block was moved
       }
       // }
     }
@@ -146,9 +146,9 @@ public class Cerulean {
   //
   // }
 
-  private Map<int[], Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
+  private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
-    Map<int[], Tile[][]> boardStates = new HashMap<int[], Tile[][]>();
+    Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
     for (int moveCount = 0; moveCount < 10; moveCount++) {
@@ -157,29 +157,29 @@ public class Cerulean {
           // TODO make sure this clone method works in all cases. If so, the comments below can be
           // removed
           Block tempBlock = currentBlock.clone();
-          boardStates.put(new int[] {moveCount, rotCount, slideCount},
+          boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
               positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
           // TODO: change
           // currentBlock.setGridLocation(new int[] {0, 0});
         }
-        // currentBlock.rotateRight();
+        currentBlock.rotateRight();
       }
     }
     return boardStates;
   }
 
 
-//  private static void printBoard(Tile[][] testState) {
-//    for (int i = 0; i < testState.length; i++) {
-//      for (int j = 0; j < testState[i].length; j++) {
-//        //Terniary Operator, basically an if statement
-//        System.out.print((testState[i][j].isFilled() ? "x " : "o "));
-//      }
-//      System.out.println();
-//    }
-//    System.out.println();
-//
-//  }
+  // private static void printBoard(Tile[][] testState) {
+  // for (int i = 0; i < testState.length; i++) {
+  // for (int j = 0; j < testState[i].length; j++) {
+  // //Terniary Operator, basically an if statement
+  // System.out.print((testState[i][j].isFilled() ? "x " : "o "));
+  // }
+  // System.out.println();
+  // }
+  // System.out.println();
+  //
+  // }
 
   private Move[] convertToMovePath(int[] bestPath) {
     return getPath(bestPath[0], bestPath[1], bestPath[2]);
@@ -339,11 +339,12 @@ public class Cerulean {
       double voidCount = getNumVoids(colCopy);
       voids += weights[1] * voidCount;
       // keeps the value from being 0 in the Terniary
-//      voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount), VOID_POW));
+      // voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount),
+      // VOID_POW));
       edges += weights[2] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
     }
-//    height =
-//        weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
+    // height =
+    // weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
     height = weights[0] * heightScore;
 
     // gets the composite lineScore, which will be entered in weight[3]
