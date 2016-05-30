@@ -52,6 +52,12 @@ public class Path {
     return true;
   }
 
-
+  public String toString(){
+	  String pathFormula = "";
+	  for (int i : path){
+		  pathFormula += i + " ";
+	  }
+	  return pathFormula;
+  }
 
 }

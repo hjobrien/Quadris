@@ -145,6 +145,19 @@ public class Cerulean {
 //      for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
         double boardWeight = evaluateWeight(possibleBoardState.getValue());
         if (boardWeight > bestWeight) {
+        	
+        	//EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
+//        	System.out.println("best weight = " + bestWeight);
+//        	System.out.println("board weight = " + boardWeight);
+//        	System.out.print("path = ");
+//        	String pathFormula = "";
+//        	for (int i : possibleBoardState.getKey().getPath()){
+//        	  pathFormula += i + " ";
+//        	}
+//        	System.out.println(pathFormula);
+//        	Engine.printBoard(possibleBoardState.getValue());
+//        	System.out.println();
+        	
           bestWeight = boardWeight;
           bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
                                                                 // block was moved
@@ -258,6 +271,10 @@ public class Cerulean {
     else if (slideCount == 2) {
       path.add(Move.RIGHT);
     }
+    
+    //ensures that the block is dropped as far as it can go
+
+    path.add(Move.DROP);
 
     return path.toArray(new Move[] {});
   }
@@ -320,6 +337,9 @@ public class Cerulean {
     } else if (slideCount == 2) {
       boardAnalyzer.executeMove(Move.RIGHT);
     }
+    
+    //ensures that the block is dropped as far as it can go
+    boardAnalyzer.executeMove(Move.DROP);
 
     // for debugging purposes
     // TODO get rid of the gross 10 left moves, make lines clear for future
@@ -340,7 +360,13 @@ public class Cerulean {
    * @return the value of the boardState given the weights the AI is currently using
    */
   public double evaluateWeight(Tile[][] boardCopy) {
-    return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
+	double[] boardScoreArray = evaluateEachWeight(boardCopy);
+	double boardScore = 0;
+	for (double n : boardScoreArray){
+		boardScore += n;
+	}
+	return boardScore;
+//    return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
   }
 
   /**
@@ -362,7 +388,7 @@ public class Cerulean {
         colCopy[j] = boardCopy[j][i];
       }
       // TODO: this is a differing end-game condition than rest of game
-      if (colCopy[0].isFilled()) {
+      if (colCopy[3].isFilled()) {
         full = true;
       }
       // TODO: make sure this works
@@ -405,10 +431,10 @@ public class Cerulean {
       weight[3] = lineScore;
     } else {
       // penalizes for ending the game
-      weight[0] = -10000000;
-      weight[1] = -10000000;
-      weight[2] = -10000000;
-      weight[3] = -10000000;
+      weight[0] = Integer.MIN_VALUE;
+      weight[1] = Integer.MIN_VALUE;
+      weight[2] = Integer.MIN_VALUE;
+      weight[3] = Integer.MIN_VALUE;
     }
     return weight;
   }
