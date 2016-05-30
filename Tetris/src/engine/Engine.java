@@ -468,13 +468,13 @@ public class Engine {
         full = true;
       }
     }
-    System.out.println(Arrays.toString(solution));
+//    System.out.println(Arrays.toString(solution));
 //    if (Arrays.toString(solution).equals(
 //        "[ROT_RIGHT, LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, RIGHT, DROP, LEFT]")) {
 //      System.out.println();
 //    }
     if (!full) {
-      System.out.println("board updated with block of type : " + currentBlock.getType());
+//      System.out.println("board updated with block of type : " + currentBlock.getType());
       updateBoardWithNewBlock(currentBlock);
       //TODO FIGURE OUT WHERE THIS GOES AND HOW WE NEED TO FIX OUR PROBLEMS
 
@@ -483,7 +483,7 @@ public class Engine {
       // Renderer.pause();
       // Game.togglePause();
       if (autoplay) {
-        System.out.println(Arrays.toString(solution));
+//        System.out.println(Arrays.toString(solution));
         for (Move m : solution) {
           executeMove(m);
         }

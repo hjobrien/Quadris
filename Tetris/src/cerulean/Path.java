@@ -3,7 +3,9 @@ package cerulean;
 import java.util.Arrays;
 
 /**
- * wrapper class for int[] that allows one to be used in a HashMap by changing the hashCode() method
+ * wrapper class for int[]. Supports behavior that requires hashing based on value and not memory
+ * addresses. This means two separate Path objects with the same values in their path field will hash
+ * to the same value
  * 
  * @author Hank O'Brien
  *

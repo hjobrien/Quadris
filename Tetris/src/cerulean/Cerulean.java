@@ -93,7 +93,7 @@ public class Cerulean {
 
     // TODO not working
     // Block currentBlockCopy = currentBlock.clone();
-    System.out.println("Ceruelan is analyzing block of type " + currentBlock.getType());
+    // System.out.println("Ceruelan is analyzing block of type " + currentBlock.getType());
     Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
     // Block nextBlockCopy =
@@ -133,32 +133,34 @@ public class Cerulean {
    */
   public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
+//    System.out.println(currentBlock.getType() + " " + nextBlock.getType());
     Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
-    System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
+    // System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
     for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
-      // cleanBoard(boardState);
-      Map<Path, Tile[][]> boardStatesWithTwoBlocks =
-          getAllStates(nextBlock, possibleBoardState.getValue());
-      for (Map.Entry<Path, Tile[][]> futureBoardStates : boardStatesWithTwoBlocks.entrySet()) {
+//      cleanBoard(boardState);
+//      Map<Path, Tile[][]> boardStatesWithTwoBlocks =
+//          getAllStates(nextBlock, possibleBoardState.getValue());
+//      for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
         double boardWeight = evaluateWeight(possibleBoardState.getValue());
         if (boardWeight > bestWeight) {
           bestWeight = boardWeight;
           bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
                                                                 // block was moved
         }
-      }
+//      }
     }
     return bestMovePath;
   }
 
-  // private void cleanBoard(Tile[][] boardState) {
-  // for(Tile[] row : boardState){
-  //
-  // }
-  //
-  // }
+  private void cleanBoard(Tile[][] boardState) {
+    for (Tile[] row : boardState) {
+      for (Tile t : row) {
+        t.setActive(false);
+      }
+    }
+  }
 
   /**
    * @param currentBlock the block to be added
@@ -628,8 +630,8 @@ public class Cerulean {
 
   /**
    * tries to test if two candidate species are too similar to allow for successful breeding, it
-   * attempts to prevent in-breading. This is based on how many of each species weights are 
-   * within some threshold of similarity
+   * attempts to prevent in-breading. This is based on how many of each species weights are within
+   * some threshold of similarity
    * 
    * @param species1 the first species to compare
    * @param species2 the second species to compare
