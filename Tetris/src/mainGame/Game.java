@@ -89,16 +89,16 @@ public class Game extends Application {
   /**
    * convenience constructor that initializes the game to some suggested settings
    */
-  public Game() {
-    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, 5, GameMode.DISTRO, true,
-        false, new RandomizeBlocks(), ScoreMode.SIMPLE);
-  }
+//  public Game() {
+//    this(DEFAULT_VERTICAL_TILES, DEFAULT_HORIZONTAL_TILES, (int) 1e8, 5, GameMode.DISTRO, true,
+//        false, new RandomizeBlocks(), ScoreMode.SIMPLE, 2);
+//  }
 
   /**
    * comprehensive constructor that sets all parts of the games configuration
    * 
-   * @param boardHeight the height of the board
-   * @param boardWidth the width of the board
+   * @param boardHeight the height of the board TODO
+   * @param boardWidth the width of the board TODO
    * @param minTimePerTurn the minimum time between game updates, in milliseconds
    * @param mode the gameMode to be used
    * @param useGraphics whether the game should expose its working through a GUI
@@ -114,11 +114,10 @@ public class Game extends Application {
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-    // this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = new Tile[boardHeight + 3][boardWidth]; // so that the board can accommodate
                                                             // blocks at the top
-    this.engine = new Engine(gameBoard, autoplay, generator, scoring, null);
+    this.engine = new Engine(gameBoard, generator, scoring);
     this.scoring = scoring;
   }
 
@@ -145,7 +144,7 @@ public class Game extends Application {
     this.autoplay = false;
     this.gameBoard = board;
     this.scoring = scoring;
-    this.engine = new Engine(gameBoard, autoplay, generator, scoring, null);
+    this.engine = new Engine(gameBoard, generator, scoring);
   }
 
   /**
@@ -159,20 +158,21 @@ public class Game extends Application {
    * @param mode the gameMode to be used
    * @param useGraphics whether the game should expose its working through a GUI
    * @param doDebug whether the game should display debug information
+   * @param weights the weights to be passed to the AI for its evaluation function
+   * @param numBlocksToAnalyze TODO
    * @param randomizeBlocks whether blocks should be randomly generated or read from a file
    * @param playMultiple whether multiple games should be played consecutively
-   * @param weights the weights to be passed to the AI for its evaluation function
    */
   public Game(int boardHeight, int boardWidth, int minTimePerTurn, int maxGamesPerGen,
       GameMode mode, boolean useGraphics, boolean doDebug, BlockGenerator generator,
-      double[] weights, ScoreMode scoring) {
+      double[] weights, ScoreMode scoring, int numBlocksToAnalyze) {
     this(boardHeight, boardWidth, minTimePerTurn, maxGamesPerGen, mode, useGraphics, doDebug,
         generator, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
 //    this.cerulean = new Cerulean();
 //    cerulean.setWeights(weights);
-    this.engine = new Engine(gameBoard, autoplay, generator, scoring, weights);
+    this.engine = new Engine(gameBoard, autoplay, generator, scoring, weights, numBlocksToAnalyze);
   }
 
 

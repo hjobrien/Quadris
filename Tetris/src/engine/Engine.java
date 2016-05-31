@@ -42,19 +42,28 @@ public class Engine {
    * @param autoplay whether the engine should automatically place the blocks
    * @param randomizeBlocks whether blocks should be randomly generated or read from a file
    */
-  public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring, double[] weights) {
+  public Engine(Tile[][] mainBoard, boolean autoplay, BlockGenerator generator, ScoreMode scoring, double[] weights, int numBlocksToAnalyze) {
     this.scoreMode = scoring;
     this.autoplay = autoplay;
     this.blockGenerator = generator;
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
-//    currentBlock = blockGenerator.generateBlock();
-    nextBlock = blockGenerator.generateBlock();
+    this.nextBlock = blockGenerator.generateBlock();
     if (autoplay) {
-      cerulean = new Cerulean();
+      cerulean = new Cerulean(numBlocksToAnalyze);
       cerulean.setWeights(weights);
     }
 
+  }
+  
+  
+  public Engine(Tile[][] mainBoard, BlockGenerator generator, ScoreMode scoring) {
+    this.scoreMode = scoring;
+    this.blockGenerator = generator;
+    this.gameBoard = deepCopy(mainBoard);
+    this.nextPieceBoard = initBoard(new Tile[4][4]);
+    this.nextBlock = blockGenerator.generateBlock();
+    this.autoplay = false;
   }
   
   /**

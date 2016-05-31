@@ -50,7 +50,7 @@ public class BoardPlaceTestClient {
    * @throws BoardFullException if the block causes the board to fill
    */
   private static Tile[][] getBestPosition(Block blockToPlace, Block nextBlock, Tile[][] testBoard) throws BoardFullException {
-    Cerulean c = new Cerulean();
+    Cerulean c = new Cerulean(2);
     c.setWeights(Autoplayable.DEFAULT_WEIGHTS);
     Engine e = new Engine(testBoard);
     System.out.println(blockToPlace);

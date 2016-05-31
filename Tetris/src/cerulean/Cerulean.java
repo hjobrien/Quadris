@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.DoubleStream;
 
 import blocks.Block;
 import blocks.Tile;
@@ -40,7 +39,8 @@ public class Cerulean {
   // private static final double LINE_POW = 1;
 
   // TODO: add a positive weight for how full each row is?
-
+  private boolean analyzeTwo;
+  
   // partially filled to prevent errors later on
   // private Move[] solutionPath = new Move[] {Move.RIGHT};
   private Engine boardAnalyzer;
@@ -59,6 +59,14 @@ public class Cerulean {
   // return solutionPath;
   // }
 
+  public Cerulean(int blocksToAnalyze){
+    this.analyzeTwo = (blocksToAnalyze == 2 ? true : false);
+  }
+  
+  public Cerulean(){
+    this.analyzeTwo = false;
+  }
+  
   /**
    * gives AI data for what block is active and the board state it is to be placed in
    * 
@@ -140,25 +148,34 @@ public class Cerulean {
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
     for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
-      cleanBoard(possibleBoardState.getValue());
-      Map<Path, Tile[][]> boardStatesWithTwoBlocks =
-          getAllStates(nextBlock, possibleBoardState.getValue());
-      for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
-        double boardWeight = evaluateWeight(futureBoardState.getValue());
+      if (analyzeTwo) {
+        cleanBoard(possibleBoardState.getValue());
+        Map<Path, Tile[][]> boardStatesWithTwoBlocks =
+            getAllStates(nextBlock, possibleBoardState.getValue());
+        for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
+          double boardWeight = evaluateWeight(futureBoardState.getValue());
+          if (boardWeight > bestWeight) {
+
+            // EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
+            // System.out.println("best weight = " + bestWeight);
+            // System.out.println("board weight = " + boardWeight);
+            // System.out.print("path = ");
+            // String pathFormula = "";
+            // for (int i : possibleBoardState.getKey().getPath()){
+            // pathFormula += i + " ";
+            // }
+            // System.out.println(pathFormula);
+            // Engine.printBoard(possibleBoardState.getValue());
+            // System.out.println();
+
+            bestWeight = boardWeight;
+            bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
+                                                                  // block was moved
+          }
+        }
+      } else {
+        double boardWeight = evaluateWeight(possibleBoardState.getValue());
         if (boardWeight > bestWeight) {
-        	
-        	//EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
-//        	System.out.println("best weight = " + bestWeight);
-//        	System.out.println("board weight = " + boardWeight);
-//        	System.out.print("path = ");
-//        	String pathFormula = "";
-//        	for (int i : possibleBoardState.getKey().getPath()){
-//        	  pathFormula += i + " ";
-//        	}
-//        	System.out.println(pathFormula);
-//        	Engine.printBoard(possibleBoardState.getValue());
-//        	System.out.println();
-        	
           bestWeight = boardWeight;
           bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
                                                                 // block was moved
@@ -193,11 +210,11 @@ public class Cerulean {
           // TODO make sure this clone method works in all cases. If so, the comments below can be
           // removed
           Block tempBlock = currentBlock.clone();
-          try{
+          try {
             boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
                 positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
-          }catch(BoardFullException e){
-            
+          } catch (BoardFullException e) {
+
           }
           // TODO: change
           // currentBlock.setGridLocation(new int[] {0, 0});
@@ -272,8 +289,8 @@ public class Cerulean {
     else if (slideCount == 2) {
       path.add(Move.RIGHT);
     }
-    
-    //ensures that the block is dropped as far as it can go
+
+    // ensures that the block is dropped as far as it can go
 
     path.add(Move.DROP);
 
@@ -338,8 +355,8 @@ public class Cerulean {
     } else if (slideCount == 2) {
       boardAnalyzer.executeMove(Move.RIGHT);
     }
-    
-    //ensures that the block is dropped as far as it can go
+
+    // ensures that the block is dropped as far as it can go
     boardAnalyzer.executeMove(Move.DROP);
 
     // for debugging purposes
@@ -361,13 +378,13 @@ public class Cerulean {
    * @return the value of the boardState given the weights the AI is currently using
    */
   public double evaluateWeight(Tile[][] boardCopy) {
-	double[] boardScoreArray = evaluateEachWeight(boardCopy);
-	double boardScore = 0;
-	for (double n : boardScoreArray){
-		boardScore += n;
-	}
-	return boardScore;
-//    return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
+    double[] boardScoreArray = evaluateEachWeight(boardCopy);
+    double boardScore = 0;
+    for (double n : boardScoreArray) {
+      boardScore += n;
+    }
+    return boardScore;
+    // return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
   }
 
   /**

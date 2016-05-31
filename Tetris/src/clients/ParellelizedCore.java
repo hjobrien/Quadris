@@ -46,7 +46,7 @@ public class ParellelizedCore {
       final int gameNum = i;
       BlockGenerator generator = new StandardizeBlocks(gameNum);
       Game game = new Game(gameHeight, gameWidth, minTimePerTurn, maxGamesPerThread,
-          GameMode.AUTOPLAY, useGraphcis, doDebug, generator, weights, scoreMode);
+          GameMode.AUTOPLAY, useGraphcis, doDebug, generator, weights, scoreMode, 1);   //1 for now, change to 2 when sped up
       results.add(Util.compute.submit(() -> Game.runGame(game, gameNum)));
     }
     try {
