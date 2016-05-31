@@ -452,7 +452,6 @@ public class Game extends Application {
         renderer.updateScore(getScore(), engine.getNumFullRows());
         
         if (engine.hasQuadris()){
-        	System.out.println("quadris is true");
         	//resets in case two quadris' are achieved in quick succession
         	counter = 1;
         	engine.setQuadris(false);
