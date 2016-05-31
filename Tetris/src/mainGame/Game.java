@@ -244,11 +244,12 @@ public class Game extends Application {
         while (!engine.hasFullBoard()) {
           Util.sleep(timePerTurn);
           engine.update();
+          
+          //not needed?
           if (engine.hasFullBoard()) {
 //            if (useGraphics) {
 //              timer.stop();
 //            }
-            System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
           }
           if (!paused) {
             if ((int) System.currentTimeMillis() - timeIncrease > 500) {
@@ -391,7 +392,9 @@ public class Game extends Application {
    * resets the game when called, typically after a loss
    */
   public void resetGame(boolean useGraphics) {
-	
+    
+	  System.out.println("Game " + (engine.getGameNum() + 1) + ": " + getScore());
+
 	engine.reset();
 	
     this.gameIsActive = true;
