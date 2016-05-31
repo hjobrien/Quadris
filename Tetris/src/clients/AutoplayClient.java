@@ -28,7 +28,7 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
   // public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
-  // public static final BlockGenerator GENERATOR = new RandomizeBlocks();
+//   public static final BlockGenerator GENERATOR = new RandomizeBlocks();
   public static final int MAX_GAMES_TO_PLAY = 50;
 
   public static void main(String[] args) {
