@@ -131,7 +131,8 @@ public class StandardizeBlocks implements BlockGenerator {
   /**
    * sets the game number of the object
    */
-  public void setGameNumber(int j) {
+  @Override
+public void setGameNumber(int j) {
     this.gameNumber = j;
 
   }

@@ -137,7 +137,8 @@ public class Block {
     falling = false;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
     for (Tile[] row : getShape()) {
       for (Tile t : row) {
