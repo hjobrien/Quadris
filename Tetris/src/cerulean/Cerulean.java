@@ -180,8 +180,12 @@ public class Cerulean {
           // TODO make sure this clone method works in all cases. If so, the comments below can be
           // removed
           Block tempBlock = currentBlock.clone();
-          boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
-              positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
+          try{
+            boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
+                positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
+          }catch(BoardFullException e){
+            
+          }
           // TODO: change
           // currentBlock.setGridLocation(new int[] {0, 0});
         }
