@@ -57,8 +57,6 @@ public class Renderer {
 
   public static final Rectangle[][] NEXT_BOARD_RECTS = new Rectangle[4][4];
 
-  // private static final String NEXT_PIECE_RECTS = null;
-
   private PrintStream scorePrinter;
   private Scanner scoreReader;
   private TextArea scoreList = null;
@@ -68,17 +66,8 @@ public class Renderer {
   private StringProperty valueProperty;
   private StackPane main;
 
-  // private boolean autoplay = false;
-
-  // private Engine engine;
-
-  private ArrayList<Integer> highScores = null; // need to put this here
-                                                // because i can't make
-                                                // a
-                                                // local variable passed to
-                                                // a method in the
-                                                // listener
-
+  private ArrayList<Integer> highScores = null;
+  
   /**
    * initialize the run values of the object
    * 
@@ -150,9 +139,6 @@ public class Renderer {
     mainGame.add(scoreText, 2, 2);
     GridPane grid = new GridPane();
     GridPane nextBlockGrid = new GridPane();
-    // Board gameBoard = new Board(VERTICAL_TILES, HORIZONTAL_TILES,
-    // SQUARE_SIZE, grid);
-    // Board nextPieceBoard = new Board(4, 4, SQUARE_SIZE, nextBlock);
     makeBoardGrid(nextBlockGrid, 4, 4, NEXT_BOARD_RECTS);
     mainGame.add(nextBlockGrid, 2, 0);
     mainGame.add(grid, 0, 0, 1, 4);
@@ -320,26 +306,6 @@ public class Renderer {
     }
     return scores;
   }
-
-  // /**
-  // * called for each engine tick, draws the board
-  // *
-  // * @param board the board to be drawn
-  // */
-  // @Deprecated
-  // public void draw(Board board) {
-  // for (int i = 3; i < board.getBoardState().length; i++) {
-  // for (int j = 0; j < board.getBoardState()[i].length; j++) {
-  //
-  // Tile current = board.getBoardState()[i][j];
-  // if (current.isFilled()) {
-  // board.getBoardRects()[i - 3][j].setFill(current.getColor());
-  // } else {
-  // board.getBoardRects()[i - 3][j].setFill(Color.WHITE);
-  // }
-  // }
-  // }
-  // }
 
   /**
    * called for each engine tick, draws the board
@@ -536,7 +502,6 @@ public class Renderer {
     GridPane endGameGrid = new GridPane();
     
     endGameGrid.getColumnConstraints().add(new ColumnConstraints(SCREEN_WIDTH-150));
-//    endGameGrid.getColumnConstraints().add(new ColumnConstraints(100));
     endGameGrid.getRowConstraints().add(new RowConstraints(550));
 
     
@@ -548,9 +513,7 @@ public class Renderer {
     endGameGrid.add(restartLabel, 1, 1);
     StackPane glass = new StackPane();
     StackPane.setAlignment(endGameGrid, Pos.CENTER);
-//    StackPane.setAlignment(restartLabel, Pos.BOTTOM_RIGHT);
     glass.getChildren().addAll(nameLabel, endGameGrid);
-//    glass.setStyle("-fx-background-color: rgba(100, 200, 130, 0.8);");
     return glass;
   }
 

@@ -119,17 +119,11 @@ public class Engine {
    * and line clearing
    */
   public void update() {
-    // printBoard();
-    // System.out.println();
-    if (!isPaused) { // little hacky, could be improved
+    if (!isPaused) {
       if (currentBlock.isFalling()) {
         if (checkDown()) {
           blockDown();
         } else {
-          // block just landed
-          // if (logMode) {
-          // Logger.log(gameBoard, activeBlock, activeBlock);
-          // }
           ArrayList<Integer> linesToClear = getFullRows();
           if (!linesToClear.isEmpty()) {
             clearLines(linesToClear);
@@ -198,21 +192,18 @@ public class Engine {
    * @return true if there is an inactive tile, false otherwise
    */
   private boolean checkUnderneath() {
-    // boolean isUnderneath = false;
     for (int i = 0; i < gameBoard.length; i++) {
       for (int j = 0; j < gameBoard[i].length; j++) {
         Tile thisT = gameBoard[i][j];
         if (thisT.isActive()) {
           Tile nextT = gameBoard[i + 1][j];
           if (nextT.isFilled() && !nextT.isActive()) {
-            // isUnderneath = true;
             return true;
           }
         }
       }
     }
     return false;
-    // return isUnderneath;
   }
 
   /**
@@ -237,7 +228,6 @@ public class Engine {
         }
       }
     }
-    // System.out.println(activeBlock.getGridLocation()[1]);
     currentBlock.moveDown(); // adjusts internal coordinates
   }
 
@@ -402,7 +392,6 @@ public class Engine {
 
     for (int i = 0; i < linesToClear.size(); i++) {
       for (int j = 0; j < gameBoard[i].length; j++) {
-//        updateTileLocation(linesToClear.get(i), j, new Tile());
         gameBoard[linesToClear.get(i)][j].clear();
       }
     }
@@ -476,27 +465,16 @@ public class Engine {
         full = true;
       }
     }
-//    System.out.println(Arrays.toString(solution));
-//    if (Arrays.toString(solution).equals(
-//        "[ROT_RIGHT, LEFT, LEFT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, RIGHT, RIGHT, DROP, LEFT]")) {
-//      System.out.println();
-//    }
     if (!full) {
 //      System.out.println("board updated with block of type : " + currentBlock.getType());
       updateBoardWithNewBlock(currentBlock);
-      //TODO FIGURE OUT WHERE THIS GOES AND HOW WE NEED TO FIX OUR PROBLEMS
 
-      // toggle for step by step block analysis
-      // Engine.togglePause();
-      // Renderer.pause();
-      // Game.togglePause();
       if (autoplay) {
 //        System.out.println(Arrays.toString(solution));
         for (Move m : solution) {
           executeMove(m);
         }
       }
-//      printBoard(gameBoard);
       // time for evaluation and movement of block
       // System.out.println("\t\t" + (System.currentTimeMillis() -now));
       
@@ -524,7 +502,6 @@ public class Engine {
    * @param b the block to add
    */
   public void addBlock(Block b) {
-//    System.out.println("Flag");
     this.currentBlock = b;
     updateBoardWithNewBlock(b);
 
@@ -539,10 +516,6 @@ public class Engine {
     
     Tile[][] blockShape = b.getShape();
 
-    // iOffset for if the whole block should show
-    // int iOffset = 4 - blockShape.length;
-
-    // iOffset for if only the bottom row of the block should show
     int iOffset = 3;
 
     // makes sure the blocks come in to the screen at the center
@@ -565,7 +538,6 @@ public class Engine {
    * @param b the block to add
    */
   public void addBlockToDisplay(Tile[][] board, Block b) {
-    // int offset = (gameBoard[0].length - b.getShape()[0].length) / 2;
 
     clearBoard(board);
     Tile[][] blockShape = b.getShape();
@@ -663,17 +635,6 @@ public class Engine {
     }
   }
 
-  // /**
-  // * prints the board for debugging
-  // */
-  // public void printBoard() {
-  // for (Tile[] row : gameBoard) {
-  // for (Tile t : row) {
-  // System.out.print(t);
-  // }
-  // System.out.println();
-  // }
-  // }
 
   /**
    * checks to see if moving the block to the right is a valid move
@@ -782,8 +743,9 @@ public class Engine {
    * @return true if the rotation is valid, false otherwise
    */
   private boolean checkRotate(Move m) {
-    Block tempB = new Block(currentBlock.getType(), currentBlock.getGridLocation(),
-        currentBlock.getRotationIndex());
+    Block tempB = currentBlock.clone();
+//        new Block(currentBlock.getType(), currentBlock.getGridLocation(),
+//        currentBlock.getRotationIndex());
     if (m == Move.ROT_LEFT) {
       tempB.rotateLeft();
     } else if (m == Move.ROT_RIGHT) {
@@ -795,7 +757,7 @@ public class Engine {
         if (tempBShape[i][j].isActive()) {
           int[] tempBLocation = tempB.getGridLocation();
 
-          // makes sure we arent running off the board
+          // makes sure we aren't running off the board
           int row = tempBLocation[0] - (tempBShape.length - 1 - i);
           int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
 
@@ -870,7 +832,6 @@ public class Engine {
     if(this.blockGenerator != null){
       this.blockGenerator.reset();
     }
-//    this.nextBlock = blockGenerator.generateBlock();
     this.full = false;
     this.gameNum++;
   }
