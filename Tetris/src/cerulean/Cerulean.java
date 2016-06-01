@@ -175,7 +175,7 @@ public class Cerulean {
    */
   private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
-    long now = System.nanoTime();
+//    long now = System.nanoTime();
     Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
