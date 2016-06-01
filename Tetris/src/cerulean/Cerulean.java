@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.DoubleStream;
 
 import blocks.Block;
 import blocks.Tile;
@@ -40,7 +41,7 @@ public class Cerulean {
 
   // TODO: add a positive weight for how full each row is?
   private boolean analyzeTwo;
-  
+
   // partially filled to prevent errors later on
   // private Move[] solutionPath = new Move[] {Move.RIGHT};
   private Engine boardAnalyzer;
@@ -59,14 +60,14 @@ public class Cerulean {
   // return solutionPath;
   // }
 
-  public Cerulean(int blocksToAnalyze){
+  public Cerulean(int blocksToAnalyze) {
     this.analyzeTwo = (blocksToAnalyze == 2 ? true : false);
   }
-  
-  public Cerulean(){
+
+  public Cerulean() {
     this.analyzeTwo = false;
   }
-  
+
   /**
    * gives AI data for what block is active and the board state it is to be placed in
    * 
@@ -76,11 +77,10 @@ public class Cerulean {
    */
   public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
-    // long t1 = System.currentTimeMillis();
-    return computeBestPath(currentBlock, nextBlock, boardState);
-    // System.out.println("x Weight analysis took " +
-    // (System.currentTimeMillis() - t1) + "
-    // Milli(s)");
+    long t1 = System.nanoTime();
+    Move[] solution = computeBestPath(currentBlock, nextBlock, boardState);
+    System.out.println("Weight analysis took " + (System.nanoTime() - t1) / 1e9 + " seconds");
+    return solution;
   }
 
   /**
@@ -142,9 +142,18 @@ public class Cerulean {
    */
   public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
+    //block analysis for 2 blocks takes ~0.5 seconds
+    //block analysis for 1 block takes ~0.005 seconds
+    //evaluate weight takes ~12000ns per call and is called between 1800 and 7200 times per analysis
+    //for a total of about 0.04 seconds
+    //get all states is called between 931 and 14000 times and takes ~450000 ns per execution
+    //for a total of about 
+    int count = 0; 
     // System.out.println(currentBlock.getType() + " " + nextBlock.getType());
     Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+    count++;
     // System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
+    // long now = System.nanoTime();
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
     for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
@@ -152,8 +161,10 @@ public class Cerulean {
         cleanBoard(possibleBoardState.getValue());
         Map<Path, Tile[][]> boardStatesWithTwoBlocks =
             getAllStates(nextBlock, possibleBoardState.getValue());
+        count++;
         for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
           double boardWeight = evaluateWeight(futureBoardState.getValue());
+          count++;
           if (boardWeight > bestWeight) {
 
             // EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
@@ -182,6 +193,10 @@ public class Cerulean {
         }
       }
     }
+    // long later = System.nanoTime();
+    // System.out.println("Time taken to find best move: " + (later - now));
+    // System.out.println("Average Time: " + (later - now) / boardStatesWithFirstBlock.size());
+     System.out.println("getAllStates called " + count + " times");
     return bestMovePath;
   }
 
@@ -201,6 +216,7 @@ public class Cerulean {
    */
   private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
+    long now = System.nanoTime();
     Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
@@ -222,6 +238,7 @@ public class Cerulean {
         currentBlock.rotateRight();
       }
     }
+    System.out.println("get all states took " + (System.nanoTime() - now) + " ns");
     return boardStates;
   }
 
@@ -378,13 +395,7 @@ public class Cerulean {
    * @return the value of the boardState given the weights the AI is currently using
    */
   public double evaluateWeight(Tile[][] boardCopy) {
-    double[] boardScoreArray = evaluateEachWeight(boardCopy);
-    double boardScore = 0;
-    for (double n : boardScoreArray) {
-      boardScore += n;
-    }
-    return boardScore;
-    // return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
+    return DoubleStream.of(evaluateEachWeight(boardCopy)).sum();
   }
 
   /**
