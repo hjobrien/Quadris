@@ -22,42 +22,17 @@ import mainGame.Move;
 
 public class Cerulean {
 
-  private double[] weights;// = new double[] {HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
+  private double[] weights;//{HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
   // ONE_LINE_WEIGHT, TWO_LINES_WEIGHT, THREE_LINES_WEIGHT, FOUR_LINES_WEIGHT
 
-  // change for how important multiple of an occurrence is
-  // negative numbers mean as the quantity gets higher, it gets less important
-  // numbers between 0 and |1| mean as the quantity get higher, it increases
-  // in importance more
-  // slowly
-  // numbers > |1| mean as the quantity gets higher, it increases in
-  // importance more quickly
-  // private static final double HEIGHT_POW = 1;
-  // private static final double VOID_POW = 1;
 
-  // seems irrelevant if we are giving parameters for different line numbers
-  // private static final double LINE_POW = 1;
-
-  // TODO: add a positive weight for how full each row is?
   private boolean analyzeTwo;
   
-  // partially filled to prevent errors later on
-  // private Move[] solutionPath = new Move[] {Move.RIGHT};
   private Engine boardAnalyzer;
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
   public static final double MAX_SIMILAR_WEIGHTS = 4; // ~= half the weights
-
-  // /**
-  // * called when a solution is needed for a given block
-  // *
-  // * @return an array of moves needed to get piece to the optimal location, should be some form of
-  // * left/right, rotate, drop
-  // */
-  // public Move[] getSolution() {
-  // return solutionPath;
-  // }
 
   public Cerulean(int blocksToAnalyze){
     this.analyzeTwo = (blocksToAnalyze == 2 ? true : false);
@@ -97,34 +72,19 @@ public class Cerulean {
    */
   private Move[] computeBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
-    // double maxWeight = Double.NEGATIVE_INFINITY;
     // TODO: change to clone (also 0,0 is wrong);
 
     // TODO not working
     // Block currentBlockCopy = currentBlock.clone();
     // System.out.println("Ceruelan is analyzing block of type " + currentBlock.getType());
-    Block currentBlockCopy =
+    Block currentBlockCopy = 
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
-    Block nextBlockCopy =
+    Block nextBlockCopy = 
         new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
 
     bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlockCopy, boardState));
-    // // Tile[][] testState;
-    // double[] testWeights;
-    // double testWeight;
-    // for (Map.Entry<Tile[][], int[]> entry : getBoardStates(boardState, nextBlockCopy).entrySet())
-    // {
-    // // testState = positionBlock(nextBlockCopy, boardState, entry.getValue()[0],
-    // // entry.getValue()[1], entry.getValue()[2]);
-    // testWeights = evaluateWeight(entry.getKey());
-    // testWeight = DoubleStream.of(testWeights).sum();
-    // if (testWeight > maxWeight) {
-    // maxWeight = testWeight;
-    // bestPath = getPath(entry.getValue()[0], entry.getValue()[1], entry.getValue()[2]);
-    // }
-    // }
     return bestPath;
   }
 
@@ -169,16 +129,16 @@ public class Cerulean {
             // System.out.println();
 
             bestWeight = boardWeight;
-            bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
-                                                                  // block was moved
+            //only sets move to how the first block was moved
+            bestMovePath = possibleBoardState.getKey().getPath();
           }
         }
       } else {
         double boardWeight = evaluateWeight(possibleBoardState.getValue());
         if (boardWeight > bestWeight) {
           bestWeight = boardWeight;
-          bestMovePath = possibleBoardState.getKey().getPath(); // only sets move to how the first
-                                                                // block was moved
+          //only sets move to how the first block was moved
+          bestMovePath = possibleBoardState.getKey().getPath(); 
         }
       }
     }
@@ -214,7 +174,8 @@ public class Cerulean {
             boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
                 positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
           } catch (BoardFullException e) {
-
+            e.printStackTrace();
+            //TODO prob bug here
           }
           // TODO: change
           // currentBlock.setGridLocation(new int[] {0, 0});
@@ -224,19 +185,6 @@ public class Cerulean {
     }
     return boardStates;
   }
-
-
-  // private static void printBoard(Tile[][] testState) {
-  // for (int i = 0; i < testState.length; i++) {
-  // for (int j = 0; j < testState[i].length; j++) {
-  // //Terniary Operator, basically an if statement
-  // System.out.print((testState[i][j].isFilled() ? "x " : "o "));
-  // }
-  // System.out.println();
-  // }
-  // System.out.println();
-  //
-  // }
 
   /**
    * wrapper for same method that takes multiple integers, this converts an array of ints into
@@ -264,6 +212,7 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
+    //TODO: change 6 to accurate num to shift
     // if (moveCount <= 6) {
     // for (int i = 0; i < (6 - moveCount); i++) {
     // path.add(Move.LEFT);
@@ -305,7 +254,7 @@ public class Cerulean {
    * @param moveRightCount the number of left/right moves in the test arrangement
    * @param rotCount the number of rotations in the test arrangement
    * @return the board with the block moved to a certain position
-   * @throws BoardFullException if by adding a block the board would become over-filled, it doesnt
+   * @throws BoardFullException if by adding a block the board would become over-filled, it doesn't
    *         know how to move in this situation
    */
   private Tile[][] positionBlock(Block blockToPosition, Tile[][] boardState, int moveRightCount,
@@ -417,13 +366,8 @@ public class Cerulean {
 
       double voidCount = getNumVoids(colCopy);
       voids += weights[1] * voidCount;
-      // keeps the value from being 0 in the Terniary
-      // voids += (weights[1] * Math.pow((voidCount == 0 ? 0.0000000000000001 : voidCount),
-      // VOID_POW));
       edges += weights[2] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
     }
-    // height =
-    // weights[0] * Math.pow((heightScore == 0 ? 0.000000000000001 : heightScore), HEIGHT_POW);
     height = weights[0] * heightScore;
 
     // gets the composite lineScore, which will be entered in weight[3]
@@ -436,7 +380,6 @@ public class Cerulean {
 
     // returns the value of the line clearance based on how many lines were cleared
     if (lineCount > 0) {
-      // System.out.println("lines = " + lineCount + ", score = " + weights[2 + lineCount]);
       lineScore += weights[2 + lineCount];
     }
 

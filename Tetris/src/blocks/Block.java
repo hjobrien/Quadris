@@ -15,7 +15,7 @@ public class Block {
   // public boolean debug = true;
 
   private boolean falling = true;
-  
+
   private Color color;
 
   private BlockType type;
@@ -32,9 +32,9 @@ public class Block {
   public Block(Tile[][][] configurations, BlockType type, Color color) {
     this.color = color;
     this.configurations = new Tile[configurations.length][][];
-    for(int i = 0; i < configurations.length; i++){
+    for (int i = 0; i < configurations.length; i++) {
       Tile[][] t = new Tile[configurations[i].length][];
-      for(int j = 0; j < configurations[i].length; j++){
+      for (int j = 0; j < configurations[i].length; j++) {
         t[j] = new Tile[configurations[i][j].length];
       }
       this.configurations[i] = t;
@@ -42,32 +42,29 @@ public class Block {
     // avoids pass by reference
     for (int i = 0; i < configurations.length; i++) {
       for (int j = 0; j < configurations[i].length; j++) {
-        for(int k = 0; k < configurations[i][j].length; k++){
+        for (int k = 0; k < configurations[i][j].length; k++) {
           this.configurations[i][j][k] = configurations[i][j][k];
         }
       }
     }
-    for(int i = 0; i < this.configurations.length; i++){
-      for(int j = 0; j < this.configurations[i].length; j++){
-        for(int k = 0; k < this.configurations[i][j].length; k++){
-          if(this.configurations[i][j][k] == null){
+    for (int i = 0; i < this.configurations.length; i++) {
+      for (int j = 0; j < this.configurations[i].length; j++) {
+        for (int k = 0; k < this.configurations[i][j].length; k++) {
+          if (this.configurations[i][j][k] == null) {
             this.configurations[i][j][k] = new Tile();
           }
         }
       }
     }
     this.type = type;
-    
-    // row, column of bottom right corner
-    
-    //startingRowIndex for if the whole block should show
-    int startingRowIndex = 2 + configurations[rotationIndex].length;
-    
-    //startingRowIndex for if only the bottom row of the block should show
-//    int startingRowIndex = 3;
 
-    
-    int startingColumnIndex = (Renderer.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2
+    // row, column of bottom right corner
+
+    // startingRowIndex for if the whole block should show
+    int startingRowIndex = 2 + configurations[rotationIndex].length;
+
+    int startingColumnIndex =
+        (Renderer.HORIZONTAL_TILES - configurations[rotationIndex][0].length) / 2
             + configurations[rotationIndex][0].length - 1;
     locationInGrid = new int[] {startingRowIndex, startingColumnIndex};
   }
@@ -77,10 +74,10 @@ public class Block {
    * 
    * @param b the copied Block
    */
-  // copy constructor?  
-  public Block(BlockType type, int[] location, int rotationIndex){
+  // copy constructor?
+  public Block(BlockType type, int[] location, int rotationIndex) {
     Block b;
-    switch(type){
+    switch (type) {
       case LEFT_L:
         b = new LeftL();
         break;
@@ -111,9 +108,40 @@ public class Block {
     this.locationInGrid = location.clone();
     this.rotationIndex = rotationIndex;
   }
-  
-  public Block clone(){
-    return new Block(this.type, this.locationInGrid, this.rotationIndex);
+
+  @Override
+  public Block clone() {
+    Block b;
+    switch (type) {
+      case LEFT_L:
+        b = new LeftL();
+        break;
+      case LEFT_S:
+        b = new LeftS();
+        break;
+      case RIGHT_L:
+        b = new RightL();
+        break;
+      case RIGHT_S:
+        b = new RightS();
+        break;
+      case SQUARE:
+        b = new Square();
+        break;
+      case LINE:
+        b = new StraightLine();
+        break;
+      case T_BLOCK:
+        b = new TBlock();
+        break;
+      default:
+        b = new StraightLine();
+    }
+    b.color = this.color;
+    b.configurations = this.configurations;
+    b.locationInGrid = this.locationInGrid.clone();
+    b.rotationIndex = this.rotationIndex;
+    return b;
   }
 
   /**
@@ -138,7 +166,7 @@ public class Block {
   }
 
   @Override
-public String toString() {
+  public String toString() {
     String s = "";
     for (Tile[] row : getShape()) {
       for (Tile t : row) {
@@ -197,8 +225,8 @@ public String toString() {
   public BlockType getType() {
     return type;
   }
-  
-  public int getNumRotations(){
+
+  public int getNumRotations() {
     return this.configurations.length;
   }
 

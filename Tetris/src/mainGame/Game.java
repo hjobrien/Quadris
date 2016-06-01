@@ -3,9 +3,9 @@ package mainGame;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+
 import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
-import blocks.blockGeneration.RandomizeBlocks;
 import engine.Engine;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -32,14 +32,7 @@ public class Game extends Application {
 
   // don't change these
   private boolean doDebug;
-  // private static boolean doLog;
   private boolean autoplay;
-  // private boolean randomizeBlocks;
-  // private boolean playMultiple; // play multiple games in a row
-
-  // public static final double[] WEIGHTS = new double[]{-294.75, -34.44, 101.72, 5};
-//  public static final double[] WEIGHTS = new double[] {-200, -50, 100, 1.68};
-
 
   private int maxTimePerTurn = 1000000000; // nanoseconds
   private int minTimePerTurn = 200000000; // nanoseconds
@@ -58,29 +51,12 @@ public class Game extends Application {
   private Tile[][] gameBoard/* = new Tile[DEFAULT_VERTICAL_TILES][DEFAULT_HORIZONTAL_TILES] */;
   private Engine engine;
   private Renderer renderer;
-//  private Cerulean cerulean;
   private boolean useGraphics;
 
   private int maxGamesPerGeneration = 0;
 
-//  private static ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
-
   // can be changed if not desired
   private boolean dropDownTerminatesBlock = true;
-
-  // seeded possible solutions
-//  public static double[][] species =
-//      new double[][] {WEIGHTS, {-70, -70, 500, 5}, {-100, -50, 100, 2}, {-200, -70, 300, 7},
-//          {-40, -100, 400, 1}, {-400, -300, 100, 1}, {-200, -100, 100, 3}, {-150, -70, 400, 0},
-//          {-70, -150, 500, -5}, {-200, -35.4, 100, 8}, {-294.75, -34.44, 101.72, 5}};
-  // public static double[][] species = new double[][]{{-70,-70,500, 5}, {-100, -50, 100, 8}, {-10,
-  // -10, 100, 5}};
-
-//  private static int currentSpecies = 0;
-//  private static int generationNum = 0;
-
-//  private static double[] speciesAvgScore = new double[species.length];
-
 
   private boolean paused = false;
 
@@ -140,7 +116,6 @@ public class Game extends Application {
     this.gameMode = mode;
     this.useGraphics = useGraphics;
     this.doDebug = doDebug;
-    // this.playMultiple = playMultiple;
     this.autoplay = false;
     this.gameBoard = board;
     this.scoring = scoring;
@@ -170,8 +145,6 @@ public class Game extends Application {
         generator, scoring);
     this.autoplay = true; // inferred because weights were passed
     this.dropDownTerminatesBlock = false;
-//    this.cerulean = new Cerulean();
-//    cerulean.setWeights(weights);
     this.engine = new Engine(gameBoard, autoplay, generator, scoring, weights, numBlocksToAnalyze);
   }
 
@@ -245,12 +218,6 @@ public class Game extends Application {
           Util.sleep(timePerTurn);
           engine.update();
           
-          //not needed?
-          if (engine.hasFullBoard()) {
-//            if (useGraphics) {
-//              timer.stop();
-//            }
-          }
           if (!paused) {
             if ((int) System.currentTimeMillis() - timeIncrease > 500) {
               timeIncrease = (int) System.currentTimeMillis();
@@ -271,7 +238,6 @@ public class Game extends Application {
   }
 
   public static int runGame(Game game, int gameNum) {
-    // System.out.println(game.engine.getGameNum() + " " + Game.generationNum);
      game.setup(game.useGraphics);
     game.getEngine().addBlock();
     
@@ -479,7 +445,6 @@ public class Game extends Application {
         if (!gameIsActive) {
           renderer.displayEndGameGraphic();
           renderer.updateHighScores(getScore());
-//          timer.stop();
         } else {
           renderer.removeEndGameGraphic();
         }
