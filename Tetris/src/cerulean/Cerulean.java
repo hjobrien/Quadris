@@ -23,7 +23,7 @@ import mainGame.Move;
 
 public class Cerulean {
 
-  private double[] weights;//{HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
+  private double[] weights;// {HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
   // ONE_LINE_WEIGHT, TWO_LINES_WEIGHT, THREE_LINES_WEIGHT, FOUR_LINES_WEIGHT
 
 
@@ -124,6 +124,7 @@ public class Cerulean {
         count++;
         for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
           double boardWeight = evaluateWeight(futureBoardState.getValue());
+          count++;
           if (boardWeight > bestWeight) {
 
             // EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
