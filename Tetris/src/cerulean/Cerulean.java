@@ -23,7 +23,7 @@ import mainGame.Move;
 
 public class Cerulean {
 
-  private double[] weights;//{HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
+  private double[] weights;// {HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
   // ONE_LINE_WEIGHT, TWO_LINES_WEIGHT, THREE_LINES_WEIGHT, FOUR_LINES_WEIGHT
 
 
@@ -77,9 +77,9 @@ public class Cerulean {
     // TODO not working
     // Block currentBlockCopy = currentBlock.clone();
     // System.out.println("Ceruelan is analyzing block of type " + currentBlock.getType());
-    Block currentBlockCopy = 
+    Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
-    Block nextBlockCopy = 
+    Block nextBlockCopy =
         new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
@@ -102,13 +102,14 @@ public class Cerulean {
    */
   public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
-    //block analysis for 2 blocks takes ~0.5 seconds
-    //block analysis for 1 block takes ~0.005 seconds
-    //evaluate weight takes ~12000ns per call and is called between 1800 and 7200 times per analysis
-    //for a total of about 0.04 seconds
-    //get all states is called between 931 and 14000 times and takes ~450000 ns per execution
-    //for a total of about 
-    int count = 0; 
+    // block analysis for 2 blocks takes ~0.5 seconds
+    // block analysis for 1 block takes ~0.005 seconds
+    // evaluate weight takes ~12000ns per call and is called between 1800 and 7200 times per
+    // analysis
+    // for a total of about 0.04 seconds
+    // get all states is called between 931 and 14000 times and takes ~450000 ns per execution
+    // for a total of about
+    int count = 0;
     // System.out.println(currentBlock.getType() + " " + nextBlock.getType());
     Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     count++;
@@ -140,7 +141,7 @@ public class Cerulean {
             // System.out.println();
 
             bestWeight = boardWeight;
-            //only sets move to how the first block was moved
+            // only sets move to how the first block was moved
             bestMovePath = possibleBoardState.getKey().getPath();
           }
         }
@@ -148,15 +149,15 @@ public class Cerulean {
         double boardWeight = evaluateWeight(possibleBoardState.getValue());
         if (boardWeight > bestWeight) {
           bestWeight = boardWeight;
-          //only sets move to how the first block was moved
-          bestMovePath = possibleBoardState.getKey().getPath(); 
+          // only sets move to how the first block was moved
+          bestMovePath = possibleBoardState.getKey().getPath();
         }
       }
     }
     // long later = System.nanoTime();
     // System.out.println("Time taken to find best move: " + (later - now));
     // System.out.println("Average Time: " + (later - now) / boardStatesWithFirstBlock.size());
-     System.out.println("getAllStates called " + count + " times");
+    System.out.println("getAllStates called " + count + " times");
     return bestMovePath;
   }
 
@@ -177,6 +178,7 @@ public class Cerulean {
   private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
     long now = System.nanoTime();
+    int numFullCases = 0;
     Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
@@ -190,14 +192,17 @@ public class Cerulean {
             boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
                 positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
           } catch (BoardFullException e) {
-            e.printStackTrace();
-            //TODO prob bug here
+            numFullCases++;
+            // TODO prob bug here
           }
           // TODO: change
           // currentBlock.setGridLocation(new int[] {0, 0});
         }
         currentBlock.rotateRight();
       }
+    }
+    if (numFullCases == boardStates.size()) {
+      throw new BoardFullException(); // all possible board positions are full
     }
     System.out.println("get all states took " + (System.nanoTime() - now) + " ns");
     return boardStates;
@@ -229,7 +234,7 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
-    //TODO: change 6 to accurate num to shift
+    // TODO: change 6 to accurate num to shift
     // if (moveCount <= 6) {
     // for (int i = 0; i < (6 - moveCount); i++) {
     // path.add(Move.LEFT);
