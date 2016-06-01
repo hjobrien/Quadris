@@ -106,8 +106,8 @@ public class Cerulean {
     //block analysis for 1 block takes ~0.005 seconds
     //evaluate weight takes ~12000ns per call and is called between 1800 and 7200 times per analysis
     //for a total of about 0.04 seconds
-    //get all states is called between 931 and 14000 times and takes ~450000 ns per execution
-    //for a total of about 
+    //get all states is called between 31 and 120 times and takes ~450000 ns per execution
+    //for a total of about 3.15 seconds 0.036s
     int count = 0; 
     // System.out.println(currentBlock.getType() + " " + nextBlock.getType());
     Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
@@ -124,7 +124,6 @@ public class Cerulean {
         count++;
         for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
           double boardWeight = evaluateWeight(futureBoardState.getValue());
-          count++;
           if (boardWeight > bestWeight) {
 
             // EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
@@ -199,7 +198,7 @@ public class Cerulean {
         currentBlock.rotateRight();
       }
     }
-    System.out.println("get all states took " + (System.nanoTime() - now) + " ns");
+//    System.out.println("get all states took " + (System.nanoTime() - now) + " ns");
     return boardStates;
   }
 
