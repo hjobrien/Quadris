@@ -462,7 +462,7 @@ public class Engine {
       try {
         solution = cerulean.submitBlock(currentBlock, nextBlock, gameBoard);
       } catch (BoardFullException e) {
-        full = true;
+//        full = true;
       }
     }
     if (!full) {

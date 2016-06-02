@@ -23,6 +23,14 @@ import mainGame.Move;
 
 public class Cerulean {
 
+  private long timeToGenStates = 0;
+  private long timeToAnalyzeStates = 0;
+  
+  
+  
+  
+  
+  
   private double[] weights;// {HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
   // ONE_LINE_WEIGHT, TWO_LINES_WEIGHT, THREE_LINES_WEIGHT, FOUR_LINES_WEIGHT
 
@@ -52,9 +60,15 @@ public class Cerulean {
    */
   public Move[] submitBlock(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
+    timeToGenStates = 0;
+    timeToAnalyzeStates = 0;
     long t1 = System.nanoTime();
     Move[] solution = computeBestPath(currentBlock, nextBlock, boardState);
-    System.out.println("Weight analysis took " + (System.nanoTime() - t1) / 1e9 + " seconds");
+    long total = (System.nanoTime() - t1);
+    System.out.println("Weight analysis took " + total / 1e9 + " seconds");
+    System.out.println("State creation took " + timeToGenStates / 1e9 + " seconds");
+    System.out.println("Analysis took " + timeToAnalyzeStates / 1e9 + " seconds");
+    System.out.println("\tUnaccounted for time " + (total - timeToGenStates - timeToAnalyzeStates) / 1e9 + " seconds");
     return solution;
   }
 
@@ -176,7 +190,7 @@ public class Cerulean {
    */
   private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
-//    long now = System.nanoTime();
+    long now = System.nanoTime();
     Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
@@ -190,7 +204,7 @@ public class Cerulean {
             boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
                 positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
           } catch (BoardFullException e) {
-            e.printStackTrace();
+            System.err.println("A board State is full " + Math.random());
             //TODO prob bug here
           }
           // TODO: change
@@ -199,7 +213,7 @@ public class Cerulean {
         currentBlock.rotateRight();
       }
     }
-//    System.out.println("get all states took " + (System.nanoTime() - now) + " ns");
+    this.timeToGenStates += (System.nanoTime() - now);
     return boardStates;
   }
 
@@ -354,6 +368,7 @@ public class Cerulean {
    * @return the value of the board
    */
   public double[] evaluateEachWeight(Tile[][] boardCopy) {
+    long now = System.nanoTime();
     double[] weight = new double[4];
     boolean full = false;
     double voids = 0;
@@ -408,6 +423,7 @@ public class Cerulean {
       weight[2] = Integer.MIN_VALUE;
       weight[3] = Integer.MIN_VALUE;
     }
+    this.timeToAnalyzeStates += (System.nanoTime() - now);
     return weight;
   }
 
