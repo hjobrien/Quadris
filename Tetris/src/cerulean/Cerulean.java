@@ -23,12 +23,9 @@ public class Cerulean {
 
   private long timeToGenStates = 0;
   private long timeToAnalyzeStates = 0;
-  
-  
-  
-  
-  
-  
+
+
+
   private double[] weights;// {HEIGHT_WEIGHT, VOID_WEIGHT, EDGE_WEIGHT,
   // ONE_LINE_WEIGHT, TWO_LINES_WEIGHT, THREE_LINES_WEIGHT, FOUR_LINES_WEIGHT
 
@@ -63,10 +60,11 @@ public class Cerulean {
     long t1 = System.nanoTime();
     Move[] solution = computeBestPath(currentBlock, nextBlock, boardState);
     long total = (System.nanoTime() - t1);
-    System.out.println("Weight analysis took " + total / 1e9 + " seconds");
-    System.out.println("State creation took " + timeToGenStates / 1e9 + " seconds");
-    System.out.println("Analysis took " + timeToAnalyzeStates / 1e9 + " seconds");
-    System.out.println("\tUnaccounted for time " + (total - timeToGenStates - timeToAnalyzeStates) / 1e9 + " seconds");
+//    System.out.println("Weight analysis took " + total / 1e9 + " seconds");
+//    System.out.println("State creation took " + timeToGenStates / 1e9 + " seconds");
+//    System.out.println("Analysis took " + timeToAnalyzeStates / 1e9 + " seconds");
+//    System.out.println("\tUnaccounted for time "
+//        + (total - timeToGenStates - timeToAnalyzeStates) / 1e9 + " seconds");
     return solution;
   }
 
@@ -89,9 +87,9 @@ public class Cerulean {
     // TODO not working
     // Block currentBlockCopy = currentBlock.clone();
     // System.out.println("Ceruelan is analyzing block of type " + currentBlock.getType());
-    Block currentBlockCopy = 
+    Block currentBlockCopy =
         new Block(currentBlock.getType(), new int[] {0, 0}, currentBlock.getRotationIndex());
-    Block nextBlockCopy = 
+    Block nextBlockCopy =
         new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
@@ -114,15 +112,16 @@ public class Cerulean {
    */
   public int[] getBestPath(Block currentBlock, Block nextBlock, Tile[][] boardState)
       throws BoardFullException {
-    //block analysis for 2 blocks takes ~0.5 seconds
-    //block analysis for 1 block takes ~0.005 seconds
-    //evaluate weight takes ~12000ns per call and is called between 1800 and 7200 times per analysis
-    //for a total of about 0.04 seconds
-    //get all states is called between 31 and 120 times and takes ~450000 ns per execution
-    //for a total of about 3.15 seconds 0.036s
-    int count = 0; 
+    // block analysis for 2 blocks takes ~0.5 seconds
+    // block analysis for 1 block takes ~0.005 seconds
+    // evaluate weight takes ~12000ns per call and is called between 1800 and 7200 times per
+    // analysis
+    // for a total of about 0.04 seconds
+    // get all states is called between 31 and 120 times and takes ~450000 ns per execution
+    // for a total of about 3.15 seconds 0.036s
+    int count = 0;
     // System.out.println(currentBlock.getType() + " " + nextBlock.getType());
-//    Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+    // Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     ArrayList<MoveResult> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     count++;
     // System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
@@ -153,7 +152,7 @@ public class Cerulean {
             // System.out.println();
 
             bestWeight = boardWeight;
-            //only sets move to how the first block was moved
+            // only sets move to how the first block was moved
             bestMovePath = possibleBoardState.getPath();
           }
         }
@@ -161,15 +160,15 @@ public class Cerulean {
         double boardWeight = evaluateWeight(possibleBoardState.getBoardResult());
         if (boardWeight > bestWeight) {
           bestWeight = boardWeight;
-          //only sets move to how the first block was moved
-          bestMovePath = possibleBoardState.getPath(); 
+          // only sets move to how the first block was moved
+          bestMovePath = possibleBoardState.getPath();
         }
       }
     }
     // long later = System.nanoTime();
     // System.out.println("Time taken to find best move: " + (later - now));
     // System.out.println("Average Time: " + (later - now) / boardStatesWithFirstBlock.size());
-     System.out.println("getAllStates called " + count + " times");
+    // System.out.println("getAllStates called " + count + " times");
     return bestMovePath;
   }
 
@@ -190,7 +189,7 @@ public class Cerulean {
   private ArrayList<MoveResult> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
     long now = System.nanoTime();
-//    Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
+    // Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
     ArrayList<MoveResult> boardStates = new ArrayList<MoveResult>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
@@ -204,8 +203,8 @@ public class Cerulean {
             boardStates.add(new MoveResult(new int[] {moveCount, rotCount, slideCount},
                 positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount)));
           } catch (BoardFullException e) {
-            System.err.println("A board State is full " + Math.random());
-            //TODO prob bug here
+            // System.err.println("A board State is full " + Math.random());
+            // TODO prob bug here
           }
           // TODO: change
           // currentBlock.setGridLocation(new int[] {0, 0});
@@ -243,7 +242,7 @@ public class Cerulean {
     for (int i = 0; i < rotCount; i++) {
       path.add(Move.ROT_RIGHT);
     }
-    //TODO: change 6 to accurate num to shift
+    // TODO: change 6 to accurate num to shift
     // if (moveCount <= 6) {
     // for (int i = 0; i < (6 - moveCount); i++) {
     // path.add(Move.LEFT);
@@ -373,7 +372,7 @@ public class Cerulean {
     boolean full = false;
     double voids = 0;
     double height = 0;
-    double heightScore = 0;
+    // double heightScore = 0;
     double edges = 0;
     for (int i = 0; i < boardCopy[0].length; i++) {
       Tile[] colCopy = new Tile[boardCopy.length];
@@ -385,15 +384,15 @@ public class Cerulean {
         full = true;
       }
       // TODO: make sure this works
-      double tempHeightScore = getHeightScore(colCopy) + getExtraHeightScore(boardCopy);
-      if (tempHeightScore > heightScore) {
-        heightScore = tempHeightScore;
-      }
+      // if (tempHeightScore > heightScore) {
+      // heightScore = tempHeightScore;
+      // }
 
       double voidCount = getNumVoids(colCopy);
       voids += weights[1] * voidCount;
-      edges += weights[2] * Math.abs((boardCopy[i].length / 2) - i) * getNumActive(colCopy);
+      edges += weights[2] * Math.abs(((boardCopy[i].length - 1) / 2.0) - i) * getNumActive(colCopy);
     }
+    double heightScore = getHeightScore(boardCopy);
     height = weights[0] * heightScore;
 
     // gets the composite lineScore, which will be entered in weight[3]
@@ -449,16 +448,48 @@ public class Cerulean {
    * @param colCopy the column to be scored
    * @return the score of the column
    */
-  private double getHeightScore(Tile[] colCopy) {
-    // gets highest overall
-    int overallHeight = 0;
-    for (int i = colCopy.length - 1; i >= 0; i--) {
-      if (colCopy[i].isFilled()) {
-        overallHeight = colCopy.length - i;
+  private double getHeightScore(Tile[][] boardCopy) {
+
+    int row = 0, column = 0, highestActiveTileIndex = 0, highestFilledTileIndex = 0;
+    boolean foundHighestActiveTile = false, foundHighestFilledTile = false;
+    while (row < boardCopy.length && (!foundHighestActiveTile && !foundHighestFilledTile)) {
+      while (column < boardCopy[row].length
+          && (!foundHighestActiveTile && !foundHighestFilledTile)) {
+        if (!foundHighestActiveTile) {
+          if (boardCopy[row][column].isActive()) {
+            highestActiveTileIndex = row;
+            foundHighestActiveTile = true;
+          }
+        }
+        if (!foundHighestFilledTile) {
+          if (boardCopy[row][column].isFilled()) {
+            highestFilledTileIndex = row;
+            foundHighestFilledTile = true;
+          }
+        }
+        column++;
       }
+      row++;
+      column = 0;
     }
 
-    return overallHeight;
+    return (boardCopy.length - highestFilledTileIndex)
+        + ((boardCopy.length - highestActiveTileIndex) * 0.1);
+
+    // // gets highest overall
+    // int overallHeight = 0;
+    //// for (int i = colCopy.length - 1; i >= 0; i--) {
+    //// if (colCopy[i].isFilled()) {
+    //// overallHeight = colCopy.length - i;
+    //// }
+    //// }
+    // for(int i = 0; i < colCopy.length; i++){
+    // if(colCopy[i].isFilled()){
+    // return i;
+    // }
+    // }
+    //
+    // return overallHeight;
   }
 
   /**

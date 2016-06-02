@@ -6,7 +6,7 @@ public interface Autoplayable {
 	// negative means its a bad thing being weighted (overall board height)
 	// positive means its a good thing (full lines);
 
-	public static final double HEIGHT_WEIGHT = -70;
+	public static final double HEIGHT_WEIGHT = -(70); //TODO: ?
 	public static final double VOID_WEIGHT = -97.85;
 	public static final double EDGE_WEIGHT = 5;
 	public static final double ONE_LINE_WEIGHT = 50;

@@ -762,7 +762,13 @@ public class Engine {
           int column = tempBLocation[1] - (tempBShape[i].length - 1 - j);
 
           if (row >= 0 && column >= 0) {
-            Tile t = tileAt(row, column);
+            Tile t = null;
+            try{
+            t = tileAt(row, column);
+            }catch(ArrayIndexOutOfBoundsException e){
+              System.err.println("row " + row + " col " + column);
+            }
+            
 
             // checks to make sure flip is legal, ignoring itself in
             // the process
