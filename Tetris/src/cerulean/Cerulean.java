@@ -3,8 +3,6 @@ package cerulean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.stream.DoubleStream;
 
@@ -124,20 +122,21 @@ public class Cerulean {
     //for a total of about 3.15 seconds 0.036s
     int count = 0; 
     // System.out.println(currentBlock.getType() + " " + nextBlock.getType());
-    Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+//    Map<Path, Tile[][]> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
+    ArrayList<MoveResult> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
     count++;
     // System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
     // long now = System.nanoTime();
     double bestWeight = Double.NEGATIVE_INFINITY;
     int[] bestMovePath = new int[] {};
-    for (Map.Entry<Path, Tile[][]> possibleBoardState : boardStatesWithFirstBlock.entrySet()) {
+    for (MoveResult possibleBoardState : boardStatesWithFirstBlock) {
       if (analyzeTwo) {
-        cleanBoard(possibleBoardState.getValue());
-        Map<Path, Tile[][]> boardStatesWithTwoBlocks =
-            getAllStates(nextBlock, possibleBoardState.getValue());
+        cleanBoard(possibleBoardState.getBoardResult());
+        ArrayList<MoveResult> boardStatesWithTwoBlocks =
+            getAllStates(nextBlock, possibleBoardState.getBoardResult());
         count++;
-        for (Map.Entry<Path, Tile[][]> futureBoardState : boardStatesWithTwoBlocks.entrySet()) {
-          double boardWeight = evaluateWeight(futureBoardState.getValue());
+        for (MoveResult futureBoardState : boardStatesWithTwoBlocks) {
+          double boardWeight = evaluateWeight(futureBoardState.getBoardResult());
           count++;
           if (boardWeight > bestWeight) {
 
@@ -155,15 +154,15 @@ public class Cerulean {
 
             bestWeight = boardWeight;
             //only sets move to how the first block was moved
-            bestMovePath = possibleBoardState.getKey().getPath();
+            bestMovePath = possibleBoardState.getPath();
           }
         }
       } else {
-        double boardWeight = evaluateWeight(possibleBoardState.getValue());
+        double boardWeight = evaluateWeight(possibleBoardState.getBoardResult());
         if (boardWeight > bestWeight) {
           bestWeight = boardWeight;
           //only sets move to how the first block was moved
-          bestMovePath = possibleBoardState.getKey().getPath(); 
+          bestMovePath = possibleBoardState.getPath(); 
         }
       }
     }
@@ -188,10 +187,11 @@ public class Cerulean {
    * @return All the possible board states that could exist given some block and some board state
    * @throws BoardFullException if any possible board state is a full board
    */
-  private Map<Path, Tile[][]> getAllStates(Block currentBlock, Tile[][] boardState)
+  private ArrayList<MoveResult> getAllStates(Block currentBlock, Tile[][] boardState)
       throws BoardFullException {
     long now = System.nanoTime();
-    Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
+//    Map<Path, Tile[][]> boardStates = new HashMap<Path, Tile[][]>();
+    ArrayList<MoveResult> boardStates = new ArrayList<MoveResult>();
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
     for (int moveCount = 0; moveCount < 10; moveCount++) {
@@ -201,8 +201,8 @@ public class Cerulean {
           // removed
           Block tempBlock = currentBlock.clone();
           try {
-            boardStates.put(new Path(new int[] {moveCount, rotCount, slideCount}),
-                positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount));
+            boardStates.add(new MoveResult(new int[] {moveCount, rotCount, slideCount},
+                positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount)));
           } catch (BoardFullException e) {
             System.err.println("A board State is full " + Math.random());
             //TODO prob bug here

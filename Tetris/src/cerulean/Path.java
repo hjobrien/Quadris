@@ -10,6 +10,7 @@ import java.util.Arrays;
  * @author Hank O'Brien
  *
  */
+@Deprecated
 public class Path {
   private int[] path;
 
