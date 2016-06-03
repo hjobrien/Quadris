@@ -8,7 +8,7 @@ public interface Autoplayable {
 
 	public static final double HEIGHT_WEIGHT = -(70); //TODO: ?
 	public static final double VOID_WEIGHT = -97.85;
-	public static final double EDGE_WEIGHT = 5;
+	public static final double EDGE_WEIGHT = 1;
 	public static final double ONE_LINE_WEIGHT = 50;
 	public static final double TWO_LINES_WEIGHT = 150;
 	public static final double THREE_LINES_WEIGHT = 350;

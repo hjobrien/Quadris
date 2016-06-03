@@ -60,11 +60,11 @@ public class Cerulean {
     long t1 = System.nanoTime();
     Move[] solution = computeBestPath(currentBlock, nextBlock, boardState);
     long total = (System.nanoTime() - t1);
-//    System.out.println("Weight analysis took " + total / 1e9 + " seconds");
-//    System.out.println("State creation took " + timeToGenStates / 1e9 + " seconds");
-//    System.out.println("Analysis took " + timeToAnalyzeStates / 1e9 + " seconds");
-//    System.out.println("\tUnaccounted for time "
-//        + (total - timeToGenStates - timeToAnalyzeStates) / 1e9 + " seconds");
+    // System.out.println("Weight analysis took " + total / 1e9 + " seconds");
+    // System.out.println("State creation took " + timeToGenStates / 1e9 + " seconds");
+    // System.out.println("Analysis took " + timeToAnalyzeStates / 1e9 + " seconds");
+    // System.out.println("\tUnaccounted for time "
+    // + (total - timeToGenStates - timeToAnalyzeStates) / 1e9 + " seconds");
     return solution;
   }
 
@@ -374,24 +374,32 @@ public class Cerulean {
     double height = 0;
     // double heightScore = 0;
     double edges = 0;
-    for (int i = 0; i < boardCopy[0].length; i++) {
-      Tile[] colCopy = new Tile[boardCopy.length];
-      for (int j = 0; j < boardCopy.length; j++) {
-        colCopy[j] = boardCopy[j][i];
+//    for (int i = 0; i < boardCopy[0].length; i++) {
+//      Tile[] colCopy = new Tile[boardCopy.length];
+//      for (int j = 0; j < boardCopy.length; j++) {
+//        colCopy[j] = boardCopy[j][i];
+//      }
+//      // TODO: this is a differing end-game condition than rest of game
+//      if (colCopy[3].isFilled()) {
+//        full = true;
+//      }
+//      // TODO: make sure this works
+//      // if (tempHeightScore > heightScore) {
+//      // heightScore = tempHeightScore;
+//      // }
+//
+//      
+//      edges += weights[2] * Math.abs(((boardCopy[i].length - 1) / 2.0) - i) * getNumFilled(colCopy);
+//    }
+    for(int i = 0; i < boardCopy.length; i++){  //iterates over rows
+      for(int j = 0; j < boardCopy[0].length; j++){ //iterates over columns within rows
+        if(boardCopy[i][j].isFilled()){
+          edges += weights[2] * Math.abs((boardCopy[0].length - 1) / 2.0 - j);
+        }
       }
-      // TODO: this is a differing end-game condition than rest of game
-      if (colCopy[3].isFilled()) {
-        full = true;
-      }
-      // TODO: make sure this works
-      // if (tempHeightScore > heightScore) {
-      // heightScore = tempHeightScore;
-      // }
-
-      double voidCount = getNumVoids(colCopy);
-      voids += weights[1] * voidCount;
-      edges += weights[2] * Math.abs(((boardCopy[i].length - 1) / 2.0) - i) * getNumActive(colCopy);
     }
+    double voidCount = getNumVoids(boardCopy);
+    voids += weights[1] * voidCount;
     double heightScore = getHeightScore(boardCopy);
     height = weights[0] * heightScore;
 
@@ -432,10 +440,10 @@ public class Cerulean {
    * @param colCopy the column of tiles to analyze
    * @return the number of active tiles it contains
    */
-  private double getNumActive(Tile[] colCopy) {
+  private double getNumFilled(Tile[] colCopy) {
     int count = 0;
     for (Tile t : colCopy) {
-      if (t.isActive()) {
+      if (t.isFilled()) {
         count++;
       }
     }
@@ -521,18 +529,21 @@ public class Cerulean {
    * @param tiles the column of tiles to be analyzed
    * @return the number of voids in the column
    */
-  private double getNumVoids(Tile[] tiles) {
+  private double getNumVoids(Tile[][] tilesBoard) {
     boolean hasFoundBlock = false;
     double voidCount = 0;
-    for (int i = 0; i < tiles.length; i++) {
-      if (hasFoundBlock && !tiles[i].isFilled()) {
-        voidCount++;
+    for (int j = 0; j < tilesBoard[0].length; j++) {
+      for (int i = 0; i < tilesBoard.length; i++) {
+        if (hasFoundBlock && !tilesBoard[i][j].isFilled()) {
+          voidCount++;
+        }
+        // TODO: maybe change to isActive
+        // TODO: possibly only consider voids that this block made
+        if (tilesBoard[i][j].isFilled()) {
+          hasFoundBlock = true;
+        }
       }
-      // TODO: maybe change to isActive
-      // TODO: possibly only consider voids that this block made
-      if (tiles[i].isFilled()) {
-        hasFoundBlock = true;
-      }
+      hasFoundBlock = false;
     }
     return voidCount;
   }
