@@ -134,7 +134,11 @@ public class Engine {
             } else if (getScoreMode() == ScoreMode.SIMPLE) {
               score += 1;
             }
-            addBlock();
+            try{
+              addBlock();
+            }catch(BoardFullException e){
+              this.full = true;
+            }
           }
         }
       } else {
@@ -143,7 +147,11 @@ public class Engine {
         } else if (getScoreMode() == ScoreMode.SIMPLE) {
           score += 1;
         }
-        addBlock();
+        try{
+          addBlock();
+        }catch(BoardFullException e){
+          this.full = true;
+        }
       }
     }
   }
@@ -448,8 +456,9 @@ public class Engine {
    * adds a new random block to the board. Before one is added, a BlockAddedEvent is fired the new
    * block is taken from the nextBlockBoard with is shown to the user, introduced to the board, and
    * a new random one added to the nextBlockBoard
+   * @throws BoardFullException 
    */
-  public void addBlock() {
+  public void addBlock() throws BoardFullException {
     currentBlock = nextBlock;
     nextBlock = blockGenerator.generateBlock();
     clearNextPieceBoard();
@@ -489,7 +498,7 @@ public class Engine {
    */
   private boolean testFull(Tile[][] gameBoard) {
     for (int i = 0; i < gameBoard[0].length; i++) {
-      if (gameBoard[3][i].isFilled()) {
+      if (gameBoard[3][i].isFilled() && !gameBoard[3][i].isActive()) {
         return true;
       }
     }
@@ -500,8 +509,9 @@ public class Engine {
    * adds a block to the engine as an active block
    * 
    * @param b the block to add
+   * @throws BoardFullException 
    */
-  public void addBlock(Block b) {
+  public void addBlock(Block b) throws BoardFullException {
     this.currentBlock = b;
     updateBoardWithNewBlock(b);
 
@@ -511,9 +521,12 @@ public class Engine {
    * adds block near the top of the screen
    * 
    * @param b the block to add
+   * @throws BoardFullException 
    */
-  public void updateBoardWithNewBlock(Block b) {
-    
+  public void updateBoardWithNewBlock(Block b) throws BoardFullException {
+    if(testFull(gameBoard)){
+      throw new BoardFullException();
+    }
     Tile[][] blockShape = b.getShape();
 
     int iOffset = 3;

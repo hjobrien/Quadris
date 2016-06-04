@@ -6,6 +6,7 @@ import java.io.PrintStream;
 
 import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
+import engine.BoardFullException;
 import engine.Engine;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -204,8 +205,9 @@ public class Game extends Application {
 
   /**
    * simple method to run the game when not in graphics mode
+   * @throws BoardFullException 
    */
-  public void run() {
+  public void run() throws BoardFullException {
     setup(useGraphics);
     engine.addBlock();
     timeIncrease = (int) System.currentTimeMillis();
@@ -237,7 +239,7 @@ public class Game extends Application {
 
   }
 
-  public static int runGame(Game game, int gameNum) {
+  public static int runGame(Game game, int gameNum) throws BoardFullException {
      game.setup(game.useGraphics);
     game.getEngine().addBlock();
     
@@ -372,7 +374,12 @@ public class Game extends Application {
     
     timePerTurn = maxTimePerTurn;
     
-    engine.addBlock();
+    try {
+      engine.addBlock();
+    } catch (BoardFullException e) {
+      System.err.println("Board Improperly Cleared`");
+      e.printStackTrace();
+    }
   }
 
 

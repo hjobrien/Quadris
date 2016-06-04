@@ -37,7 +37,7 @@ public class Cerulean {
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
   public static final double MAX_SIMILAR_WEIGHTS = 4; // ~= half the weights
-
+    
   public Cerulean(int blocksToAnalyze) {
     this.analyzeTwo = (blocksToAnalyze == 2 ? true : false);
   }
@@ -294,8 +294,9 @@ public class Cerulean {
     Tile[][] tileCopy = new Tile[boardState.length][boardState[0].length];
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[0].length; j++) {
-        tileCopy[i][j] = new Tile(boardState[i][j].isActive(), boardState[i][j].isFilled(),
-            boardState[i][j].getColor());
+        Tile t = boardState[i][j];
+        tileCopy[i][j] = new Tile(t.isActive(), t.isFilled(),
+            t.getColor());
       }
     }
 
@@ -433,22 +434,22 @@ public class Cerulean {
     this.timeToAnalyzeStates += (System.nanoTime() - now);
     return weight;
   }
-
-  /**
-   * returns the number of active tiles in a column
-   * 
-   * @param colCopy the column of tiles to analyze
-   * @return the number of active tiles it contains
-   */
-  private double getNumFilled(Tile[] colCopy) {
-    int count = 0;
-    for (Tile t : colCopy) {
-      if (t.isFilled()) {
-        count++;
-      }
-    }
-    return count;
-  }
+//
+//  /**
+//   * returns the number of active tiles in a column
+//   * 
+//   * @param colCopy the column of tiles to analyze
+//   * @return the number of active tiles it contains
+//   */
+//  private double getNumFilled(Tile[] colCopy) {
+//    int count = 0;
+//    for (Tile t : colCopy) {
+//      if (t.isFilled()) {
+//        count++;
+//      }
+//    }
+//    return count;
+//  }
 
   /**
    * produces a score based on the height of a column
@@ -548,29 +549,29 @@ public class Cerulean {
     return voidCount;
   }
 
-  /**
-   * analyzes each column of the board to get their height score, only scores columns under the
-   * maximum height
-   * 
-   * @param boardCopy the board to be analyzed
-   * @return the sum of the score of all lines under the maximum one multiplied by 0.1
-   */
-  private double getExtraHeightScore(Tile[][] boardCopy) {
-
-    double extraHeight = Double.POSITIVE_INFINITY;
-    for (int column = 0; column < boardCopy[0].length; column++) {
-      int colHeight = Integer.MAX_VALUE;
-      for (int row = boardCopy.length - 1; row >= 0; row--) {
-        if (boardCopy[row][column].isActive()) {
-          colHeight = row;
-        }
-      }
-      if (colHeight < extraHeight) {
-        extraHeight = colHeight;
-      }
-    }
-    return extraHeight * 0.1;
-  }
+//  /**
+//   * analyzes each column of the board to get their height score, only scores columns under the
+//   * maximum height
+//   * 
+//   * @param boardCopy the board to be analyzed
+//   * @return the sum of the score of all lines under the maximum one multiplied by 0.1
+//   */
+//  private double getExtraHeightScore(Tile[][] boardCopy) {
+//
+//    double extraHeight = Double.POSITIVE_INFINITY;
+//    for (int column = 0; column < boardCopy[0].length; column++) {
+//      int colHeight = Integer.MAX_VALUE;
+//      for (int row = boardCopy.length - 1; row >= 0; row--) {
+//        if (boardCopy[row][column].isActive()) {
+//          colHeight = row;
+//        }
+//      }
+//      if (colHeight < extraHeight) {
+//        extraHeight = colHeight;
+//      }
+//    }
+//    return extraHeight * 0.1;
+//  }
 
   /**
    * allows the AI's weights to be changed for use in AI_TRAINING mode
