@@ -17,13 +17,18 @@ public class ParallelizedClient implements Autoplayable {
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   public static final int NUM_BLOCKS_TO_CONSIDER = 2;
 
-  private static final int NUM_GAMES_TO_PLAY = 4;
+  private static final int NUM_GAMES_TO_PLAY = 10;
 
   public static void main(String args[]) throws IOException {
-    ParallelizedCore runner = new ParallelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
-        MAX_GAMES_PER_THREAD, NUM_GAMES_TO_PLAY, USE_GRAPHICS, DO_DEBUG, SCORE_MODE, NUM_BLOCKS_TO_CONSIDER);
-    System.out.println(
-        "Average Score over " + NUM_GAMES_TO_PLAY + " Games using " + SCORE_MODE + " scoring is " + runner.run(DEFAULT_WEIGHTS));
+    ParallelizedCore runner =
+        new ParallelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_PER_THREAD,
+            NUM_GAMES_TO_PLAY, USE_GRAPHICS, DO_DEBUG, SCORE_MODE, NUM_BLOCKS_TO_CONSIDER);
+    long now = System.nanoTime();
+    double avgScore = runner.run(DEFAULT_WEIGHTS);
+    long later = System.nanoTime();
+    System.out.println("Average Score over " + NUM_GAMES_TO_PLAY + " Games using " + SCORE_MODE
+        + " scoring is " + avgScore);
+    System.out.println("It took " + (later - now) + " nanos or " + (later - now) / 1e9 + " seconds");
     System.exit(0);
   }
 

@@ -16,13 +16,13 @@ public class WeightTrainingClient implements Autoplayable {
 
   public static final int GAME_HEIGHT = 20;
   public static final int GAME_WIDTH = 10;
-  public static final int MIN_TIME_PER_TURN = 100000000;
+  public static final int MIN_TIME_PER_TURN = 10;
   public static final boolean USE_GRAPHICS = false;
   public static final boolean DO_DEBUG = false;
   public static final int NUM_BLOCKS_TO_CONSIDER = 2;
   // should be 1, if a game finishes the thread should be allowed to take a new thread from the pool
   public static final int MAX_CONSEC_GAMES_PER_THREAD = 1;
-  public static final int MAX_GAMES_PER_GEN = 50;
+  public static final int MAX_GAMES_PER_GEN = 10;
   public static final int MAX_GENERATIONS = 30;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   public static final double MUTATION_FACTOR = 0.5;
