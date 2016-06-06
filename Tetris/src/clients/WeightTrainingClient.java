@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import cerulean.Cerulean;
 import clients.interfaces.Autoplayable;
+import engine.ParellelizedCore;
 import mainGame.ScoreMode;
 
 public class WeightTrainingClient implements Autoplayable {

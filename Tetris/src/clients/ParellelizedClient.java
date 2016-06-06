@@ -3,6 +3,7 @@ package clients;
 import java.io.IOException;
 
 import clients.interfaces.Autoplayable;
+import engine.ParellelizedCore;
 import mainGame.ScoreMode;
 
 public class ParellelizedClient implements Autoplayable {
