@@ -1,46 +1,58 @@
 package clients;
 
+import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.StandardizeBlocks;
+import clients.interfaces.Autoplayable;
+import clients.interfaces.Viewable;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import mainGame.Game;
+import mainGame.GameMode;
+import mainGame.ScoreMode;
 import renderer.DualPlayRenderer;
 
-public class DualPlayClient extends Application {
+public class DualPlayClient extends Application implements Viewable, Autoplayable {
 
+	private static final int GAME_HEIGHT = 20;
+	private static final int GAME_WIDTH = 10;
+	public static final int MIN_TIME_PER_USER_TURN = 50000000;
+	private static final int MIN_TIME_PER_CERULEAN_TURN = 1000000;
+	private static final boolean DEBUG = false;
+	public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
+	public static final int MAX_GAMES_TO_PLAY = 5;
+	//probably shouldn't randomize because then the computer will get different blocks than the user
+	// public static final BlockGenerator GENERATOR = new RandomizeBlocks();
+	public static final BlockGenerator GENERATOR = new StandardizeBlocks(2);
+	public static final int NUM_BLOCKS_TO_ANALYZE = 2;
+	
+	public static void main(String[] args) {
+		launch();
+	}
 
+	/*
+	 * Every time a new block is added, the game timer on the AI pauses (no
+	 * updates occur). When the next block is added to the user's game, the
+	 * timer unpauses, the block is played, and a new block is spawned, which
+	 * again pauses the AI. This should be so quick that it will seem
+	 * instantaneous to the user, allowing them feel like they are playing
+	 * against the AI without being told where the AI will move before they move
+	 * themselves
+	 * 
+	 * Another possiblity could be starting the human game one block earlier so
+	 * that the computer can addBlock whenever the user addBlocks without giving
+	 * away the "best position"
+	 */
 
-//  private static final int GAME_HEIGHT = 20;
-//  private static final int GAME_WIDTH = 10;
-//  private static final int MIN_TIME_PER_TURN = 100000000;
-//  private static final boolean USE_GRAPHICS = true;
-//  private static final boolean DO_DEBUG = false;
-//  private static final boolean RANDOMIZE = false;
-//  private static final boolean PLAY_MULTIPLE = false;
-//  private static final double[] WEIGHTS = new double[] {-70, -97.85, 306.77, 5};
+	@Override
+	public void start(Stage stage) throws Exception {
+		Game ceruleanGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_CERULEAN_TURN, MAX_GAMES_TO_PLAY,
+		        GameMode.AUTOPLAY, USE_GRAPHICS, DEBUG, GENERATOR, DEFAULT_WEIGHTS, SCORE_MODE, NUM_BLOCKS_TO_ANALYZE);
+		    
+		Game userGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_USER_TURN, MAX_GAMES_TO_PLAY, GameMode.DISTRO, USE_GRAPHICS,
+			        DEBUG, GENERATOR, SCORE_MODE);
 
-  public static void main(String[] args) {
-    launch();
-  }
+		stage.setScene(new DualPlayRenderer(false).makeGame());
+		stage.show();
 
-  /*
-   * Every time a new block is added, the game timer on the AI pauses (no updates occur).
-   * When the next block is added to the user's game, the timer unpauses, the block is played, 
-   * and a new block is spawned, which again pauses the AI. This should be so quick that it will 
-   * seem instantaneous to the user, allowing them feel like they are playing against the AI without
-   * being told where the AI will move before they move themselves
-   * 
-   * Another possiblity could be starting the human game one block earlier so that the computer can
-   * addBlock whenever the user addBlocks without giving away the "best position"
-   */
-  
-  @Override
-  public void start(Stage stage) throws Exception {
-//    Game aiGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.AUTOPLAY,
-//        USE_GRAPHICS, DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE, WEIGHTS);
-//    Game userGame = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, GameMode.DISTRO,
-//        USE_GRAPHICS, DO_DEBUG, RANDOMIZE, PLAY_MULTIPLE);
-    
-    stage.setScene(new DualPlayRenderer(false).makeGame());
-    stage.show();
-
-  }
+	}
 }
