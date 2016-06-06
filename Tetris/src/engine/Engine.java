@@ -471,7 +471,7 @@ public class Engine {
       try {
         solution = cerulean.submitBlock(currentBlock, nextBlock, gameBoard);
       } catch (BoardFullException e) {
-//        full = true;
+        full = true;
       }
     }
     if (!full) {
@@ -513,7 +513,11 @@ public class Engine {
    */
   public void addBlock(Block b) throws BoardFullException {
     this.currentBlock = b;
-    updateBoardWithNewBlock(b);
+    try{
+      updateBoardWithNewBlock(b);
+    }catch(BoardFullException e){
+      this.full = true;
+    }
 
   }
 
