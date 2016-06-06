@@ -15,12 +15,13 @@ public class NoGraphicsClient implements Autoplayable{
   public static final boolean DO_DEBUG = false;
 //  public static final boolean PLAY_MULTIPLE = false;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-  public static final BlockGenerator GENERATOR = new StandardizeBlocks(0);
+  public static final BlockGenerator GENERATOR = new StandardizeBlocks(2);
   public static final int MAX_GAMES_TO_PLAY = 5;
+  public static final int NUM_BLOCKS_TO_CONSIDER = 2;
 
   public static void main(String args[]) throws Exception {
     Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY, GameMode.AUTOPLAY,
-        USE_GRAPHICS, DO_DEBUG, GENERATOR, DEFAULT_WEIGHTS, SCORE_MODE, 1);
+        USE_GRAPHICS, DO_DEBUG, GENERATOR, DEFAULT_WEIGHTS, SCORE_MODE, NUM_BLOCKS_TO_CONSIDER);
     game.run();
   }
 

@@ -24,10 +24,11 @@ public class ParallelizedCore {
   private boolean useGraphcis = false;
   private boolean doDebug = false;
   private ScoreMode scoreMode = ScoreMode.SIMPLE;
+  private int numBlocksToConsider;
 
 
   public ParallelizedCore(int gameHeight, int gameWidth, int minTimePerTurn, int maxGamesPerThread,
-      int maxGamesPerGen, boolean useGraphics, boolean doDebug, ScoreMode scoreMode) {
+      int maxGamesPerGen, boolean useGraphics, boolean doDebug, ScoreMode scoreMode, int numBlocksToConsider) {
     this.gameHeight = gameHeight;
     this.gameWidth = gameWidth;
     this.minTimePerTurn = minTimePerTurn;
@@ -36,6 +37,7 @@ public class ParallelizedCore {
     this.useGraphcis = useGraphics;
     this.doDebug = doDebug;
     this.scoreMode = scoreMode;
+    this.numBlocksToConsider = numBlocksToConsider;
   }
 
 
@@ -46,7 +48,7 @@ public class ParallelizedCore {
       final int gameNum = i;
       BlockGenerator generator = new StandardizeBlocks(gameNum);
       Game game = new Game(gameHeight, gameWidth, minTimePerTurn, maxGamesPerThread,
-          GameMode.AUTOPLAY, useGraphcis, doDebug, generator, weights, scoreMode, 1);   //1 for now, change to 2 when sped up
+          GameMode.AUTOPLAY, useGraphcis, doDebug, generator, weights, scoreMode, numBlocksToConsider);   //1 for now, change to 2 when sped up
       results.add(Util.compute.submit(() -> Game.runGame(game, gameNum)));
     }
     try {
