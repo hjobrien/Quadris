@@ -2,6 +2,14 @@ package engine;
 
 public class BoardFullException extends Exception {
 
+  public BoardFullException(String errorMessage) {
+    super(errorMessage);
+  }
+  
+  public BoardFullException(){
+    super();
+  }
+
   /**
    * 
    */
