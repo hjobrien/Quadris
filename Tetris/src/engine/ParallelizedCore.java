@@ -14,7 +14,7 @@ import mainGame.GameMode;
 import mainGame.ScoreMode;
 import util.Util;
 
-public class ParellelizedCore {
+public class ParallelizedCore {
 
   private int gameHeight;
   private int gameWidth;
@@ -26,7 +26,7 @@ public class ParellelizedCore {
   private ScoreMode scoreMode = ScoreMode.SIMPLE;
 
 
-  public ParellelizedCore(int gameHeight, int gameWidth, int minTimePerTurn, int maxGamesPerThread,
+  public ParallelizedCore(int gameHeight, int gameWidth, int minTimePerTurn, int maxGamesPerThread,
       int maxGamesPerGen, boolean useGraphics, boolean doDebug, ScoreMode scoreMode) {
     this.gameHeight = gameHeight;
     this.gameWidth = gameWidth;

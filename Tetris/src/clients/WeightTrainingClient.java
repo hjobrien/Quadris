@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import cerulean.Cerulean;
 import clients.interfaces.Autoplayable;
-import engine.ParellelizedCore;
+import engine.ParallelizedCore;
 import mainGame.ScoreMode;
 
 public class WeightTrainingClient implements Autoplayable {
@@ -49,7 +49,7 @@ public class WeightTrainingClient implements Autoplayable {
     }
     PrintStream aiPrinter = new PrintStream(file);
     
-    ParellelizedCore runner = new ParellelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
+    ParallelizedCore runner = new ParallelizedCore(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN,
         MAX_CONSEC_GAMES_PER_THREAD, MAX_GAMES_PER_GEN, USE_GRAPHICS, DO_DEBUG, SCORE_MODE);
 
     double[] speciesAvgScore = new double[species.length];
