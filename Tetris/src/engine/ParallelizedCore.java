@@ -1,6 +1,10 @@
 package engine;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -41,7 +45,10 @@ public class ParallelizedCore {
   }
 
 
-  public double run(double[] weights) {
+  public double run(double[] weights) throws IOException {
+    File gameRecords = new File("Scores/" + Arrays.toString(weights));
+    gameRecords.createNewFile();
+    PrintStream scorePrinter = new PrintStream(gameRecords);
     List<Integer> gameScores;
     List<ListenableFuture<Integer>> results = new ArrayList<>();
     for (int i = 0; i < maxGamesPerGen; i++) {
@@ -54,12 +61,16 @@ public class ParallelizedCore {
     try {
       gameScores = Futures.allAsList(results).get();
     } catch (InterruptedException | ExecutionException e) {
+      scorePrinter.close();
       throw new RuntimeException(e);
     }
     int total = 0;
     for (int i = 0; i < gameScores.size(); i++) {
-      total += gameScores.get(i);
+      int gameScore = gameScores.get(i);
+      total += gameScore;
+      scorePrinter.println(gameScore);
     }
+    scorePrinter.close();
     return ((double) total) / gameScores.size();
   }
 }
