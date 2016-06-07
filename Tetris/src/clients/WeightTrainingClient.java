@@ -25,7 +25,7 @@ public class WeightTrainingClient implements Autoplayable {
   public static final int MAX_GAMES_PER_GEN = 10;
   public static final int MAX_GENERATIONS = 30;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-  public static final double MUTATION_FACTOR = 0.1;
+  public static final double MUTATION_FACTOR = 0.5;
 
 
   private static double[][] species =
