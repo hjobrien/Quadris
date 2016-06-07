@@ -48,7 +48,13 @@ public class Engine {
     this.blockGenerator = generator;
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
-    this.nextBlock = blockGenerator.generateBlock();
+    try {
+      this.nextBlock = blockGenerator.generateBlock();
+    } catch (UsedAllBlocksException e) {
+      System.err.println("File didn't contain any blocks");
+      e.printStackTrace();
+      System.exit(-2);
+    }
     if (autoplay) {
       cerulean = new Cerulean(numBlocksToAnalyze);
       cerulean.setWeights(weights);
@@ -62,7 +68,13 @@ public class Engine {
     this.blockGenerator = generator;
     this.gameBoard = deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
-    this.nextBlock = blockGenerator.generateBlock();
+    try {
+      this.nextBlock = blockGenerator.generateBlock();
+    } catch (UsedAllBlocksException e) {
+      System.err.println("File didn't contain any blocks");
+      e.printStackTrace();
+      System.exit(-2);
+    }
     this.autoplay = false;
   }
   
@@ -117,8 +129,9 @@ public class Engine {
   /**
    * is the general engine method coordinates dropping blocks, adding blocks, logging game state,
    * and line clearing
+   * @throws UsedAllBlocksException 
    */
-  public void update() {
+  public void update() throws UsedAllBlocksException {
     if (!isPaused) {
       if (currentBlock.isFalling()) {
         if (checkDown()) {
@@ -457,9 +470,11 @@ public class Engine {
    * block is taken from the nextBlockBoard with is shown to the user, introduced to the board, and
    * a new random one added to the nextBlockBoard
    * @throws BoardFullException 
+   * @throws UsedAllBlocksException 
    */
-  public void addBlock() throws BoardFullException {
+  public void addBlock() throws BoardFullException, UsedAllBlocksException {
     currentBlock = nextBlock;
+    
     nextBlock = blockGenerator.generateBlock();
     clearNextPieceBoard();
     addBlockToDisplay(nextPieceBoard, nextBlock);

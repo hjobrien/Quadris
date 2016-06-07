@@ -12,6 +12,7 @@ import blocks.RightS;
 import blocks.Square;
 import blocks.StraightLine;
 import blocks.TBlock;
+import engine.UsedAllBlocksException;
 
 /**
  * Object dedicated to producing repeatable streams of blocks using pre-written lines of numbers in
@@ -55,8 +56,13 @@ public class StandardizeBlocks implements BlockGenerator {
   /**
    * generates a new Block by converting the number from the file to a Block Object
    */
-  public Block generateBlock() {
-    int i = blocksToAdd[gameNumber][numBlocksAdded];
+  public Block generateBlock() throws UsedAllBlocksException {
+    int i = -1;
+    try{
+      i = blocksToAdd[gameNumber][numBlocksAdded];
+    }catch(ArrayIndexOutOfBoundsException e){
+      throw new UsedAllBlocksException("No more blocks to add");
+    }
     numBlocksAdded++;
     switch (i) {
       case 0:
@@ -74,7 +80,7 @@ public class StandardizeBlocks implements BlockGenerator {
       case 6:
         return new Square();
     }
-    throw new RuntimeException("bad file num");
+    throw new RuntimeException("bad number in file");
   }
 
   /**

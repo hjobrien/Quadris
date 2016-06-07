@@ -8,6 +8,7 @@ import blocks.Tile;
 import blocks.blockGeneration.BlockGenerator;
 import engine.BoardFullException;
 import engine.Engine;
+import engine.UsedAllBlocksException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -206,8 +207,9 @@ public class Game extends Application {
   /**
    * simple method to run the game when not in graphics mode
    * @throws BoardFullException 
+   * @throws UsedAllBlocksException 
    */
-  public void run() throws BoardFullException {
+  public void run() throws BoardFullException, UsedAllBlocksException {
     setup(useGraphics);
     engine.addBlock();
     timeIncrease = (int) System.currentTimeMillis();
@@ -218,7 +220,11 @@ public class Game extends Application {
                                                             // change from infinite games
         while (!engine.hasFullBoard()) {
           Util.sleep(timePerTurn);
-          engine.update();
+          try {
+            engine.update();
+          } catch (UsedAllBlocksException e) {
+            e.printStackTrace();
+          }
           
           if (!paused) {
             if ((int) System.currentTimeMillis() - timeIncrease > 500) {
@@ -239,7 +245,7 @@ public class Game extends Application {
 
   }
 
-  public static int runGame(Game game, int gameNum) throws BoardFullException {
+  public static int runGame(Game game, int gameNum) throws BoardFullException, UsedAllBlocksException {
      game.setup(game.useGraphics);
     game.getEngine().addBlock();
     
@@ -338,7 +344,11 @@ public class Game extends Application {
           case SPACE:
             engine.executeMove(Move.DROP);
             if (dropDownTerminatesBlock)
-              engine.update();
+              try {
+                engine.update();
+              } catch (UsedAllBlocksException e) {
+                throw new RuntimeException();
+              }
             break;
           case UP:
             engine.executeMove(Move.UP);
@@ -379,6 +389,8 @@ public class Game extends Application {
     } catch (BoardFullException e) {
       System.err.println("Board Improperly Cleared`");
       e.printStackTrace();
+    } catch (UsedAllBlocksException e) {
+      throw new RuntimeException("File did not contain any blocks");
     }
   }
 

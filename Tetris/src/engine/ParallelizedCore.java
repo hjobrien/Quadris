@@ -49,7 +49,7 @@ public class ParallelizedCore {
       BlockGenerator generator = new StandardizeBlocks(gameNum);
       Game game = new Game(gameHeight, gameWidth, minTimePerTurn, maxGamesPerThread,
           GameMode.AUTOPLAY, useGraphcis, doDebug, generator, weights, scoreMode, numBlocksToConsider);   //1 for now, change to 2 when sped up
-      results.add(Util.compute.submit(() -> Game.runGame(game, gameNum)));
+        results.add(Util.compute.submit(() -> Game.runGame(game, gameNum)));
     }
     try {
       gameScores = Futures.allAsList(results).get();

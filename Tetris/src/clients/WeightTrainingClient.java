@@ -25,7 +25,7 @@ public class WeightTrainingClient implements Autoplayable {
   public static final int MAX_GAMES_PER_GEN = 10;
   public static final int MAX_GENERATIONS = 30;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-  public static final double MUTATION_FACTOR = 0.5;
+  public static final double MUTATION_FACTOR = 0.1;
 
 
   private static double[][] species =
@@ -57,14 +57,19 @@ public class WeightTrainingClient implements Autoplayable {
     for (int genNumber = 0; genNumber < MAX_GENERATIONS; genNumber++) {
       for (int i = 0; i < species.length; i++) {
         double[] currentSpecies = species[i];
-        double avgScore = runner.run(currentSpecies);
-        System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
-            + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
-        aiPrinter.println(avgScore);
-        speciesAvgScore[i] = avgScore;
+        try {
+          double avgScore = runner.run(currentSpecies);
+          System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
+              + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
+          aiPrinter.println(avgScore);
+          speciesAvgScore[i] = avgScore;
+        } catch (Exception e) {
+          speciesAvgScore[i] = -1;
+          e.printStackTrace();
+        }
       }
       aiPrinter.println();
-      System.out.println();
+      System.out.println("***BREEDING***");
       species = Cerulean.breed(species, speciesAvgScore, MUTATION_FACTOR);
     }
     aiPrinter.close();
