@@ -29,6 +29,8 @@ public class ParallelizedCore {
   private boolean doDebug = false;
   private ScoreMode scoreMode = ScoreMode.SIMPLE;
   private int numBlocksToConsider;
+  private static int numTimesRun = 0;
+  
 
 
   public ParallelizedCore(int gameHeight, int gameWidth, int minTimePerTurn, int maxGamesPerThread,
@@ -46,7 +48,8 @@ public class ParallelizedCore {
 
 
   public double run(double[] weights) throws IOException {
-    File gameRecords = new File("Scores/" + Arrays.toString(weights));
+    File gameRecords = new File("Scores/" + numTimesRun + Arrays.toString(weights) + ".txt");
+    numTimesRun++;
     gameRecords.createNewFile();
     PrintStream scorePrinter = new PrintStream(gameRecords);
     List<Integer> gameScores;
