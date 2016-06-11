@@ -57,15 +57,27 @@ public class WeightTrainingClient implements Autoplayable {
     for (int genNumber = 0; genNumber < MAX_GENERATIONS; genNumber++) {
       for (int i = 0; i < species.length; i++) {
         double[] currentSpecies = species[i];
-        try {
-          double avgScore = runner.run(currentSpecies);
+        if (i == 0 && Cerulean.getBestScore() != 0) {
+          double avgScore = Cerulean.getBestScore();
           System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
               + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
-          aiPrinter.println(avgScore);
-          speciesAvgScore[i] = avgScore;
-        } catch (Exception e) {
-          speciesAvgScore[i] = -1;
-          e.printStackTrace();
+          speciesAvgScore[0] = avgScore;
+        } else if (i == 1 && Cerulean.getSecondScore() != 0) {
+          double avgScore = Cerulean.getSecondScore();
+          System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
+              + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
+          speciesAvgScore[1] = avgScore;
+        } else {
+          try {
+            double avgScore = runner.run(currentSpecies);
+            System.out.println("Average Score of " + Arrays.toString(currentSpecies) + "\t over "
+                + MAX_GAMES_PER_GEN + " Games using " + SCORE_MODE + " scoring is " + avgScore);
+            aiPrinter.println(avgScore);
+            speciesAvgScore[i] = avgScore;
+          } catch (Exception e) {
+            speciesAvgScore[i] = -1;
+            e.printStackTrace();
+          }
         }
       }
       aiPrinter.println();

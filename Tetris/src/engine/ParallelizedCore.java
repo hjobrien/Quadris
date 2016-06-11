@@ -48,7 +48,7 @@ public class ParallelizedCore {
 
 
   public double run(double[] weights) throws IOException {
-    File gameRecords = new File("Scores/" + numTimesRun + Arrays.toString(weights) + ".txt");
+    File gameRecords = new File("Scores/" + (numTimesRun < 10 ? "0" + numTimesRun : numTimesRun) + Arrays.toString(weights) + ".txt");
     numTimesRun++;
     gameRecords.createNewFile();
     PrintStream scorePrinter = new PrintStream(gameRecords);
@@ -71,6 +71,7 @@ public class ParallelizedCore {
     for (int i = 0; i < gameScores.size(); i++) {
       int gameScore = gameScores.get(i);
       total += gameScore;
+//      System.out.println(gameScore);
       scorePrinter.println(gameScore);
     }
     scorePrinter.close();

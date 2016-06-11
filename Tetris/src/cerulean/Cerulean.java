@@ -33,6 +33,9 @@ public class Cerulean {
   private boolean analyzeTwo;
 
   private Engine boardAnalyzer;
+  
+  private static double bestScore;
+  private static double secondScore;
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
@@ -646,6 +649,8 @@ public class Cerulean {
     // }
     double[] bestCandidate = species[bestIndex];
     double[] secondCandidate = species[secondIndex];
+    Cerulean.bestScore = speciesAvgScore[bestIndex];
+    Cerulean.secondScore = speciesAvgScore[secondIndex];
     int numSpecies = species.length;
     double[][] newSpecies = new double[numSpecies][];
     Random rand = new Random();
@@ -663,8 +668,7 @@ public class Cerulean {
       // child[j] = secondCandidate[j];
       // }
       // many-cross algorithm. this seems to be 'fairer' in that earlier
-      // weights change as much as
-      // later ones
+      // weights change as much as later ones
       double[] child = new double[bestCandidate.length];
       for (int j = 0; j < child.length; j++) {
         if (rand.nextBoolean()) {
@@ -712,4 +716,20 @@ public class Cerulean {
     }
   }
 
+  /**
+   * @return the bestScore
+   */
+  public static double getBestScore() {
+    return bestScore;
+  }
+
+  /**
+   * @return the secondScore
+   */
+  public static double getSecondScore() {
+    return secondScore;
+  }
+
+  
+  
 }
