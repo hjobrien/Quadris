@@ -28,7 +28,7 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
   // public static final boolean PLAY_MULTIPLE = true;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   
-  public static final BlockGenerator GENERATOR = new StandardizeBlocks(8);
+  public static final BlockGenerator GENERATOR = new StandardizeBlocks(3);
 //  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
   public  static final int MAX_GAMES_TO_PLAY = 50;
   public static final int NUM_BLOCKS_TO_ANALYZE = 2;
@@ -37,10 +37,12 @@ public class AutoplayClient extends Application implements Viewable, Autoplayabl
     launch();
   }
 
+  //best game for StandardizeBlocks(2) and weights = -57.29, -83.97, 1.76, 1573.34, 2451.18, 2089.19, 6228.07
+  
   @Override
   public void start(Stage arg0) throws Exception {
     Game game = new Game(GAME_HEIGHT, GAME_WIDTH, MIN_TIME_PER_TURN, MAX_GAMES_TO_PLAY,
-        GameMode.AUTOPLAY, USE_GRAPHICS, DEBUG, GENERATOR, new double[]{-40.0, -100.0, 1.0, 400.0, 1200.0, 2800.0, 8000.0}, SCORE_MODE, NUM_BLOCKS_TO_ANALYZE);
+        GameMode.AUTOPLAY, USE_GRAPHICS, DEBUG, GENERATOR, new double[]{-57.29, -83.97, 1.76, 1573.34, 2451.18, 2089.19, 6228.07}, SCORE_MODE, NUM_BLOCKS_TO_ANALYZE);
     game.run(arg0);
 
   }

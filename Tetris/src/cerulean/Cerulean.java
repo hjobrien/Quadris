@@ -33,14 +33,14 @@ public class Cerulean {
   private boolean analyzeTwo;
 
   private Engine boardAnalyzer;
-  
+
   private static double bestScore;
   private static double secondScore;
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
   public static final double MAX_SIMILAR_WEIGHTS = 4; // ~= half the weights
-    
+
   public Cerulean(int blocksToAnalyze) {
     this.analyzeTwo = (blocksToAnalyze == 2 ? true : false);
   }
@@ -96,7 +96,7 @@ public class Cerulean {
         new Block(nextBlock.getType(), new int[] {0, 0}, nextBlock.getRotationIndex());
 
     Move[] bestPath = new Move[] {};
-    
+
     bestPath = convertToMovePath(getBestPath(currentBlockCopy, nextBlockCopy, boardState));
     return bestPath;
   }
@@ -122,10 +122,10 @@ public class Cerulean {
     // for a total of about 0.04 seconds
     // get all states is called between 31 and 120 times and takes ~450000 ns per execution
     // for a total of about 3.15 seconds 0.036s
-//    int count = 0;
+    // int count = 0;
     // System.out.println(currentBlock.getType() + " " + nextBlock.getType());
     ArrayList<MoveResult> boardStatesWithFirstBlock = getAllStates(currentBlock, boardState);
-//    count++;
+    // count++;
     // System.out.println("Number of states found: " + boardStatesWithFirstBlock.size());
     // long now = System.nanoTime();
     double bestWeight = Double.NEGATIVE_INFINITY;
@@ -135,10 +135,10 @@ public class Cerulean {
         cleanBoard(possibleBoardState.getBoardResult());
         ArrayList<MoveResult> boardStatesWithTwoBlocks =
             getAllStates(nextBlock, possibleBoardState.getBoardResult());
-//        count++;
+        // count++;
         for (MoveResult futureBoardState : boardStatesWithTwoBlocks) {
           double boardWeight = evaluateWeight(futureBoardState.getBoardResult());
-//          count++;
+          // count++;
           if (boardWeight > bestWeight) {
 
             // EXTREMELY HELPFUL FOR DEBUGGING, DO NOT ERASE
@@ -196,7 +196,9 @@ public class Cerulean {
     int fullStatesCount = 0;
     // reduce loop reps TODO
     // TODO: create variable for blocks grid location so block can be reset to good (non 0) value
-    for (int moveCount = 0; moveCount < 10; moveCount++) {
+    int distanceToMove = 10 - currentBlock.getShape()[0].length + 3;//idk why I need the three here
+//    int distanceToMove = 10;
+    for (int moveCount = 0; moveCount < distanceToMove; moveCount++) {
       for (int rotCount = 0; rotCount < currentBlock.getNumRotations(); rotCount++) {
         for (int slideCount = 0; slideCount < 3; slideCount++) {
           // TODO make sure this clone method works in all cases. If so, the comments below can be
@@ -207,7 +209,8 @@ public class Cerulean {
                 positionBlock(tempBlock, boardState, moveCount, rotCount, slideCount)));
           } catch (BoardFullException e) {
             fullStatesCount++;
-            if(fullStatesCount == 30*currentBlock.getNumRotations()){
+            // 30 because 10 movesCount and 3 slideCounts
+            if (fullStatesCount == 3 * distanceToMove * currentBlock.getNumRotations()) {
               throw new BoardFullException("All states are full");
             }
             // System.err.println("A board State is full " + Math.random());
@@ -302,8 +305,7 @@ public class Cerulean {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[0].length; j++) {
         Tile t = boardState[i][j];
-        tileCopy[i][j] = new Tile(t.isActive(), t.isFilled(),
-            t.getColor());
+        tileCopy[i][j] = new Tile(t.isActive(), t.isFilled(), t.getColor());
       }
     }
 
@@ -382,26 +384,27 @@ public class Cerulean {
     double height = 0;
     // double heightScore = 0;
     double edges = 0;
-//    for (int i = 0; i < boardCopy[0].length; i++) {
-//      Tile[] colCopy = new Tile[boardCopy.length];
-//      for (int j = 0; j < boardCopy.length; j++) {
-//        colCopy[j] = boardCopy[j][i];
-//      }
-//      // TODO: this is a differing end-game condition than rest of game
-//      if (colCopy[3].isFilled()) {
-//        full = true;
-//      }
-//      // TODO: make sure this works
-//      // if (tempHeightScore > heightScore) {
-//      // heightScore = tempHeightScore;
-//      // }
-//
-//      
-//      edges += weights[2] * Math.abs(((boardCopy[i].length - 1) / 2.0) - i) * getNumFilled(colCopy);
-//    }
-    for(int i = 0; i < boardCopy.length; i++){  //iterates over rows
-      for(int j = 0; j < boardCopy[0].length; j++){ //iterates over columns within rows
-        if(boardCopy[i][j].isFilled()){
+    // for (int i = 0; i < boardCopy[0].length; i++) {
+    // Tile[] colCopy = new Tile[boardCopy.length];
+    // for (int j = 0; j < boardCopy.length; j++) {
+    // colCopy[j] = boardCopy[j][i];
+    // }
+    // // TODO: this is a differing end-game condition than rest of game
+    // if (colCopy[3].isFilled()) {
+    // full = true;
+    // }
+    // // TODO: make sure this works
+    // // if (tempHeightScore > heightScore) {
+    // // heightScore = tempHeightScore;
+    // // }
+    //
+    //
+    // edges += weights[2] * Math.abs(((boardCopy[i].length - 1) / 2.0) - i) *
+    // getNumFilled(colCopy);
+    // }
+    for (int i = 0; i < boardCopy.length; i++) { // iterates over rows
+      for (int j = 0; j < boardCopy[0].length; j++) { // iterates over columns within rows
+        if (boardCopy[i][j].isFilled()) {
           edges += weights[2] * Math.abs((boardCopy[0].length - 1) / 2.0 - j);
         }
       }
@@ -441,22 +444,22 @@ public class Cerulean {
     this.timeToAnalyzeStates += (System.nanoTime() - now);
     return weight;
   }
-//
-//  /**
-//   * returns the number of active tiles in a column
-//   * 
-//   * @param colCopy the column of tiles to analyze
-//   * @return the number of active tiles it contains
-//   */
-//  private double getNumFilled(Tile[] colCopy) {
-//    int count = 0;
-//    for (Tile t : colCopy) {
-//      if (t.isFilled()) {
-//        count++;
-//      }
-//    }
-//    return count;
-//  }
+  //
+  // /**
+  // * returns the number of active tiles in a column
+  // *
+  // * @param colCopy the column of tiles to analyze
+  // * @return the number of active tiles it contains
+  // */
+  // private double getNumFilled(Tile[] colCopy) {
+  // int count = 0;
+  // for (Tile t : colCopy) {
+  // if (t.isFilled()) {
+  // count++;
+  // }
+  // }
+  // return count;
+  // }
 
   /**
    * produces a score based on the height of a column
@@ -556,29 +559,29 @@ public class Cerulean {
     return voidCount;
   }
 
-//  /**
-//   * analyzes each column of the board to get their height score, only scores columns under the
-//   * maximum height
-//   * 
-//   * @param boardCopy the board to be analyzed
-//   * @return the sum of the score of all lines under the maximum one multiplied by 0.1
-//   */
-//  private double getExtraHeightScore(Tile[][] boardCopy) {
-//
-//    double extraHeight = Double.POSITIVE_INFINITY;
-//    for (int column = 0; column < boardCopy[0].length; column++) {
-//      int colHeight = Integer.MAX_VALUE;
-//      for (int row = boardCopy.length - 1; row >= 0; row--) {
-//        if (boardCopy[row][column].isActive()) {
-//          colHeight = row;
-//        }
-//      }
-//      if (colHeight < extraHeight) {
-//        extraHeight = colHeight;
-//      }
-//    }
-//    return extraHeight * 0.1;
-//  }
+  // /**
+  // * analyzes each column of the board to get their height score, only scores columns under the
+  // * maximum height
+  // *
+  // * @param boardCopy the board to be analyzed
+  // * @return the sum of the score of all lines under the maximum one multiplied by 0.1
+  // */
+  // private double getExtraHeightScore(Tile[][] boardCopy) {
+  //
+  // double extraHeight = Double.POSITIVE_INFINITY;
+  // for (int column = 0; column < boardCopy[0].length; column++) {
+  // int colHeight = Integer.MAX_VALUE;
+  // for (int row = boardCopy.length - 1; row >= 0; row--) {
+  // if (boardCopy[row][column].isActive()) {
+  // colHeight = row;
+  // }
+  // }
+  // if (colHeight < extraHeight) {
+  // extraHeight = colHeight;
+  // }
+  // }
+  // return extraHeight * 0.1;
+  // }
 
   /**
    * allows the AI's weights to be changed for use in AI_TRAINING mode
@@ -730,6 +733,6 @@ public class Cerulean {
     return secondScore;
   }
 
-  
-  
+
+
 }
