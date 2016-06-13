@@ -66,6 +66,12 @@ public class Tile {
 		this.color = Color.WHITE;
 	}
 	
+	public void setAll(boolean isActive, boolean isFilled, Color c){
+	  setActive(isActive);
+	  setFilled(isFilled);
+	  setColor(c);
+	}
+	
 	@Override
 	public String toString(){
 	  if(isActive){

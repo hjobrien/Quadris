@@ -8,6 +8,7 @@ import blocks.blockGeneration.BlockGenerator;
 import cerulean.Cerulean;
 import mainGame.Move;
 import mainGame.ScoreMode;
+import util.BoardUtil;
 
 public class Engine {
 
@@ -46,7 +47,7 @@ public class Engine {
     this.scoreMode = scoring;
     this.autoplay = autoplay;
     this.blockGenerator = generator;
-    this.gameBoard = deepCopy(mainBoard);
+    this.gameBoard = BoardUtil.deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
     try {
       this.nextBlock = blockGenerator.generateBlock();
@@ -66,7 +67,7 @@ public class Engine {
   public Engine(Tile[][] mainBoard, BlockGenerator generator, ScoreMode scoring) {
     this.scoreMode = scoring;
     this.blockGenerator = generator;
-    this.gameBoard = deepCopy(mainBoard);
+    this.gameBoard = BoardUtil.deepCopy(mainBoard);
     this.nextPieceBoard = initBoard(new Tile[4][4]);
     try {
       this.nextBlock = blockGenerator.generateBlock();
@@ -87,28 +88,8 @@ public class Engine {
    * @param mainBoard
    */
   public Engine(Tile[][] mainBoard){
-    this.gameBoard = deepCopy(mainBoard);
+    this.gameBoard = BoardUtil.deepCopy(mainBoard);
     autoplay = false;
-  }
-  /**
-   * copies a board by value
-   * 
-   * @param mainBoard the board to be copied
-   * @return a new board with the values of the original
-   */
-  private Tile[][] deepCopy(Tile[][] mainBoard) {
-    Tile[][] copy = new Tile[mainBoard.length][mainBoard[0].length];
-    for (int i = 0; i < mainBoard.length; i++) {
-      for (int j = 0; j < mainBoard[i].length; j++) {
-        if (mainBoard[i][j] != null) {
-          copy[i][j] = new Tile(mainBoard[i][j].isActive(), mainBoard[i][j].isFilled(),
-              mainBoard[i][j].getColor());
-        } else {
-          copy[i][j] = new Tile();
-        }
-      }
-    }
-    return copy;
   }
 
   /**

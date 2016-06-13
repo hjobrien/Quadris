@@ -11,6 +11,7 @@ import blocks.Tile;
 import engine.BoardFullException;
 import engine.Engine;
 import mainGame.Move;
+import util.BoardUtil;
 
 /**
  * General AI class, handles game state analysis and move optimization
@@ -36,6 +37,8 @@ public class Cerulean {
 
   private static double bestScore;
   private static double secondScore;
+  
+  private Tile[][] aaa = new Tile[23][10];
 
   // keeps species that are too similar from breeding together, keeps GA from converging prematurely
   public static final double MAX_SIMILARITY_RATIO = 0.95;
@@ -43,10 +46,20 @@ public class Cerulean {
 
   public Cerulean(int blocksToAnalyze) {
     this.analyzeTwo = (blocksToAnalyze == 2 ? true : false);
+//    for(int i = 0; i < 23; i++){
+//      for(int j = 0; j < 10; j++){
+//        aaa[i][j] = new Tile();
+//      }
+//    }
   }
 
   public Cerulean() {
     this.analyzeTwo = false;
+//    for(int i = 0; i < 23; i++){
+//      for(int j = 0; j < 10; j++){
+//        aaa[i][j] = new Tile();
+//      }
+//    }
   }
 
   /**
@@ -68,6 +81,7 @@ public class Cerulean {
     // System.out.println("Analysis took " + timeToAnalyzeStates / 1e9 + " seconds");
     // System.out.println("\tUnaccounted for time "
     // + (total - timeToGenStates - timeToAnalyzeStates) / 1e9 + " seconds");
+//    System.out.println((total/1e9));
     return solution;
   }
 
@@ -305,6 +319,11 @@ public class Cerulean {
     for (int i = 0; i < boardState.length; i++) {
       for (int j = 0; j < boardState[0].length; j++) {
         Tile t = boardState[i][j];
+//        if(aaa[i][j] == null){
+//          aaa[i][j] = new Tile(t.isActive(), t.isFilled(), t.getColor());
+//        }else{
+//        aaa[i][j].setAll(t.isActive(), t.isFilled(), t.getColor());
+//        }
         tileCopy[i][j] = new Tile(t.isActive(), t.isFilled(), t.getColor());
       }
     }
@@ -326,8 +345,11 @@ public class Cerulean {
       boardAnalyzer.executeMove(Move.ROT_RIGHT);
     }
 
+    //this should be the amount of shift needed but doesn't work
+//    int leftShift = blockToPosition.getGridLocation()[0] - blockToPosition.getShape()[0].length;
     // TODO make not 10, just what is necessary
-    for (int i = 0; i < 10; i++) {
+    int leftShift = 10;
+    for (int i = 0; i < leftShift; i++) {
       boardAnalyzer.executeMove(Move.LEFT);
     }
 
@@ -355,8 +377,8 @@ public class Cerulean {
     // moveCount + ", slideCount = " + slideCount);
     // boardAnalyzer.printBoard();
     // System.out.println();
-
     return boardAnalyzer.getGameBoard();
+//    return BoardUtil.deepCopy(boardAnalyzer.getGameBoard());
 
   }
 

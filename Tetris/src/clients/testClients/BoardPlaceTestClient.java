@@ -22,6 +22,7 @@ import mainGame.Move;
 public class BoardPlaceTestClient {
   
   public static final Color COLOR = Color.BLACK;
+  public static final int BLOCKS_TO_CONSIDER = 2;
 
   public static void main(String[] args) throws BoardFullException {
     Block blockToPlace = new LeftS();
@@ -50,7 +51,7 @@ public class BoardPlaceTestClient {
    * @throws BoardFullException if the block causes the board to fill
    */
   private static Tile[][] getBestPosition(Block blockToPlace, Block nextBlock, Tile[][] testBoard) throws BoardFullException {
-    Cerulean c = new Cerulean(2);
+    Cerulean c = new Cerulean(BLOCKS_TO_CONSIDER);
     c.setWeights(Autoplayable.DEFAULT_WEIGHTS);
     Engine e = new Engine(testBoard);
     System.out.println(blockToPlace);
@@ -72,6 +73,10 @@ public class BoardPlaceTestClient {
    */
   public static Tile[][] getBoard(){
     return new Tile[][]{
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},               
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
+      
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},               
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
       new Tile[]{new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile(), new Tile()},
