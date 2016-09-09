@@ -22,18 +22,20 @@ public class WeightTrainingClient implements Autoplayable {
   public static final int NUM_BLOCKS_TO_CONSIDER = 2;
   // should be 1, if a game finishes the thread should be allowed to take a new thread from the pool
   public static final int MAX_CONSEC_GAMES_PER_THREAD = 1;
-  public static final int MAX_GAMES_PER_GEN = 10;
+  public static final int MAX_GAMES_PER_GEN = 16;
   public static final int MAX_GENERATIONS = 30;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
   public static final double MUTATION_FACTOR = 0.5;
 
 
   private static double[][] species =
-      new double[][] {{-200, -50, 1.68, 100, 100 * 3, 100 * 7, 100 * 20},
-          {-70, -70, 5, 500, 500 * 3, 500 * 7, 500 * 20},
+      new double[][] {
+          {-40, -100, 1, 400, 400 * 3, 400 * 7, 400 * 20},      //TODO: Errors
+          {-200, -50, 1.68, 100, 100 * 3, 100 * 7, 100 * 20},
+//          {-70, -70, 5, 500, 500 * 3, 500 * 7, 500 * 20},
+          {-57.29, -83.97, 1.76, 1573.34, 2451.18, 2089.19, 6228.07},
           {-100, -50, 2, 100, 100 * 3, 100 * 7, 100 * 20},
           {-200, -70, 7, 300, 300 * 3, 300 * 7, 300 * 20},
-          {-40, -100, 1, 400, 400 * 3, 400 * 7, 400 * 20},
           {-400, -300, 1, 100, 100 * 3, 100 * 7, 100 * 20},
           {-200, -100, 3, 100, 100 * 3, 100 * 7, 100 * 20},
           {-150, -70, 0, 400, 400 * 3, 400 * 7, 400 * 20},
