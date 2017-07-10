@@ -1,6 +1,5 @@
 /bin/
 /Scores/
-*.class
 .idea/
 Quadris.iml
 hamcrest-core-1.3.jar
@@ -8,3 +7,4 @@ junit-4.12.jar
 out/
 .DS_Store
 Quadris/.DS_Store
+*.class
