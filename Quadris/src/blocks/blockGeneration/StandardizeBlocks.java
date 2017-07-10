@@ -23,7 +23,7 @@ import engine.UsedAllBlocksException;
  */
 public class StandardizeBlocks implements BlockGenerator {
 
-  public static final String BLOCK_FILE_PATH = "Blocks to Add";
+  public static final String BLOCK_FILE_PATH = "/Users/Hank/IdeaProjects/Quadris/Quadris/Blocks-to-Add.txt";
 
   private int gameNumber;
   private int numBlocksAdded;

@@ -1,6 +1,7 @@
 package clients;
 
 import blocks.blockGeneration.BlockGenerator;
+import blocks.blockGeneration.RandomizeBlocks;
 import blocks.blockGeneration.StandardizeBlocks;
 import clients.interfaces.Viewable;
 import javafx.application.Application;
@@ -23,8 +24,8 @@ public class UserGameClient extends Application implements Viewable{
   public static final int MIN_TIME_PER_TURN = 100000000;
   public static final boolean DEBUG = false;
   public static final ScoreMode SCORE_MODE = ScoreMode.SIMPLE;
-//  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
-  public static final BlockGenerator GENERATOR = new StandardizeBlocks(2);
+  public static final BlockGenerator GENERATOR = new RandomizeBlocks();
+//  public static final BlockGenerator GENERATOR = new StandardizeBlocks(2);
   public static final int MAX_GAMES_TO_PLAY = 5;
 
   public static void main(String args[]) throws Exception {
