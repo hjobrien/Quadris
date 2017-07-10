@@ -383,7 +383,7 @@ public class Renderer {
    * @throws IOException for various file issues including FileNotFound
    */
   public void initializeScorePrinter() throws IOException {
-    File scoreFile = new File("/Users/Hank/IdeaProjects/Quadris/Quadris/src/gameLogs/High-Scores.txt");
+    File scoreFile = new File("Quadris/src/gameLogs/High-Scores.txt");
     if (!scoreFile.exists()) {
       scoreFile.createNewFile();
       highScores = new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
