@@ -225,6 +225,7 @@ public class Cerulean {
             fullStatesCount++;
             // 30 because 10 movesCount and 3 slideCounts
             if (fullStatesCount == 3 * distanceToMove * currentBlock.getNumRotations()) {
+//              System.out.println("full-2");
               throw new BoardFullException("All states are full");
             }
             // System.err.println("A board State is full " + Math.random());
@@ -338,6 +339,7 @@ public class Cerulean {
 
     if (boardAnalyzer.hasFullBoard()) {
       boardAnalyzer.reset();
+//      System.out.println("full-2 source");
       throw new BoardFullException();
     }
 
@@ -441,7 +443,8 @@ public class Cerulean {
     // corresponding
     // weights[] spot, but that seems excessive and only relevant if we choose to add way more
     // weights
-    int lineCount = getNumLines(boardCopy);
+    int lineCount = Math.min(4, getNumLines(boardCopy));
+
     double lineScore = 0;
 
     // returns the value of the line clearance based on how many lines were cleared

@@ -494,7 +494,8 @@ public class Engine {
    */
   private boolean testFull(Tile[][] gameBoard) {
     for (int i = 0; i < gameBoard[0].length; i++) {
-      if (gameBoard[3][i].isFilled() && !gameBoard[3][i].isActive()) {
+      if (gameBoard[0][i].isFilled() && !gameBoard[0][i].isActive()) {
+//        System.out.println(gameBoard);
         return true;
       }
     }
@@ -525,6 +526,7 @@ public class Engine {
    */
   public void updateBoardWithNewBlock(Block b) throws BoardFullException {
     if(testFull(gameBoard)){
+//      System.out.println("full-1");
       throw new BoardFullException();
     }
     Tile[][] blockShape = b.getShape();

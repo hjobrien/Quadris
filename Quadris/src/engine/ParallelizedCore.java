@@ -24,7 +24,7 @@ public class ParallelizedCore {
   private int gameWidth;
   private int minTimePerTurn;
   private int maxGamesPerThread;
-  private int maxGamesPerGen = 10;
+  private int maxGamesPerGen = 16;
   private boolean useGraphcis = false;
   private boolean doDebug = false;
   private ScoreMode scoreMode = ScoreMode.SIMPLE;
@@ -48,7 +48,7 @@ public class ParallelizedCore {
 
 
   public double run(double[] weights) throws IOException {
-    File gameRecords = new File("Scores/" + (numTimesRun < 10 ? "0" + numTimesRun : numTimesRun) + Arrays.toString(weights) + ".txt");
+  File gameRecords = new File("/Users/Hank/IdeaProjects/Quadris/Quadris/Scores/" + (numTimesRun < 10 ? "0" + numTimesRun : numTimesRun) + Arrays.toString(weights) + ".txt");
     numTimesRun++;
     gameRecords.createNewFile();
     PrintStream scorePrinter = new PrintStream(gameRecords);
